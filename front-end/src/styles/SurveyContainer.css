@@ -1,0 +1,12 @@
+.survey-container {
+    background-color: rgba(100,149,237,0.2);
+    top: 50px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    position: fixed;
+    padding-left: 220px;
+    padding-right: 220px;
+    padding-top: 15px;
+}

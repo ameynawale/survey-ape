@@ -1,0 +1,8 @@
+.form-container {
+    overflow-x: visible;
+    overflow-y: visible;
+    background-color: #fff;
+    padding: 30px;
+    min-height: 632px;
+    box-shadow: 0 4px 15px rgba(0,0,0,.2);
+}

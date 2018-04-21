@@ -1,0 +1,28 @@
+.header-bar {
+    background-color: #222222;
+    top: 0;
+    left: 0;
+    right: 0;
+    font-size: 14px;
+    height: 50px;
+    width: 100%;
+}
+
+.header-bar button {
+    background-color: cornflowerblue;
+    color: #FFF;
+    outline: transparent solid 1px;
+    width: 100px;
+    height: 50px;
+    border-radius: 0px;
+}
+
+.survey-button {
+    font-size: 18px;
+    float: left;
+}
+
+.share-button {
+    font-size: 16px;
+    float: right;
+}
