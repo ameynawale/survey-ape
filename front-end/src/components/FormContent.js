@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import CheckBox from "./CheckBox";
+import CheckBox from "./SingleSelect";
+
+import '../styles/FormContent.css';
 
 
 class FormContent extends Component {
@@ -26,15 +28,9 @@ class FormContent extends Component {
     render() {
         return (
             <form>
-                <CheckBox/>
-                <label>
-                    Number of guests:
-                    <input
-                        name="numberOfGuests"
-                        type="number"
-                        value={this.state.numberOfGuests}
-                        onChange={this.handleInputChange} />
-                </label>
+                <div>
+                    <CheckBox/>
+                </div>
             </form>
         );
     }

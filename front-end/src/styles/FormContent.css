@@ -1,3 +1,8 @@
 .form-content {
     opacity: 1;
 }
+
+.question-container {
+    background-color: #F4F4F4;
+    padding: 20px 20px 20px 20px;
+}
