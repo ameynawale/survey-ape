@@ -6,7 +6,9 @@ class SurveyContainer extends Component {
     render() {
         return (
             <div className="survey-container">
-                <FormContainer/>
+                <div className="form-design-container">
+                    <FormContainer/>
+                </div>
             </div>
         );
     }

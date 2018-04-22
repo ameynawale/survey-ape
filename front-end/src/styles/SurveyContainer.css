@@ -9,4 +9,6 @@
     padding-left: 220px;
     padding-right: 220px;
     padding-top: 15px;
+    height: auto;
+    overflow-x: scroll;
 }

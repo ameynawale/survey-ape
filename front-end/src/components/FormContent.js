@@ -44,7 +44,7 @@ class FormContent extends Component {
     render() {
         return (
             <form>
-                <div>
+                <div className="form-design-container">
                     <div className="form-inline">
                         <p>{this.state.questions}</p>
                     </div>
