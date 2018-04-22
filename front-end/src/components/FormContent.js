@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import CheckBox from "./SingleSelect";
+import SingleSelect from "./SingleSelect";
 
 import '../styles/FormContent.css';
 
@@ -9,7 +9,8 @@ class FormContent extends Component {
         super(props);
         this.state = {
             isGoing: true,
-            numberOfGuests: 2
+            numberOfGuests: 2,
+            questions: []
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -25,11 +26,30 @@ class FormContent extends Component {
         });
     }
 
+    addQuestion = (event) => {
+        event.preventDefault();
+        var questions = this.state.questions;
+        let index = questions.length;
+        questions.push(
+            <div className="form-inline">
+                <SingleSelect/>
+            </div>
+        );
+        questions.push(<br/>);
+        this.setState({
+            questions: questions
+        });
+    }
+
     render() {
         return (
             <form>
                 <div>
-                    <CheckBox/>
+                    <div className="form-inline">
+                        <p>{this.state.questions}</p>
+                    </div>
+                    <SingleSelect/>
+                    <button className="btn btn-link add-option" onClick={this.addQuestion}>Add Option</button>
                 </div>
             </form>
         );
