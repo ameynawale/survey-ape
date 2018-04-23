@@ -4,3 +4,7 @@
     width: 100px;
     border-radius: 0px;
 }
+
+.question-input {
+    width: 100% !important;
+}

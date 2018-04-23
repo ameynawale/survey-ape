@@ -16,6 +16,10 @@ class FormContent extends Component {
         this.handleInputChange = this.handleInputChange.bind(this);
     }
 
+    componentWillMount(){
+        this.state.questions.push(<SingleSelect/>);
+    }
+
     handleInputChange(event) {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -35,7 +39,7 @@ class FormContent extends Component {
                 <SingleSelect/>
             </div>
         );
-        questions.push(<br/>);
+        // questions.push(<br/>);
         this.setState({
             questions: questions
         });
@@ -48,7 +52,6 @@ class FormContent extends Component {
                     <div className="form-inline">
                         <p>{this.state.questions}</p>
                     </div>
-                    <SingleSelect/>
                     <button className="btn btn-link add-option" onClick={this.addQuestion}>Add Option</button>
                 </div>
             </form>
