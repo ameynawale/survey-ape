@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import '../styles/FormContent.css';
 import '../styles/Header.css';
@@ -11,10 +12,19 @@ class SingleSelect extends Component {
         this.state = {
             options: [],
             question: "",
-            optionsarray: []
+            optionsarray: [],
+            index: this.props.index
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
+    }
+
+    componentWillMount() {
+        console.log("index in child "+this.props.index);
+    }
+
+    static propTypes = {
+        handleSubmit: PropTypes.func.isRequired
     }
 
     handleInputChange(event) {
@@ -78,6 +88,9 @@ class SingleSelect extends Component {
         this.setState({
             options: options
         });
+
+        this.props.handleSubmit(this.state);
+
     }
 
     removeOption = (event) => {
@@ -140,7 +153,14 @@ class SingleSelect extends Component {
         return (
             <div className="question-container">
                 <div className="col-lg-12">
-                    <input type="text" className="form-control question-input" onChange={this.handleInputChange}/><br/>
+                    <input type="text" className="form-control question-input"
+                           onChange={(event) => {
+                               this.setState({
+                                   question: event.target.value
+                               });
+                               this.props.handleSubmit(this.state);
+                           }}
+                    /><br/>
                 </div>
                 <div className="form-inline">
                     <p>{this.state.options}</p>

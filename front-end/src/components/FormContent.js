@@ -10,14 +10,21 @@ class FormContent extends Component {
         this.state = {
             isGoing: true,
             numberOfGuests: 2,
-            questions: []
+            questions: [],
+            questionsarray: [],
+            index: 0
         };
+        // var index = 0;
 
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentWillMount(){
-        this.state.questions.push(<SingleSelect/>);
+        console.log("indside parent will mount");
+        this.in
+        this.state.questions.push(<SingleSelect index={this.state.index++} handleSubmit={this.handleSubmit}/>);
+        this.state.questionsarray.push({});
     }
 
     handleInputChange(event) {
@@ -30,15 +37,29 @@ class FormContent extends Component {
         });
     }
 
+    handleSubmit = (question) => {
+        console.log("questionslength "+ this.state.questions.length);
+        for(let i=0; i < this.state.questionsarray.length; i++)
+        {
+            console.log("index "+question.index);
+            if(question.index == i)
+            {
+                this.state.questionsarray[i] = question;
+                break;
+            }
+        }
+        this.state.questions.forEach(question => console.log(question.question + " " + question.index + " " + question.optionsarray));
+    }
+
     addQuestion = (event) => {
         event.preventDefault();
         var questions = this.state.questions;
-        let index = questions.length;
         questions.push(
             <div className="form-inline">
-                <SingleSelect/>
+                <SingleSelect index={this.state.index++} handleSubmit={this.handleSubmit}/>
             </div>
         );
+        this.state.questionsarray.push({});
         // questions.push(<br/>);
         this.setState({
             questions: questions
