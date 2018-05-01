@@ -5,11 +5,32 @@ import Samplesurveypage from './samplesurveypage';
 import HomeHeader from "./HomeHeader";
 import SignIn from "./SignIn";
 import SignUp from './SignUp';
+import Header from './Header';
+import * as API from '../api/API';
 
 class CustomRouter extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            surveyName: '',
+            surveyId: ''
+        };
+    }
+
+
+    handleAddSurvey = (surveydata) => {
+        API.addSurvey(surveydata)
+            .then((res) => {
+                if(res.status === 201)
+                {
+                    this.setState({
+                        surveyName: res.surveyName,
+                        surveyId: res.surveyId
+                    });
+                    this.props.history.push("/CreateSurvey");
+                }
+            })
     }
 
     render() {
@@ -26,6 +47,12 @@ class CustomRouter extends Component {
                     <div>
                         <HomeHeader/>
                         <SignUp/>
+                    </div>
+                )}/>
+                <Route exact path="/CreateSurvey" render={() => (
+                    <div>
+                        <Header handleAddSurvey={this.handleAddSurvey}/>
+                        <Samplesurveypage surveydata={this.state}/>
                     </div>
                 )}/>
             </div>

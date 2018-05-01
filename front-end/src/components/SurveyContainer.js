@@ -7,7 +7,7 @@ class SurveyContainer extends Component {
         return (
             <div className="survey-container">
                 <div className="form-design-container">
-                    <FormContainer/>
+                    <FormContainer surveydata={this.props.surveydata}/>
                 </div>
             </div>
         );

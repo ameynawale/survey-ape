@@ -7,8 +7,7 @@ class samplesurveypage extends Component {
     render() {
         return (
             <div>
-                <Header/>
-                <SurveyContainer/>
+                <SurveyContainer surveydata={this.props.surveydata}/>
             </div>
         );
     }

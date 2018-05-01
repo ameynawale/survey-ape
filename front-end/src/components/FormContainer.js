@@ -7,7 +7,7 @@ class FormContainer extends Component {
     render() {
         return (
             <div className="form-container">
-                <FormContent/>
+                <FormContent surveydata={this.props.surveydata}/>
             </div>
         );
     }

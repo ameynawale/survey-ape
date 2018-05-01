@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
-import SingleSelect from "./SingleSelect";
+import SingleSelect from "./Radio";
+import Checkbox from './Checkbox';
 
 import '../styles/FormContent.css';
+import { Button, ButtonGroup } from 'reactstrap';
+// import Checkbox from "./Checkbox";
 
 
 class FormContent extends Component {
@@ -12,7 +15,10 @@ class FormContent extends Component {
             numberOfGuests: 2,
             questions: [],
             questionsarray: [],
-            index: 0
+            index: 0,
+
+            surveyName      :   this.props.surveydata.surveyName,
+            surveyId        :   this.props.surveydata.surveyId
         };
         // var index = 0;
 
@@ -21,10 +27,8 @@ class FormContent extends Component {
     }
 
     componentWillMount(){
-        console.log("indside parent will mount");
-        this.in
-        this.state.questions.push(<SingleSelect index={this.state.index++} handleSubmit={this.handleSubmit}/>);
-        this.state.questionsarray.push({});
+        // console.log("indside parent will mount");
+        // this.in
     }
 
     handleInputChange(event) {
@@ -54,13 +58,25 @@ class FormContent extends Component {
     addQuestion = (event) => {
         event.preventDefault();
         var questions = this.state.questions;
+            questions.push(
+                <div className="form-inline">
+                    <SingleSelect index={this.state.index++} handleSubmit={this.handleSubmit}/>
+                </div>
+            );
+        this.state.questionsarray.push({});
+        this.setState({
+            questions: questions
+        });
+    }
+    addCheckbox = (event) => {
+        event.preventDefault();
+        var questions = this.state.questions;
         questions.push(
             <div className="form-inline">
-                <SingleSelect index={this.state.index++} handleSubmit={this.handleSubmit}/>
+                <Checkbox index={this.state.index++} handleSubmit={this.handleSubmit}/>
             </div>
         );
         this.state.questionsarray.push({});
-        // questions.push(<br/>);
         this.setState({
             questions: questions
         });
@@ -73,7 +89,15 @@ class FormContent extends Component {
                     <div className="form-inline">
                         <p>{this.state.questions}</p>
                     </div>
-                    <button className="btn btn-link add-option" onClick={this.addQuestion}>Add Option</button>
+                    {/*<button className="btn btn-link add-option" onClick={this.addQuestion}>Add Option</button>*/}
+                    <ButtonGroup>
+                        <Button onClick={this.addQuestion}>Radio</Button>
+                        <Button>Dropdown</Button>
+                        <Button onClick={this.addCheckbox}>Checkbox</Button>
+                        <Button>Text</Button>
+                        <Button>Rating</Button>
+                        <Button>Date</Button>
+                    </ButtonGroup>
                 </div>
             </form>
         );
