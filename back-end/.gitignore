@@ -1,0 +1,13 @@
+/.metadata/
+/.metadata/
+*.idea
+.DS_Store
+.recommenders
+.settings
+.classpath
+.project
+.factorypath
+target
+RemoteSystemsTempFiles
+Servers
+/back-end.iml
