@@ -6,7 +6,7 @@ import '../styles/Header.css';
 import '../styles/SingleSelect.css';
 
 
-class Checkbox extends Component {
+class Dropdown extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -51,8 +51,7 @@ class Checkbox extends Component {
             // console.log("index "+index)
             <div className="form-group">
                 <label>
-                    <input type="checkbox" disabled/>
-                    <input type="text" className="form-control ml-2"
+                    <input type="text" className="form-control ml-3"
                         // onBlurCapture={this.handleInputChange}
                         // value={option}
                            placeholder="Option"
@@ -130,6 +129,21 @@ class Checkbox extends Component {
         });
         console.log(this.state.optionsarray);
 
+        /*console.log(this.state.options);
+        var options = this.state.options;
+        var index = event.currentTarget.dataset.id/2;
+        console.log("index "+index);
+        console.log("name "+event.target.name);
+        options.splice(index, 2);
+        // this.state.options.splice(index, 2);
+        var optionsarray = this.state.optionsarray;
+        optionsarray.splice(index, 1);
+        // var index = options.indexOf(event.target);
+        // delete options[index];
+        this.setState({
+            options: options,
+            optionsarray: optionsarray
+        });*/
     }
 
 
@@ -156,4 +170,4 @@ class Checkbox extends Component {
     }
 }
 
-export default Checkbox;
+export default Dropdown;

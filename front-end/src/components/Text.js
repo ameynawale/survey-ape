@@ -6,7 +6,7 @@ import '../styles/Header.css';
 import '../styles/SingleSelect.css';
 
 
-class Checkbox extends Component {
+class Text extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -42,7 +42,7 @@ class Checkbox extends Component {
         console.log(this.state.optionsarray);
     }
 
-    addOption = (event) => {
+    /*addOption = (event) => {
         event.preventDefault();
         console.log(this.state.optionsarray);
         this.state.optionsarray.push("");
@@ -72,7 +72,7 @@ class Checkbox extends Component {
                 <br/><br/>
             </div>
         );
-
+*/
         /*var options = this.state.options;
         let index = options.length;
         options.push(
@@ -85,7 +85,7 @@ class Checkbox extends Component {
             </div>
         );*/
         // options.push(<br/>);
-        this.setState({
+  /*      this.setState({
             options: options
         });
 
@@ -132,7 +132,7 @@ class Checkbox extends Component {
 
     }
 
-
+*/
 
     render() {
         return (
@@ -147,13 +147,9 @@ class Checkbox extends Component {
                            }}
                     /><br/>
                 </div>
-                <div className="form-inline">
-                    <p>{this.state.options}</p>
-                </div>
-                <button className="btn btn-link add-option" onClick={this.addOption}>Add Option</button>
             </div>
         );
     }
 }
 
-export default Checkbox;
+export default Text;

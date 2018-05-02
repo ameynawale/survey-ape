@@ -53,6 +53,23 @@ export const addSurvey = (payload) =>
             return error;
         });
 
+export const getSurveyListing = () =>
+    fetch(`${api}/surveys/getsurveylisting`, {
+        method: 'GET',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        },
+        // mode: 'cors',
+        credentials:'include',
+        // body: JSON.stringify(payload)
+    }).then(res => res.json())
+        .catch(error => {
+            console.log("This is error");
+            return error;
+        });
+
+
 /*
 export const getTasks = () =>
     fetch(`${api}/tasks/addtask`, {

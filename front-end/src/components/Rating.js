@@ -6,7 +6,7 @@ import '../styles/Header.css';
 import '../styles/SingleSelect.css';
 
 
-class Checkbox extends Component {
+class Rating extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -42,7 +42,7 @@ class Checkbox extends Component {
         console.log(this.state.optionsarray);
     }
 
-    addOption = (event) => {
+    /*addOption = (event) => {
         event.preventDefault();
         console.log(this.state.optionsarray);
         this.state.optionsarray.push("");
@@ -73,7 +73,7 @@ class Checkbox extends Component {
             </div>
         );
 
-        /*var options = this.state.options;
+        /!*var options = this.state.options;
         let index = options.length;
         options.push(
             <div className="form-group">
@@ -83,7 +83,7 @@ class Checkbox extends Component {
                     <span className="fa fa-trash ml-2" name={index} onClick={this.removeOption} data-id={index}></span>
                 </label>
             </div>
-        );*/
+        );*!/
         // options.push(<br/>);
         this.setState({
             options: options
@@ -132,7 +132,7 @@ class Checkbox extends Component {
 
     }
 
-
+*/
 
     render() {
         return (
@@ -145,15 +145,24 @@ class Checkbox extends Component {
                                });
                                this.props.handleSubmit(this.state);
                            }}
-                    /><br/>
+                    /><br/><br/>
                 </div>
                 <div className="form-inline">
-                    <p>{this.state.options}</p>
+                    <label>Scale:</label>
+                    <select className="form-control" id="sel1"
+                            onChange={(event) => {
+                                this.setState({
+                                    scale: event.target.value
+                                })
+                            }}>
+                        <option>5</option>
+                        <option>10</option>
+                    </select><br/>
                 </div>
-                <button className="btn btn-link add-option" onClick={this.addOption}>Add Option</button>
+                {/*<button className="btn btn-link add-option" onClick={this.addOption}>Add Option</button>*/}
             </div>
         );
     }
 }
 
-export default Checkbox;
+export default Rating;

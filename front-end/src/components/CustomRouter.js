@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { Route, withRouter } from 'react-router-dom';
 import Reacthomepage from './Reacthomepage';
 import Samplesurveypage from './samplesurveypage';
+import SurveyListing from './SurveyListing';
 import HomeHeader from "./HomeHeader";
 import SignIn from "./SignIn";
 import SignUp from './SignUp';
@@ -14,7 +15,9 @@ class CustomRouter extends Component {
         super(props);
         this.state = {
             surveyName: '',
-            surveyId: ''
+            surveyId: '',
+            createdbyme: [],
+            sharedwithme: []
         };
     }
 
@@ -29,6 +32,20 @@ class CustomRouter extends Component {
                         surveyId: res.surveyId
                     });
                     this.props.history.push("/CreateSurvey");
+                }
+            })
+    }
+
+    handleGetSurveyListing = () => {
+        API.getSurveyListing()
+            .then((res) => {
+                if(res.status === 200)
+                {
+                    this.setState({
+                        createdbyme: res.createdbyme,
+                        sharedwithme: res.sharedwithme
+                    });
+                    this.props.history.push("/surveys");
                 }
             })
     }
@@ -51,8 +68,14 @@ class CustomRouter extends Component {
                 )}/>
                 <Route exact path="/CreateSurvey" render={() => (
                     <div>
-                        <Header handleAddSurvey={this.handleAddSurvey}/>
+                        <Header handleAddSurvey={this.handleAddSurvey} handleGetSurveyListing={this.handleGetSurveyListing}/>
                         <Samplesurveypage surveydata={this.state}/>
+                    </div>
+                )}/>
+                <Route exact path="/surveys" render={() => (
+                    <div>
+                        <Header handleAddSurvey={this.handleAddSurvey} handleGetSurveyListing={this.handleGetSurveyListing}/>
+                        <SurveyListing surveydata={this.state}/>
                     </div>
                 )}/>
             </div>

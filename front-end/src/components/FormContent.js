@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import SingleSelect from "./Radio";
 import Checkbox from './Checkbox';
-
+import Dropdown from "./Dropdown";
+import Text from "./Text";
+import Rating from "./Rating";
+import Date from "./Date";
 import '../styles/FormContent.css';
 import { Button, ButtonGroup } from 'reactstrap';
-// import Checkbox from "./Checkbox";
 
 
 class FormContent extends Component {
@@ -81,6 +83,61 @@ class FormContent extends Component {
             questions: questions
         });
     }
+    addDropdown = (event) => {
+        event.preventDefault();
+        var questions = this.state.questions;
+        questions.push(
+            <div className="form-inline">
+                <Dropdown index={this.state.index++} handleSubmit={this.handleSubmit}/>
+            </div>
+        );
+        this.state.questionsarray.push({});
+        this.setState({
+            questions: questions
+        });
+    }
+    addText = (event) => {
+        event.preventDefault();
+        var questions = this.state.questions;
+        questions.push(
+            <div className="form-inline">
+                <Text index={this.state.index++} handleSubmit={this.handleSubmit}/>
+            </div>
+        );
+        this.state.questionsarray.push({});
+        this.setState({
+            questions: questions
+        });
+    }
+    addRating = (event) => {
+        event.preventDefault();
+        var questions = this.state.questions;
+        questions.push(
+            <div className="form-inline">
+                <Rating index={this.state.index++} handleSubmit={this.handleSubmit}/>
+            </div>
+        );
+        this.state.questionsarray.push({});
+        this.setState({
+            questions: questions
+        });
+    }
+    addDate = (event) => {
+        event.preventDefault();
+        var questions = this.state.questions;
+        questions.push(
+            <div className="form-inline">
+                <Date index={this.state.index++} handleSubmit={this.handleSubmit}/>
+            </div>
+        );
+        this.state.questionsarray.push({});
+        this.setState({
+            questions: questions
+        });
+    }
+
+
+
 
     render() {
         return (
@@ -92,11 +149,11 @@ class FormContent extends Component {
                     {/*<button className="btn btn-link add-option" onClick={this.addQuestion}>Add Option</button>*/}
                     <ButtonGroup>
                         <Button onClick={this.addQuestion}>Radio</Button>
-                        <Button>Dropdown</Button>
+                        <Button onClick={this.addDropdown}>Dropdown</Button>
                         <Button onClick={this.addCheckbox}>Checkbox</Button>
-                        <Button>Text</Button>
-                        <Button>Rating</Button>
-                        <Button>Date</Button>
+                        <Button onClick={this.addText}>Text</Button>
+                        <Button onClick={this.addRating}>Rating</Button>
+                        <Button onClick={this.addDate}>Date</Button>
                     </ButtonGroup>
                 </div>
             </form>

@@ -28,7 +28,9 @@ class Header extends Component {
     render() {
         return (
             <div className="header-bar">
-                <button className="btn btn-primary survey-button">Surveys</button>
+                <button className="btn btn-primary survey-button"
+                        onClick={this.props.handleGetSurveyListing}
+                >Surveys</button>
                 <button className="btn btn-primary survey-button"
                         onClick={this.openCreateSurveyModal}
                 >Create</button>
@@ -48,6 +50,25 @@ class Header extends Component {
                                            surveyName : event.target.value
                                        });
                                    }}/><br/>
+                            <label>Survey type:</label>
+                            <select className="form-control" id="sel1"
+                                    onChange={(event) => {
+                                        this.setState({
+                                            surveyType: event.target.value
+                                        })
+                                    }}>
+                                <option>General Survey</option>
+                                <option>Closed invitation-only survey</option>
+                                <option>Open unique survey</option>
+                            </select><br/>
+                            <label>Expires on:</label>
+                            <input type="date" className="form-control"
+                                   onChange={(event) => {
+                                       this.setState({
+                                           expires: event.target.value
+                                       })
+                                   }}>
+                            </input><br/>
                             <button type="button" id="createSurvey" className="button-register"
                                     onClick={() => this.props.handleSignIn(this.state.user)}
                             >Create Survey</button>
