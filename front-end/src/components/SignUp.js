@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Route, withRouter} from 'react-router-dom';
 import * as validation from '../validation/InputValidations';
 import '../styles/SurveyContainer.css';
-
+import * as API from '../api/API';
 class SignUp extends Component {
     constructor(props){
         super(props);
@@ -18,12 +18,12 @@ class SignUp extends Component {
         var valid = validation.signup(this.state);
         if(valid === ''){
             let payload ={
-                firstName: this.state.firstName,
-                lastName: this.state.lastName,
+                firstname: this.state.firstname,
+                lastname: this.state.lastname,
                 email: this.state.email,
                 password: this.state.password,
             }
-            // this.UserSignUpAPICall(payload);
+            this.UserSignUpAPICall(payload);
         }else{
             this.setState({
                 ...this.state,
@@ -31,6 +31,26 @@ class SignUp extends Component {
             });
             event.preventDefault();
         }
+    }
+    UserSignUpAPICall = (payload) => {
+        API.doSignUp(payload)
+            .then((res) => {
+                if (res.status === 200) {
+                    alert("successful signup")
+                } else if (res.response.status === 400) {
+                    alert("user already exists")
+                    this.setState({
+                        ...this.state,
+                        messageDivSignUp: "User already exists"
+                    });
+                } else if (res.response.status === 500) {
+                    alert("internal server error")
+                    this.setState({
+                        ...this.state,
+                        messageDivSignUp: "Internal server error"
+                    });
+                }
+            });
     }
     render() {
         let messageDivSignUp =null;
@@ -58,9 +78,9 @@ class SignUp extends Component {
                                 <label className="col-3 col-form-label">First Name</label>
                                 <div className=" col-sm-8">
                                     <input type="text"  className="form-control"  placeholder="John"
-                                           value={this.state.firstName}
+                                           value={this.state.firstname}
                                            onChange={(event) => {
-                                               this.setState({...this.state,firstName: event.target.value});
+                                               this.setState({...this.state,firstname: event.target.value});
                                            }}required/>
                                 </div>
                             </div>
@@ -68,9 +88,9 @@ class SignUp extends Component {
                                 <label className="col-3 col-form-label">Last Name</label>
                                 <div className=" col-sm-8">
                                     <input type="text"  className="form-control"  placeholder="Smith"
-                                           value={this.state.lastName}
+                                           value={this.state.lastname}
                                            onChange={(event) => {
-                                               this.setState({...this.state,lastName: event.target.value});
+                                               this.setState({...this.state,lastname: event.target.value});
                                            }}required/>
                                 </div>
                             </div>

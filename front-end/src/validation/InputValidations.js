@@ -4,15 +4,15 @@ export const signup = (data) => {
     const emailPattern = /^[\w.]*@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
     const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z@]{8,}$/;
 
-    if(data.firstName ==='' || data.lastName ==='' || data.email ==='' || data.password ===''){
+    if(data.firstname ==='' || data.lastname ==='' || data.email ==='' || data.password ===''){
         msg = "All fields are mandatory. Please fill all details";
         return msg;
     }
-    if (!(namePattern.test(data.firstName))) {
+    if (!(namePattern.test(data.firstname))) {
         msg = "Enter correct First Name";
         return msg;
     }
-    if(!(namePattern.test(data.lastName))){
+    if(!(namePattern.test(data.lastname))){
         msg = "Enter correct Last Name";
         return msg;
     }
@@ -20,8 +20,8 @@ export const signup = (data) => {
         msg = "Enter correct Email Address";
         return msg;
     }
-    if (data.password.length<8 || data.password.length>14) {
-        msg = "Password must be 8 to 15 character long";
+    if (data.password.length<6 || data.password.length>14) {
+        msg = "Password must be 6 to 15 character long";
         return msg;
     }
     return msg;

@@ -10,5 +10,7 @@ import surveyape.entity.UserEntity;
  *
  */
 public interface UserRepository extends CrudRepository<UserEntity, Long> {
+    UserEntity findByEmail(String email);
 
+    UserEntity findByEmailAndPassword (String email, String password);
 }

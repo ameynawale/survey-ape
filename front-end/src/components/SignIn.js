@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import * as validation from '../validation/InputValidations';
 import '../styles/SurveyContainer.css';
+import * as API from '../api/API';
 
 class SignIn extends Component {
     constructor(props){
@@ -19,7 +20,7 @@ class SignIn extends Component {
                 email: this.state.email,
                 password: this.state.password,
             }
-            // this.UserSignInAPICall(payload);
+            this.UserSignInAPICall(payload);
 
         }else{
             this.setState({
@@ -29,7 +30,26 @@ class SignIn extends Component {
             event.preventDefault();
         }
     }
-    
+
+    UserSignInAPICall = (payload) => {
+        API.doLogin(payload)
+            .then((res) => {
+                if (res.status === 200) {
+                    alert("successful login")
+                } else if (res.response.status === 404){
+                        this.setState({
+                            ...this.state,
+                            messageDivLogin: "Invalid email or password"
+                        });
+                } else if(res.response.status === 500){
+                        this.setState({
+                            ...this.state,
+                            messageDivLogin: "Internal Server error, try again"
+                        });
+                }
+            });
+    }
+
     cancelLogin =()=>{
         this.setState({
             ...this.state,
