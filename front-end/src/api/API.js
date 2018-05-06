@@ -56,21 +56,17 @@ export const doSignUp = (payload) =>{
     //         return error;
     //     });
 
-export const addSurvey = (payload) =>
-    fetch(`${api}/surveys/createsurvey`, {
-        method: 'POST',
-        headers: {
-            ...headers,
-            'Content-Type': 'application/json'
-        },
-        // mode: 'cors',
-        credentials:'include',
-        body: JSON.stringify(payload)
-    }).then(res => res.json())
-        .catch(error => {
-            console.log("This is error");
+export const addSurvey = (payload) =>{
+    return axios.post('http://localhost:8080/survey/create', payload)
+        .then(function (response) {
+            console.log(response);
+            return response;
+        })
+        .catch(function (error) {
+            console.log(error);
             return error;
         });
+};
 
 export const getSurveyListing = () =>
     fetch(`${api}/surveys/getsurveylisting`, {

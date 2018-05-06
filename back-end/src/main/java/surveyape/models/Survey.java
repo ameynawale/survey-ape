@@ -10,6 +10,18 @@ public class Survey {
     private int ispublished;
     private List<Invitees> invitees;
 
+    public Survey(){}
+
+    public Survey(int surveyid, String surveyname, int ownerid, String surveytype, String validity, int ispublished, List<Invitees> invitees) {
+        this.surveyid = surveyid;
+        this.surveyname = surveyname;
+        this.ownerid = ownerid;
+        this.surveytype = surveytype;
+        this.validity = validity;
+        this.ispublished = ispublished;
+        this.invitees = invitees;
+    }
+
     public int getSurveyid() {
         return surveyid;
     }

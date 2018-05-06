@@ -2,6 +2,7 @@ package surveyape.servicesImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import surveyape.converters.Convertors;
 import surveyape.entity.InviteesEntity;
 import surveyape.entity.SurveyEntity;
 import surveyape.models.Invitees;
@@ -20,7 +21,7 @@ public class SurveyServiceImpl implements SurveyService{
     @Autowired
     private InviteeRepository inviteeRespository;
 
-    public Survey createSurvey(Survey survey){
+    /*public Survey createSurvey(Survey survey){
         List<InviteesEntity> inviteesEntity = new ArrayList<>();
 //        List<Invitees> invitees = new ArrayList<>();
 
@@ -47,6 +48,12 @@ public class SurveyServiceImpl implements SurveyService{
         return getSurvey(newSurvey.getSurveyid());
 
 //        return s;
+    }*/
+
+    public Survey createSurvey(Survey survey){
+        SurveyEntity surveyEntity = new SurveyEntity(survey.getSurveyname(), 7, survey.getSurveyname(), survey.getValidity(),
+        0, null);
+        return Convertors.mapSurveyEntityToSurvey(surveyRepository.save(surveyEntity));
     }
 
     public Survey getSurvey(int surveyId){

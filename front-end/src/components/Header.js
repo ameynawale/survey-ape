@@ -47,14 +47,14 @@ class Header extends Component {
                             <input type="text" className="form-control" name="survey" placeholder = "Enter Survey Name"
                                    onChange={(event) => {
                                        this.setState({
-                                           surveyName : event.target.value
+                                           surveyname : event.target.value
                                        });
                                    }}/><br/>
                             <label>Survey type:</label>
                             <select className="form-control" id="sel1"
                                     onChange={(event) => {
                                         this.setState({
-                                            surveyType: event.target.value
+                                            surveytype: event.target.value
                                         })
                                     }}>
                                 <option>General Survey</option>
@@ -65,12 +65,12 @@ class Header extends Component {
                             <input type="date" className="form-control"
                                    onChange={(event) => {
                                        this.setState({
-                                           expires: event.target.value
+                                           validity: event.target.value
                                        })
                                    }}>
                             </input><br/>
                             <button type="button" id="createSurvey" className="button-register"
-                                    onClick={() => this.props.handleSignIn(this.state.user)}
+                                    onClick={() => this.props.handleAddSurvey(this.state)}
                             >Create Survey</button>
                         </form>
                     </div>
