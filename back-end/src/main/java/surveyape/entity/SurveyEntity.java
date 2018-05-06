@@ -2,6 +2,7 @@ package surveyape.entity;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "surveys")
@@ -19,12 +20,26 @@ public class SurveyEntity {
     @Column(columnDefinition="tinyint(1) default 0")
     private int ispublished;
 
+//    @OneToMany(fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "surveyid")
+    private List<InviteesEntity> invitees;
+
     public SurveyEntity(String surveyname, int ownerid, String surveytype, String validity, int ispublished) {
         this.surveyname = surveyname;
         this.ownerid = ownerid;
         this.surveytype = surveytype;
         this.validity = validity;
         this.ispublished = ispublished;
+    }
+
+    public SurveyEntity(String surveyname, int ownerid, String surveytype, String validity,
+                        int ispublished, List<InviteesEntity> invitees) {
+        this.surveyname = surveyname;
+        this.ownerid = ownerid;
+        this.surveytype = surveytype;
+        this.validity = validity;
+        this.ispublished = ispublished;
+        this.invitees = invitees;
     }
 
     public int getSurveyid() {
@@ -73,5 +88,13 @@ public class SurveyEntity {
 
     public void setIspublished(int ispublished) {
         this.ispublished = ispublished;
+    }
+
+    public List<InviteesEntity> getInvitees() {
+        return invitees;
+    }
+
+    public void setInvitees(List<InviteesEntity> invitees) {
+        this.invitees = invitees;
     }
 }
