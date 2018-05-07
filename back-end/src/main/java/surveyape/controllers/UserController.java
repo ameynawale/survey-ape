@@ -15,6 +15,10 @@ import surveyape.respositories.UserRepository;
 import surveyape.services.MailService;
 import surveyape.services.UserService;
 
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * UserController a RestController class which manages the User's details.
  * 
@@ -118,14 +122,15 @@ public class UserController {
         }
     }
 
-    @CheckSession
-    @RequestMapping(path="/fetchuser", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> fetchUser() {
+    @CheckSession @RequestMapping(path="/logout", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> logoutUser(HttpSession httpSession) {
 
-            String email = Convertors.fetchSessionEmail();
+        Map<String, String> errorResponse = new HashMap<>();
 
-            UserEntity newUser = userRepository.findByEmail(email);
-                return new ResponseEntity<>(newUser, HttpStatus.OK);
+        httpSession.invalidate();
+
+        errorResponse.put("message", "Logout successful.");
+        return new ResponseEntity<>(errorResponse, HttpStatus.OK);
     }
 
 }
