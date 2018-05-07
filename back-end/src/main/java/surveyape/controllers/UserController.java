@@ -7,7 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import surveyape.aspects.CheckSession;
+import surveyape.converters.Convertors;
+import surveyape.entity.UserEntity;
 import surveyape.models.User;
+import surveyape.respositories.UserRepository;
 import surveyape.services.MailService;
 import surveyape.services.UserService;
 
@@ -21,7 +25,8 @@ import surveyape.services.UserService;
 @RequestMapping("/users")
 @CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
-
+    @Autowired
+    private UserRepository userRepository;
     @Autowired
     private MailService mailService;
     @Autowired
@@ -112,4 +117,15 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @CheckSession
+    @RequestMapping(path="/fetchuser", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> fetchUser() {
+
+            String email = Convertors.fetchSessionEmail();
+
+            UserEntity newUser = userRepository.findByEmail(email);
+                return new ResponseEntity<>(newUser, HttpStatus.OK);
+    }
+
 }

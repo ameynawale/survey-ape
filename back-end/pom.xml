@@ -10,7 +10,7 @@
 	<!-- Declares that our project is child of this parent project -->
 	<!-- Maven Concept: Define configuration in parent project and let child 
 		project inherit it -->
-	<!-- airline-reservation-system is child of the spring-boot projectj -->
+	<!-- survey-ape is child of the spring-boot projectj -->
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
@@ -76,6 +76,24 @@
 			<scope>test</scope>
 			<version>1.4.194</version>
 		</dependency>
+        <!-- Helps with hot reload -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+        </dependency>
+        <!-- Spring AOP -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>LATEST</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>LATEST</version>
+            <scope>compile</scope>
+        </dependency>
 	</dependencies>
 
 

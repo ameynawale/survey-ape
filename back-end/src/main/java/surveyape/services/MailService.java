@@ -1,5 +1,6 @@
 package surveyape.services;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -19,6 +20,12 @@ import java.util.Random;
 @Service
 public class MailService{
 
+
+    @Value("${survey.email.subject}")
+    String emailSubject;
+
+    @Value("${survey.email.from}")
+    String emailFrom;
 
     public JavaMailSender emailSender;
 
@@ -51,8 +58,8 @@ public class MailService{
         //  System.out.println();
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(user.getEmail());
-        message.setSubject("Welcome to the Survey Ape : Sign up");
-        message.setFrom("thirthamhanisha@gmail.com");
+        message.setSubject(emailSubject);
+        message.setFrom(emailFrom);
         message.setText("Hi " + user.getFirstname()+"," + " Welcome to the Survey Ape, here is your registration code: " +user.getCode());
        // System.out.println("Hi " + user.getFirstname()+"," + " Welcome to the Survey Ape, here is your registration code: " +user.getCode());
         emailSender.send(message);

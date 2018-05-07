@@ -1,5 +1,7 @@
 package surveyape.converters;
 
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import surveyape.entity.SurveyEntity;
 import surveyape.entity.UserEntity;
 import surveyape.models.Invitees;
@@ -30,5 +32,9 @@ public class Convertors {
                 null);
 
         return survey;
+    }
+
+    public static String fetchSessionEmail() {
+        return (String)((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession().getAttribute("email");
     }
 }
