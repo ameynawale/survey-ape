@@ -12,7 +12,9 @@ import surveyape.models.User;
 public interface UserService {
     User addUser(User user);
 
-    Boolean getUser(String email);
+    User getUser(String email);
 
     User login(User user);
+
+    void activateUser(User user);
 }

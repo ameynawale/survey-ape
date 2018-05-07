@@ -40,7 +40,7 @@ public class UserController {
         if(registeredUser != null){
             return new ResponseEntity<>(registeredUser, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("not found",HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(user,HttpStatus.NOT_FOUND);
         }
 //        User registeredUser  = userService.login(user);
 //        if(registeredUser != null){
@@ -62,11 +62,11 @@ public class UserController {
         System.out.println(user.getEmail());
         System.out.println(user.getFirstname());
       //  System.out.println(mailService.getCode());
-        System.out.println(user.getEmail());
+       // System.out.println(user.getEmail());
         System.out.println("-----------");
-        boolean checkUser = userService.getUser(user.getEmail());
+        User checkUser = userService.getUser(user.getEmail());
         System.out.println(checkUser);
-        if(!checkUser){
+        if(checkUser == null){
             System.out.println("check use is false");
             User newUser = userService.addUser(user);
             if(newUser != null){
@@ -92,30 +92,40 @@ public class UserController {
         System.out.println("-----------");
         //System.out.println(code);
         System.out.println(user.getEmail());
-        System.out.println(user.getFirstname());
-        //  System.out.println(mailService.getCode());
-        System.out.println(user.getEmail());
+        System.out.println(user.getCode());
+
         System.out.println("-----------");
-        boolean checkUser = userService.getUser(user.getCode());
-        System.out.println(checkUser);
-        if(!checkUser){
-            System.out.println("check use is false");
-           /* try{
-                System.out.println("mail service before check point");
-                mailService.sendSimpleMessage(user);
-                System.out.println("mail service check point");
-            }catch(MailException e){
-                System.out.println("error: " +e.getMessage());
-            }*/
-            User newUser = userService.addUser(user);
-            if(newUser != null){
-                return new ResponseEntity<>(newUser, HttpStatus.OK);
-            } else{
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        User checkUser = userService.getUser(user.getEmail());
+        System.out.println(checkUser.getEmail());
+        System.out.println(checkUser.getCode());
+        if(checkUser.getEmail() != null) {
+        System.out.println("before checking");
+            if ((checkUser.getCode()).equalsIgnoreCase(user.getCode())) {
+                System.out.println("after checking");
+                userService.activateUser(user);
+                System.out.println("after activating");
+                return new ResponseEntity<>(checkUser, HttpStatus.OK);
             }
-        } else{
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            else{
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         }
+        else{
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+
+
+//        if(!checkUser){
+//            System.out.println("check use is false");
+//               if(userService.getUser(user.getEmail()) == null){
+//                return new ResponseEntity<>(checkUser, HttpStatus.OK);
+//            } else{
+//                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//            }
+//        } else{
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
     }
 
     @CheckSession

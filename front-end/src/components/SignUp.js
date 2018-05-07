@@ -14,6 +14,7 @@ class SignUp extends Component {
             lastName: '',
             messageDivSignUp : ''
         }
+
     }
     handleUserSignUp = (event) => {
         var valid = validation.signup(this.state);
@@ -24,7 +25,7 @@ class SignUp extends Component {
                 email: this.state.email,
                 password: this.state.password,
             }
-            this.UserSignUpAPICall(payload);
+            this.props.SignUp(payload);
         }else{
             this.setState({
                 ...this.state,
@@ -33,7 +34,7 @@ class SignUp extends Component {
             event.preventDefault();
         }
     }
-    UserSignUpAPICall = (payload) => {
+  /*  UserSignUpAPICall = (payload) => {
         API.doSignUp(payload)
             .then((res) => {
                 if (res.status === 200) {
@@ -55,7 +56,7 @@ class SignUp extends Component {
                     });
                 }
             });
-    }
+    }*/
     render() {
         let messageDivSignUp =null;
         if(this.state.messageDivSignUp !== ''){

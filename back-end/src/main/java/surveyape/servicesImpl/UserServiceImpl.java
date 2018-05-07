@@ -36,12 +36,12 @@ public class UserServiceImpl implements UserService {
         return Convertors.mapUserEntityToUser(userEntity);
     }
 
-    public Boolean getUser(String email){
+    public User getUser(String email){
         UserEntity user = userRepository.findByEmail(email);
         if(user!=null){
-            return true;
+            return Convertors.mapUserEntityToUser(user);
         } else{
-            return false;
+            return null;
         }
     }
 
@@ -51,6 +51,14 @@ public class UserServiceImpl implements UserService {
             return Convertors.mapUserEntityToUser(userEntity);
         } else{
             return null;
+        }
+    }
+
+    public void activateUser(User user) {
+        UserEntity userEntity = userRepository.findByEmail(user.getEmail());
+        if(userEntity!=null){
+            userEntity.setIsactivated(1);
+            userRepository.save(userEntity);
         }
     }
 }

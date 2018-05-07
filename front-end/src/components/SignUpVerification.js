@@ -9,14 +9,16 @@ class SignUpVerification extends Component {
         super(props);
         this.state = {
             verificationCode: '',
-            messageDivSignUpVerification : ''
+            messageDivSignUpVerification : '',
+            user: this.props.user
         }
     }
     handleSignUpVerification = (event) => {
         var valid = validation.signUpVerification(this.state);
         if(valid === ''){
             let payload ={
-                verificationCode: this.state.verificationCode
+                code: this.state.verificationCode,
+                email: this.state.user.email
             }
             this.UserSignUpVerificationAPICall(payload);
         }else{

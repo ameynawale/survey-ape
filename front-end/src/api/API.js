@@ -58,7 +58,7 @@ export const doSignUp = (payload) =>{
 
 
 export const doSignUpVerification = (payload) =>{
-    return axios.post('http://localhost:8080/users/signupVerification', payload)
+    return axios.post('http://localhost:8080/users/signUpVerification', payload)
         .then(function (response) {
             console.log(response);
             return response

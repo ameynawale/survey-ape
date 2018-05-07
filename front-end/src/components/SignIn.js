@@ -9,8 +9,9 @@ class SignIn extends Component {
         this.state = {
             email: '',
             password: '',
-            messageDivLogin : ''
+            messageDivLogin : this.props.messageDivLogin
         }
+
     }
 
     handleUserSignIn = (event) => {
@@ -20,7 +21,10 @@ class SignIn extends Component {
                 email: this.state.email,
                 password: this.state.password,
             }
-            this.UserSignInAPICall(payload);
+            this.props.SignIn(payload);
+            this.setState({
+                messageDivLogin: this.props.messageDivLogin
+            })
 
         }else{
             this.setState({
@@ -31,25 +35,7 @@ class SignIn extends Component {
         }
     }
 
-    UserSignInAPICall = (payload) => {
-        API.doLogin(payload)
-            .then((res) => {
-                if (res.status === 200) {
-                    // alert("successful login");
-                    this.props.history.push('/surveys');
-                } else if (res.response.status === 404){
-                        this.setState({
-                            ...this.state,
-                            messageDivLogin: "Invalid email or password"
-                        });
-                } else if(res.response.status === 500){
-                        this.setState({
-                            ...this.state,
-                            messageDivLogin: "Internal Server error, try again"
-                        });
-                }
-            });
-    }
+
 
     cancelLogin =()=>{
         this.setState({
