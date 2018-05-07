@@ -13,7 +13,7 @@ public class Convertors {
         response.setEmail(userEntity.getEmail());
         response.setPassword(userEntity.getPassword());
         response.setIsactivated(userEntity.getIsactivated());
-
+        response.setCode(userEntity.getCode());
         return response;
     }
 }

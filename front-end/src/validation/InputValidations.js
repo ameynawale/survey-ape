@@ -41,3 +41,18 @@ export const login = (data) => {
     }
     return msg;
 };
+
+export const signUpVerification = (data) => {
+    let msg = "";
+    const codePattern = /^[a-zA-Z0-9\s]+$/;
+
+    if( data.code ==='' ){
+        msg = "Enter the verification code";
+        return msg;
+    }
+    if (!(codePattern.test(data.code))) {
+        msg = "Enter correct code";
+        return msg;
+    }
+    return msg;
+};

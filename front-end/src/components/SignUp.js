@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Route, withRouter} from 'react-router-dom';
 import * as validation from '../validation/InputValidations';
 import '../styles/SurveyContainer.css';
+import  './SignUpVerification';
 import * as API from '../api/API';
 class SignUp extends Component {
     constructor(props){
@@ -37,6 +38,7 @@ class SignUp extends Component {
             .then((res) => {
                 if (res.status === 200) {
                     alert("successful signup")
+                    this.props.history.push('/signUpVerification');
                 } else if (res.response.status === 400) {
                     alert("user already exists")
                     this.setState({

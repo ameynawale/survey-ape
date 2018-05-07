@@ -15,7 +15,7 @@ export const doLogin = (payload) =>{
             console.log(error);
             return error
         });
-}
+};
     // fetch(`${url}/users/signin`, {
     //     method: 'POST',
     //     headers: {
@@ -55,6 +55,18 @@ export const doSignUp = (payload) =>{
     //         console.log("This is error");
     //         return error;
     //     });
+
+export const doSignUpVerification = (payload) =>{
+    return axios.post('http://localhost:8080/users/signupVerification', payload)
+        .then(function (response) {
+            console.log(response);
+            return response
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error
+        });
+};
 
 export const addSurvey = (payload) =>
     fetch(`${api}/surveys/createsurvey`, {

@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import surveyape.models.User;
+import surveyape.services.MailService;
 import surveyape.services.UserService;
 
 /**
@@ -21,7 +23,10 @@ import surveyape.services.UserService;
 public class UserController {
 
     @Autowired
+    private MailService mailService;
+    @Autowired
     private UserService userService;
+
 
     @RequestMapping(path="/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> login(@RequestBody User user) {
@@ -51,10 +56,52 @@ public class UserController {
         System.out.println(user);
         System.out.println(user.getEmail());
         System.out.println(user.getFirstname());
-        System.out.println(user.getCode());
+      //  System.out.println(mailService.getCode());
+        System.out.println(user.getEmail());
         System.out.println("-----------");
         boolean checkUser = userService.getUser(user.getEmail());
+        System.out.println(checkUser);
         if(!checkUser){
+            System.out.println("check use is false");
+            User newUser = userService.addUser(user);
+            if(newUser != null){
+                // check if the user is added to the database  and them send a mail.
+                try{
+                    System.out.println("mail service before check point" + newUser.getCode());
+                    mailService.sendSimpleMessage(newUser);
+                    System.out.println("mail service check point");
+                }catch(MailException e){
+                    System.out.println("error: " +e.getMessage());
+                }
+                return new ResponseEntity<>(newUser, HttpStatus.OK);
+            } else{
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+        } else{
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+    @RequestMapping(path="/signUpVerification", method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> signUpVerification(@RequestBody User user) {
+        System.out.println("-----------");
+        //System.out.println(code);
+        System.out.println(user.getEmail());
+        System.out.println(user.getFirstname());
+        //  System.out.println(mailService.getCode());
+        System.out.println(user.getEmail());
+        System.out.println("-----------");
+        boolean checkUser = userService.getUser(user.getCode());
+        System.out.println(checkUser);
+        if(!checkUser){
+            System.out.println("check use is false");
+           /* try{
+                System.out.println("mail service before check point");
+                mailService.sendSimpleMessage(user);
+                System.out.println("mail service check point");
+            }catch(MailException e){
+                System.out.println("error: " +e.getMessage());
+            }*/
             User newUser = userService.addUser(user);
             if(newUser != null){
                 return new ResponseEntity<>(newUser, HttpStatus.OK);

@@ -5,6 +5,7 @@ import SurveyListing from './SurveyListing';
 import HomeHeader from "./HomeHeader";
 import SignIn from "./SignIn";
 import SignUp from './SignUp';
+import SignUpVerification from './SignUpVerification';
 import Header from './Header';
 import * as API from '../api/API';
 
@@ -55,14 +56,20 @@ class CustomRouter extends Component {
                 <Route exact path="/" render={() => (
                     <div>
                         <HomeHeader/>
-                        <SignIn/>
+                        <SignIn history={this.props.history}/>
                         {/*<Samplesurveypage/>*/}
                     </div>
                 )}/>
                 <Route exact path="/signUp" render={() => (
                     <div>
                         <HomeHeader/>
-                        <SignUp/>
+                        <SignUp history={this.props.history}/>
+                    </div>
+                )}/>
+                <Route exact path="/signUpVerification" render={() => (
+                    <div>
+                        <HomeHeader/>
+                        <SignUpVerification history={this.props.history}/>
                     </div>
                 )}/>
                 <Route exact path="/CreateSurvey" render={() => (
