@@ -37,8 +37,10 @@ class SignUp extends Component {
         API.doSignUp(payload)
             .then((res) => {
                 if (res.status === 200) {
+
                     alert("successful signup")
                     this.props.history.push('/signUpVerification');
+
                 } else if (res.response.status === 400) {
                     alert("user already exists")
                     this.setState({

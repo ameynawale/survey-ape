@@ -35,7 +35,8 @@ class SignIn extends Component {
         API.doLogin(payload)
             .then((res) => {
                 if (res.status === 200) {
-                    alert("successful login")
+                    // alert("successful login");
+                    this.props.history.push('/surveys');
                 } else if (res.response.status === 404){
                         this.setState({
                             ...this.state,

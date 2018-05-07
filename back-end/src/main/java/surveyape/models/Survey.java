@@ -1,39 +1,19 @@
-package surveyape.entity;
-
-import javax.persistence.*;
-import java.util.Date;
+package surveyape.models;
 import java.util.List;
 
-@Entity
-@Table(name = "surveys")
-@Cacheable(false)
-public class SurveyEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class Survey {
     private int surveyid;
     private String surveyname;
     private int ownerid;
-    @Column(length=50)
     private String surveytype;
     private String validity;
-    @Column(columnDefinition="tinyint(1) default 0")
     private int ispublished;
+    private List<Invitees> invitees;
 
-//    @OneToMany(fetch=FetchType.EAGER)
-    @OneToMany(mappedBy = "surveyid")
-    private List<InviteesEntity> invitees;
+    public Survey(){}
 
-    public SurveyEntity(String surveyname, int ownerid, String surveytype, String validity, int ispublished) {
-        this.surveyname = surveyname;
-        this.ownerid = ownerid;
-        this.surveytype = surveytype;
-        this.validity = validity;
-        this.ispublished = ispublished;
-    }
-
-    public SurveyEntity(String surveyname, int ownerid, String surveytype, String validity,
-                        int ispublished, List<InviteesEntity> invitees) {
+    public Survey(int surveyid, String surveyname, int ownerid, String surveytype, String validity, int ispublished, List<Invitees> invitees) {
+        this.surveyid = surveyid;
         this.surveyname = surveyname;
         this.ownerid = ownerid;
         this.surveytype = surveytype;
@@ -90,11 +70,11 @@ public class SurveyEntity {
         this.ispublished = ispublished;
     }
 
-    public List<InviteesEntity> getInvitees() {
+    public List<Invitees> getInvitees() {
         return invitees;
     }
 
-    public void setInvitees(List<InviteesEntity> invitees) {
+    public void setInvitees(List<Invitees> invitees) {
         this.invitees = invitees;
     }
 }

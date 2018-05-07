@@ -1,6 +1,9 @@
 package surveyape.converters;
 
+import surveyape.entity.SurveyEntity;
 import surveyape.entity.UserEntity;
+import surveyape.models.Invitees;
+import surveyape.models.Survey;
 import surveyape.models.User;
 
 public class Convertors {
@@ -15,5 +18,17 @@ public class Convertors {
         response.setIsactivated(userEntity.getIsactivated());
         response.setCode(userEntity.getCode());
         return response;
+    }
+
+    public static Survey mapSurveyEntityToSurvey(SurveyEntity surveyEntity){
+        Survey survey = new Survey(surveyEntity.getSurveyid(),
+                surveyEntity.getSurveyname(),
+                surveyEntity.getOwnerid(),
+                surveyEntity.getSurveytype(),
+                surveyEntity.getValidity(),
+                surveyEntity.getIspublished(),
+                null);
+
+        return survey;
     }
 }

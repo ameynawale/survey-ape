@@ -23,7 +23,14 @@ class CustomRouter extends Component {
 
 
     handleAddSurvey = (surveydata) => {
-        API.addSurvey(surveydata)
+        var Survey = {
+            surveyname: surveydata.surveyname,
+            surveytype: surveydata.surveytype,
+            validity: surveydata.validity
+        }
+        console.log('inside handleAddSurvey');
+
+        API.addSurvey(Survey)
             .then((res) => {
                 if(res.status === 201)
                 {
