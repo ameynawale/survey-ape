@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import surveyape.aspects.CheckSession;
 import surveyape.models.Survey;
 import surveyape.services.SurveyService;
 
@@ -16,13 +17,13 @@ import surveyape.services.SurveyService;
  */
 @RestController
 @RequestMapping("/survey")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*", allowCredentials = "true", allowedHeaders = {"*"})
 public class SurveyController {
 
     @Autowired
     private SurveyService surveyService;
 
-    @RequestMapping(path="/create", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @CheckSession @RequestMapping(path="/create", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createSurvey(@RequestBody Survey survey) {
         System.out.println("-----------");
 

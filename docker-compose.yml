@@ -1,0 +1,15 @@
+version: "3"
+services:
+  surveyape-app:
+    build: back-end/
+    ports:
+      - 8080:8080
+  surveyape-react:
+    build: front-end/
+    ports:
+      - 3000:3000
+    volumes:
+      - './front-end:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    depends_on:
+      - surveyape-app

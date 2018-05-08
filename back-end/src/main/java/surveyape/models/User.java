@@ -3,7 +3,7 @@ package surveyape.models;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 public class User {
-    private int 	userid;
+    private Long 	userid;
     private String 	firstname;
     private String 	lastname;
     private String 	email;
@@ -11,11 +11,11 @@ public class User {
     private int 	isactivated;
     private String 	code;
 
-    public int getUserid() {
+    public Long getUserid() {
         return userid;
     }
 
-    public void setUserid(int userid) {
+    public void setUserid(Long userid) {
         this.userid = userid;
     }
 

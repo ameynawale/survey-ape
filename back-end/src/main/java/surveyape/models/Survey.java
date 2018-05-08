@@ -1,8 +1,10 @@
 package surveyape.models;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.List;
 
 public class Survey {
-    private int surveyid;
+    private String surveyid;
     private String surveyname;
     private int ownerid;
     private String surveytype;
@@ -12,28 +14,25 @@ public class Survey {
 
     public Survey(){}
 
-    public Survey(int surveyid, String surveyname, int ownerid, String surveytype, String validity, int ispublished, List<Invitees> invitees) {
+    public Survey(String surveyid, String surveyname, String surveytype, String validity, int ispublished, List<Invitees> invitees) {
         this.surveyid = surveyid;
         this.surveyname = surveyname;
-        this.ownerid = ownerid;
         this.surveytype = surveytype;
         this.validity = validity;
         this.ispublished = ispublished;
         this.invitees = invitees;
     }
 
-    public int getSurveyid() {
+    public String getSurveyid() {
         return surveyid;
     }
-
-    public void setSurveyid(int surveyid) {
-        this.surveyid = surveyid;
-    }
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    public void setSurveyid(String surveyid) { this.surveyid = surveyid; }
 
     public String getSurveyname() {
         return surveyname;
     }
-
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public void setSurveyname(String surveyname) {
         this.surveyname = surveyname;
     }
@@ -41,7 +40,7 @@ public class Survey {
     public int getOwnerid() {
         return ownerid;
     }
-
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public void setOwnerid(int ownerid) {
         this.ownerid = ownerid;
     }
@@ -49,7 +48,7 @@ public class Survey {
     public String getSurveytype() {
         return surveytype;
     }
-
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public void setSurveytype(String surveytype) {
         this.surveytype = surveytype;
     }
@@ -57,7 +56,7 @@ public class Survey {
     public String getValidity() {
         return validity;
     }
-
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public void setValidity(String validity) {
         this.validity = validity;
     }
@@ -65,7 +64,7 @@ public class Survey {
     public int getIspublished() {
         return ispublished;
     }
-
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public void setIspublished(int ispublished) {
         this.ispublished = ispublished;
     }
@@ -73,7 +72,7 @@ public class Survey {
     public List<Invitees> getInvitees() {
         return invitees;
     }
-
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public void setInvitees(List<Invitees> invitees) {
         this.invitees = invitees;
     }

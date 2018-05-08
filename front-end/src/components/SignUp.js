@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Route, withRouter} from 'react-router-dom';
 import * as validation from '../validation/InputValidations';
 import '../styles/SurveyContainer.css';
+import  './SignUpVerification';
 import * as API from '../api/API';
 class SignUp extends Component {
     constructor(props){
@@ -13,6 +14,7 @@ class SignUp extends Component {
             lastName: '',
             messageDivSignUp : ''
         }
+
     }
     handleUserSignUp = (event) => {
         var valid = validation.signup(this.state);
@@ -23,7 +25,7 @@ class SignUp extends Component {
                 email: this.state.email,
                 password: this.state.password,
             }
-            this.UserSignUpAPICall(payload);
+            this.props.SignUp(payload);
         }else{
             this.setState({
                 ...this.state,
@@ -32,12 +34,13 @@ class SignUp extends Component {
             event.preventDefault();
         }
     }
-    UserSignUpAPICall = (payload) => {
+  /*  UserSignUpAPICall = (payload) => {
         API.doSignUp(payload)
             .then((res) => {
                 if (res.status === 200) {
-                    alert("successful signup");
-                    this.props.history.push('/surveys');
+
+                    alert("successful signup")
+                    this.props.history.push('/signUpVerification');
 
                 } else if (res.response.status === 400) {
                     alert("user already exists")
@@ -53,7 +56,7 @@ class SignUp extends Component {
                     });
                 }
             });
-    }
+    }*/
     render() {
         let messageDivSignUp =null;
         if(this.state.messageDivSignUp !== ''){

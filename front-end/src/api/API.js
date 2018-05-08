@@ -1,8 +1,23 @@
 const api = process.env.REACT_APP_CONTACTS_API_URL || 'http://localhost:8080'
 const url = 'http://localhost:8080';
-const axios = require("axios")
+const axios = require("axios");
+
 const headers = {
     'Accept': 'application/json'
+};
+
+axios.defaults.withCredentials = true;
+
+export const doLogout = () =>{
+    return axios.get('http://localhost:8080/users/logout', null)
+        .then(function (response) {
+            console.log(response);
+            return response
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error
+        });
 };
 
 export const doLogin = (payload) =>{
@@ -15,7 +30,7 @@ export const doLogin = (payload) =>{
             console.log(error);
             return error
         });
-}
+};
     // fetch(`${url}/users/signin`, {
     //     method: 'POST',
     //     headers: {
@@ -56,6 +71,19 @@ export const doSignUp = (payload) =>{
     //         return error;
     //     });
 
+
+export const doSignUpVerification = (payload) =>{
+    return axios.post('http://localhost:8080/users/signUpVerification', payload)
+        .then(function (response) {
+            console.log(response);
+            return response
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error
+        });
+};
+
 export const addSurvey = (payload) =>{
     return axios.post('http://localhost:8080/survey/create', payload)
         .then(function (response) {
@@ -64,6 +92,7 @@ export const addSurvey = (payload) =>{
         })
         .catch(function (error) {
             console.log(error);
+
             return error;
         });
 };

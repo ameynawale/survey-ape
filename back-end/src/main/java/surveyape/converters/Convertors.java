@@ -1,6 +1,8 @@
 package surveyape.converters;
 
 import surveyape.entity.QuestionsEntity;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import surveyape.entity.SurveyEntity;
 import surveyape.entity.UserEntity;
 import surveyape.models.Invitees;
@@ -18,14 +20,13 @@ public class Convertors {
         response.setEmail(userEntity.getEmail());
         response.setPassword(userEntity.getPassword());
         response.setIsactivated(userEntity.getIsactivated());
-
+        response.setCode(userEntity.getCode());
         return response;
     }
 
     public static Survey mapSurveyEntityToSurvey(SurveyEntity surveyEntity){
         Survey survey = new Survey(surveyEntity.getSurveyid(),
                 surveyEntity.getSurveyname(),
-                surveyEntity.getOwnerid(),
                 surveyEntity.getSurveytype(),
                 surveyEntity.getValidity(),
                 surveyEntity.getIspublished(),
@@ -34,12 +35,16 @@ public class Convertors {
         return survey;
     }
 
-    public static Question mapQuestionsEntityToQuestion(QuestionsEntity questionsEntity){
+    public static Question mapQuestionsEntityToQuestion(QuestionsEntity questionsEntity) {
 
-        Question question = new Question(questionsEntity.getQuestionid(),
-                                        questionsEntity.getQuestion(),
-                                        questionsEntity.getSurveyid(),
-                                        questionsEntity.getQuestiontype());
+        Question question = new Question(Integer.parseInt(String.valueOf(questionsEntity.getQuestionid())),
+                questionsEntity.getQuestion(),
+                Integer.parseInt(questionsEntity.getSurveyEntity().getSurveyid()),
+                questionsEntity.getQuestiontype());
         return question;
+    }
+
+    public static String fetchSessionEmail() {
+        return (String)((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession().getAttribute("email");
     }
 }
