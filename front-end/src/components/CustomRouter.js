@@ -7,6 +7,8 @@ import SignIn from "./SignIn";
 import SignUp from './SignUp';
 import SignUpVerification from './SignUpVerification';
 import Header from './Header';
+import SurveyStats from './SurveyStats';
+import TakeSurvey from './TakeSurvey';
 import * as API from '../api/API';
 
 class CustomRouter extends Component {
@@ -153,9 +155,31 @@ class CustomRouter extends Component {
                         <SurveyListing surveydata={this.state}/>
                     </div>
                 )}/>
+                <Route exact path="/surveyStats" render={(selectedSurvey) => (
+                    <div>
+                        <Header handleAddSurvey={this.handleAddSurvey} handleGetSurveyListing={this.handleGetSurveyListing}/>
+                        <SurveyStats selectedSurvey={selectedSurvey.location.state.selectedSurvey}/>
+                    </div>
+                )}/>
+                <Route exact path="/open" render={(data) => (
+                    <div>
+                        <TakeSurvey urlData={data} type={"open"}/>
+                    </div>
+                )}/>
+                <Route exact path="/close" render={(data) => (
+                    <div>
+                        <TakeSurvey urlData={data} type={"close"}/>
+                    </div>
+                )}/>
+                <Route exact path="/unique" render={(data) => (
+                    <div>
+                        <TakeSurvey urlData={data} type={"unique"}/>
+                    </div>
+                )}/>
             </div>
         );
     }
 }
+
 
 export default withRouter(CustomRouter);
