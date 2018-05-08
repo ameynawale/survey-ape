@@ -10,6 +10,9 @@ import surveyape.models.User;
  *
  */
 public interface UserService {
+
+    String fetchUniqueUser(User user);
+
     User addUser(User user);
 
     User getUser(String email);

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import surveyape.aspects.CheckSession;
 import surveyape.converters.Convertors;
 import surveyape.entity.UserEntity;
+import surveyape.exceptions.InternalServerException;
 import surveyape.models.User;
 import surveyape.respositories.UserRepository;
 import surveyape.services.MailService;
@@ -27,112 +28,87 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/users")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*", allowCredentials = "true", allowedHeaders = {"*"})
 public class UserController {
-    @Autowired
-    private UserRepository userRepository;
+
     @Autowired
     private MailService mailService;
     @Autowired
     private UserService userService;
 
+    private Map<String, String> jsonResponse = null;
 
-    @RequestMapping(path="/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<?> login(@RequestBody User user) {
+    @RequestMapping(path="/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> login(@RequestBody User user, HttpSession httpSession) {
 
-        User registeredUser  = userService.login(user);
-        if(registeredUser != null){
-            return new ResponseEntity<>(registeredUser, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(user,HttpStatus.NOT_FOUND);
+        jsonResponse = new HashMap<>();
+
+        // User doesn't exist
+        String uniqueInfo = userService.fetchUniqueUser(user);
+        if(uniqueInfo.equalsIgnoreCase("AVAILABLE")) {
+            jsonResponse.put("message", "The username doesn't have an account. Please create an account. ");
+            return new ResponseEntity<>(jsonResponse, HttpStatus.NOT_FOUND);
         }
-//        User registeredUser  = userService.login(user);
-//        if(registeredUser != null){
-//            if(registeredUser.getPassword().equals(user.getPassword())){
-//                return new ResponseEntity<>(registeredUser, HttpStatus.OK);
-//            } else {
-//                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-//            }
-//        } else{
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//        return null;
+
+        User existingUser  = userService.login(user);
+
+        if(existingUser != null) {
+            httpSession.setAttribute("email", existingUser.getEmail());
+            return new ResponseEntity<>(existingUser, HttpStatus.OK);
+        } else {
+            // Invalid credentials
+            jsonResponse.put("message", "The username and password you entered did not match our records. Please double-check and try again.");
+            return new ResponseEntity<>(jsonResponse, HttpStatus.NOT_FOUND);
+        }
     }
 
     @RequestMapping(path="/signup", method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> signUp(@RequestBody User user) {
-        System.out.println("-----------");
-        System.out.println(user);
-        System.out.println(user.getEmail());
-        System.out.println(user.getFirstname());
-      //  System.out.println(mailService.getCode());
-       // System.out.println(user.getEmail());
-        System.out.println("-----------");
+
         User checkUser = userService.getUser(user.getEmail());
-        System.out.println(checkUser);
-        if(checkUser == null){
-            System.out.println("check use is false");
+
+        if (checkUser == null) {
             User newUser = userService.addUser(user);
-            if(newUser != null){
+            if (newUser != null) {
                 // check if the user is added to the database  and them send a mail.
-                try{
-                    System.out.println("mail service before check point" + newUser.getCode());
+                try {
+                    System.out.println("mail service before check point: " + newUser.getCode());
                     mailService.sendSimpleMessage(newUser);
                     System.out.println("mail service check point");
-                }catch(MailException e){
-                    System.out.println("error: " +e.getMessage());
+                } catch (MailException e) {
+                    System.out.println("error: " + e.getMessage());
                 }
                 return new ResponseEntity<>(newUser, HttpStatus.OK);
-            } else{
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            } else {
+                throw new InternalServerException("Internal Server Error");
             }
 
-        } else{
+        } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
     @RequestMapping(path="/signUpVerification", method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> signUpVerification(@RequestBody User user) {
-        System.out.println("-----------");
-        //System.out.println(code);
-        System.out.println(user.getEmail());
-        System.out.println(user.getCode());
 
-        System.out.println("-----------");
         User checkUser = userService.getUser(user.getEmail());
-        System.out.println(checkUser.getEmail());
-        System.out.println(checkUser.getCode());
-        if(checkUser.getEmail() != null) {
-        System.out.println("before checking");
+
+        if (checkUser.getEmail() != null) {
+
             if ((checkUser.getCode()).equalsIgnoreCase(user.getCode())) {
-                System.out.println("after checking");
+
                 userService.activateUser(user);
-                System.out.println("after activating");
+
                 return new ResponseEntity<>(checkUser, HttpStatus.OK);
-            }
-            else{
+            } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-        }
-        else{
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } else {
+            throw new InternalServerException("Internal Server Error");
 
         }
-
-
-//        if(!checkUser){
-//            System.out.println("check use is false");
-//               if(userService.getUser(user.getEmail()) == null){
-//                return new ResponseEntity<>(checkUser, HttpStatus.OK);
-//            } else{
-//                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//            }
-//        } else{
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
     }
 
-    @CheckSession @RequestMapping(path="/logout", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @CheckSession @RequestMapping(path="/logout", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> logoutUser(HttpSession httpSession) {
 
         Map<String, String> errorResponse = new HashMap<>();

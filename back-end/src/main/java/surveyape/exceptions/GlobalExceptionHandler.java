@@ -21,4 +21,14 @@ public class GlobalExceptionHandler {
         errorResponse.put("message", invalidSessionMsg);
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
+
+    @Value("${internal.server.error.message}")
+    String internalErrorMsg;
+
+    @ExceptionHandler(InternalServerException.class)
+    public ResponseEntity<?> internalErrorMsg() {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("message", internalErrorMsg);
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
