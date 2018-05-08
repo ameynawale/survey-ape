@@ -9,7 +9,7 @@ public class UserSurveyEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int dummyid;
+    private Long dummyid;
     private String email;
     private int surveyid;
     @Column(columnDefinition="tinyint(1) default 0")

@@ -1,8 +1,9 @@
 package surveyape.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "surveys")
@@ -10,66 +11,70 @@ import java.util.List;
 public class SurveyEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int surveyid;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    @Column(name = "surveyid", updatable = false, nullable = false)
+    private String surveyid;
+
     private String surveyname;
-    private int ownerid;
+
     @Column(length=50)
     private String surveytype;
     private String validity;
+    private String createdon;
+
     @Column(columnDefinition="tinyint(1) default 0")
     private int ispublished;
 
-//    @OneToMany(fetch=FetchType.EAGER)
-    @OneToMany(mappedBy = "surveyid")
-    private List<InviteesEntity> invitees;
+    @OneToMany(mappedBy = "surveyEntity", cascade=CascadeType.ALL)
+    private Set<InviteesEntity> invitees;
 
-    public SurveyEntity(String surveyname, int ownerid, String surveytype, String validity, int ispublished) {
+    @OneToMany(mappedBy = "surveyEntity", cascade=CascadeType.ALL)
+    private Set<QuestionsEntity> questions;
+
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name = "userid") // ownerid
+    private UserEntity userEntity;
+
+    public SurveyEntity() { }
+
+    public SurveyEntity(String surveyname, String surveytype, String validity, int ispublished, UserEntity userEntity) {
         this.surveyname = surveyname;
-        this.ownerid = ownerid;
         this.surveytype = surveytype;
         this.validity = validity;
         this.ispublished = ispublished;
+        this.userEntity = userEntity;
     }
 
-    public SurveyEntity(String surveyname, int ownerid, String surveytype, String validity,
-                        int ispublished, List<InviteesEntity> invitees) {
+    public SurveyEntity(String surveyname, String surveytype, String validity,
+                        int ispublished, Set<InviteesEntity> invitees) {
         this.surveyname = surveyname;
-        this.ownerid = ownerid;
         this.surveytype = surveytype;
         this.validity = validity;
         this.ispublished = ispublished;
         this.invitees = invitees;
     }
 
-    public int getSurveyid() {
+    public String getSurveyid() {
         return surveyid;
     }
-
-    public void setSurveyid(int surveyid) {
+    public void setSurveyid(String surveyid) {
         this.surveyid = surveyid;
     }
 
     public String getSurveyname() {
         return surveyname;
     }
-
     public void setSurveyname(String surveyname) {
         this.surveyname = surveyname;
-    }
-
-    public int getOwnerid() {
-        return ownerid;
-    }
-
-    public void setOwnerid(int ownerid) {
-        this.ownerid = ownerid;
     }
 
     public String getSurveytype() {
         return surveytype;
     }
-
     public void setSurveytype(String surveytype) {
         this.surveytype = surveytype;
     }
@@ -77,7 +82,6 @@ public class SurveyEntity {
     public String getValidity() {
         return validity;
     }
-
     public void setValidity(String validity) {
         this.validity = validity;
     }
@@ -85,16 +89,20 @@ public class SurveyEntity {
     public int getIspublished() {
         return ispublished;
     }
-
     public void setIspublished(int ispublished) {
         this.ispublished = ispublished;
     }
 
-    public List<InviteesEntity> getInvitees() {
+    public Set<InviteesEntity> getInvitees() {
         return invitees;
     }
-
-    public void setInvitees(List<InviteesEntity> invitees) {
+    public void setInvitees(Set<InviteesEntity> invitees) {
         this.invitees = invitees;
     }
+
+    public String getCreatedon() { return createdon; }
+    public void setCreatedon(String createdon) { this.createdon = createdon; }
+
+    public Set<QuestionsEntity> getQuestions() { return questions; }
+    public void setQuestions(Set<QuestionsEntity> questions) { this.questions = questions; }
 }

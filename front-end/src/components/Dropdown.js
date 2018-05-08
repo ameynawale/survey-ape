@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import '../styles/FormContent.css';
 import '../styles/Header.css';
 import '../styles/SingleSelect.css';
+import * as API from "../api/API";
 
 
 class Dropdown extends Component {
@@ -13,7 +14,9 @@ class Dropdown extends Component {
             options: [],
             question: "",
             optionsarray: [],
-            index: this.props.index
+            questionid: this.props.surveydata.questionid,
+            surveyid: this.props.surveydata.surveyid,
+            questiontype: 'dropdown'
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -27,20 +30,54 @@ class Dropdown extends Component {
         handleSubmit: PropTypes.func.isRequired
     }
 
-    handleInputChange(event) {
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
-        var index = name/2;
-        console.log("index"+index);
-        var optionsarray = this.state.optionsarray;
-        optionsarray[index] = value;
-        // optionsarray.push(value);
-        this.setState({
-            optionsarray: optionsarray
-        });
-        console.log(this.state.optionsarray);
+    handleInputChange() {
+        API.addQuestion(this.state);
     }
+
+    handleOptionInputChange(event) {
+        let option = {
+            optionid: event.target.name,
+            options: event.target.value,
+            questionid: this.state.questionid
+        }
+        API.addOption(option);
+    }
+
+    addOption = (event) => {
+        event.preventDefault();
+        let option = {
+            questionid: this.state.questionid
+        }
+
+        API.addOption(option)
+            .then((res) => {
+                if(res.status === 201)
+                {
+                    this.state.optionsarray.push("");
+                    let options = this.state.options;
+                    options.push(
+                        <div className="form-group">
+                            <label>
+                                <input type="checkbox" disabled/>
+                                <input type="text" className="form-control ml-2"
+                                       onBlurCapture={(event) => {
+                                           this.handleOptionInputChange(event)}}
+                                       placeholder="Option"
+                                       name={res.data.optionid}
+                                />
+                                <span className="fa fa-trash ml-2" onClick={this.removeOption} ></span>
+                            </label>
+                            <br/><br/>
+                        </div>
+                    );
+                    this.setState({
+                        options: options
+                    })
+                }
+            })
+    }
+
+/*
 
     addOption = (event) => {
         event.preventDefault();
@@ -72,6 +109,7 @@ class Dropdown extends Component {
             </div>
         );
 
+
         /*var options = this.state.options;
         let index = options.length;
         options.push(
@@ -84,14 +122,14 @@ class Dropdown extends Component {
             </div>
         );*/
         // options.push(<br/>);
-        this.setState({
+  /*      this.setState({
             options: options
         });
 
         this.props.handleSubmit(this.state);
 
     }
-
+*/
     removeOption = (event) => {
         console.log("dataid "+event.currentTarget.dataset.id);
         event.preventDefault();
@@ -157,7 +195,7 @@ class Dropdown extends Component {
                                this.setState({
                                    question: event.target.value
                                });
-                               this.props.handleSubmit(this.state);
+                               this.handleInputChange();
                            }}
                     /><br/>
                 </div>

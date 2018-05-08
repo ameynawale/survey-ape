@@ -9,6 +9,7 @@ class Header extends Component {
         super();
         this.state = {
             createSurveyIsOpen: false,
+            isClosed: true
         };
 
         this.openCreateSurveyModal = this.openCreateSurveyModal.bind(this);
@@ -65,14 +66,39 @@ class Header extends Component {
                             <label>Survey type:</label>
                             <select className="form-control" id="sel1"
                                     onChange={(event) => {
-                                        this.setState({
-                                            surveytype: event.target.value
-                                        })
+                                        if(event.target.value == 'General Survey')
+                                        {
+                                            this.setState({
+                                                surveytype: 'general',
+                                                isClosed: true
+                                            })
+                                        }
+                                        else if(event.target.value == 'Closed invitation-only survey')
+                                        {
+                                            this.setState({
+                                                surveytype: 'closed',
+                                                isClosed: false
+                                            })
+                                        }
+                                        else if(event.target.value == 'Open unique survey')
+                                        {
+                                            this.setState({
+                                                surveytype: 'open',
+                                                isClosed: true
+                                            })
+                                        }
                                     }}>
                                 <option>General Survey</option>
                                 <option>Closed invitation-only survey</option>
                                 <option>Open unique survey</option>
                             </select><br/>
+                            <input type="text" className="form-control" name="survey" placeholder = "Invitees Emails (comma-separated)"
+                                   disabled={this.state.isClosed}
+                                   onChange={(event) => {
+                                       this.setState({
+                                           invitees : event.target.value
+                                       });
+                                   }}/><br/>
                             <label>Expires on:</label>
                             <input type="date" className="form-control"
                                    onChange={(event) => {
