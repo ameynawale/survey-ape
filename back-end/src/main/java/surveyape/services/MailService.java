@@ -60,8 +60,21 @@ public class MailService{
         message.setTo(user.getEmail());
         message.setSubject(emailSubject);
         message.setFrom(emailFrom);
-        message.setText("Hi " + user.getFirstname()+"," + " Welcome to the Survey Ape, here is your registration code: " +user.getCode());
+        message.setText("Hi " + user.getFirstname()+"," + " Here is your registration code, please confirm your Email ID: " +user.getCode());
        // System.out.println("Hi " + user.getFirstname()+"," + " Welcome to the Survey Ape, here is your registration code: " +user.getCode());
+        emailSender.send(message);
+
+    }
+
+    public void sendConfirmationMessage (User user) throws MailException{
+
+        //  System.out.println();
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(user.getEmail());
+        message.setSubject("Welcome to Survey");
+        message.setFrom(emailFrom);
+        message.setText("Hi " +"," + " Welcome to the Survey Ape. Thank you for registering, your account is verified");
+        // System.out.println("Hi " + user.getFirstname()+"," + " Welcome to the Survey Ape, here is your registration code: " +user.getCode());
         emailSender.send(message);
 
     }

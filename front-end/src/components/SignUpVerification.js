@@ -36,6 +36,7 @@ class SignUpVerification extends Component {
                 if (res.status === 200) {
                     alert("Registration successful! You can sign in now");
                     // this.props.history.push('/surveys');
+                    this.props.history.push('/');
                 } else if (res.response.status === 400) {
                     alert("Incorrect verification code")
                     this.setState({

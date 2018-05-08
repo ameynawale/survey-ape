@@ -74,7 +74,7 @@ public class UserController {
                 try {
                     System.out.println("mail service before check point: " + newUser.getCode());
                     mailService.sendSimpleMessage(newUser);
-                    System.out.println("mail service check point");
+                  //  System.out.println("mail service check point");
                 } catch (MailException e) {
                     System.out.println("error: " + e.getMessage());
                 }
@@ -97,9 +97,14 @@ public class UserController {
             if ((checkUser.getCode()).equalsIgnoreCase(user.getCode())) {
 
                 userService.activateUser(user);
-
+                try {
+                    mailService.sendConfirmationMessage(user);
+                    System.out.println("mail service check point");
+                } catch (MailException e) {
+                    System.out.println("error: " + e.getMessage());
+                }
                 jsonResponse = new HashMap<>();
-                jsonResponse.put("message", "User account activated. ");
+                jsonResponse.put("message", "User account activated and mail sent. ");
 
                 return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
             } else {
