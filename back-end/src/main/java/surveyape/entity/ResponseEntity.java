@@ -9,50 +9,35 @@ public class ResponseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int dummyid;
-    private int userid;
-    private int questionid;
+    private Long dummyid;
     private String email;
+
     @Column(length=1000)
     private String response;
 
-    public ResponseEntity(int userid, int questionid, String email, String response) {
-        this.userid = userid;
-        this.questionid = questionid;
-        this.email = email;
-        this.response = response;
-    }
+    private Long optionid;
 
-    public int getUserid() {
-        return userid;
-    }
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name = "userid")
+    private UserEntity userEntity;
 
-    public void setUserid(int userid) {
-        this.userid = userid;
-    }
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name = "questionid")
+    private QuestionsEntity questionsEntity;
 
-    public int getQuestionid() {
-        return questionid;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public void setQuestionid(int questionid) {
-        this.questionid = questionid;
-    }
+    public String getResponse() { return response; }
+    public void setResponse(String response) { this.response = response; }
 
-    public String getEmail() {
-        return email;
-    }
+    public Long getOptionid() { return optionid; }
+    public void setOptionid(Long optionid) { this.optionid = optionid; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public UserEntity getUserEntity() { return userEntity; }
+    public void setUserEntity(UserEntity userEntity) { this.userEntity = userEntity; }
 
-    public String getResponse() {
-        return response;
-    }
-
-    public void setResponse(String response) {
-        this.response = response;
-    }
+    public QuestionsEntity getQuestionsEntity() { return questionsEntity; }
+    public void setQuestionsEntity(QuestionsEntity questionsEntity) { this.questionsEntity = questionsEntity; }
 }
 

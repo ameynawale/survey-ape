@@ -25,7 +25,6 @@ public class Convertors {
     public static Survey mapSurveyEntityToSurvey(SurveyEntity surveyEntity){
         Survey survey = new Survey(surveyEntity.getSurveyid(),
                 surveyEntity.getSurveyname(),
-                surveyEntity.getOwnerid(),
                 surveyEntity.getSurveytype(),
                 surveyEntity.getValidity(),
                 surveyEntity.getIspublished(),

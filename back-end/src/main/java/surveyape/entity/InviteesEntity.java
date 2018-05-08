@@ -13,23 +13,25 @@ public class InviteesEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private int 	inviteeid;
-        private int 	surveyid;
-        private String 	email;
+    private Long 	inviteeid;
+    private String 	email;
+
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name = "surveyid")
+    private SurveyEntity surveyEntity;
 
     public InviteesEntity() {}
 
-    public InviteesEntity(int surveyid, String email) {
-        this.surveyid = surveyid;
+    public InviteesEntity(String email) {
         this.email = email;
     }
 
-    public int getInviteeid() { return inviteeid; }
-    public void setInviteeid(int inviteeid) { this.inviteeid = inviteeid; }
-
-    public int getSurveyid() { return surveyid; }
-    public void setSurveyid(int surveyid) { this.surveyid = surveyid; }
+    public Long getInviteeid() { return inviteeid; }
+    public void setInviteeid(Long inviteeid) { this.inviteeid = inviteeid; }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
+
+    public SurveyEntity getSurveyEntity() { return surveyEntity; }
+    public void setSurveyEntity(SurveyEntity surveyEntity) { this.surveyEntity = surveyEntity; }
 }

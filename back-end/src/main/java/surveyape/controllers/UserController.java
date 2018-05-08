@@ -98,7 +98,10 @@ public class UserController {
 
                 userService.activateUser(user);
 
-                return new ResponseEntity<>(checkUser, HttpStatus.OK);
+                jsonResponse = new HashMap<>();
+                jsonResponse.put("message", "User account activated. ");
+
+                return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }

@@ -1,6 +1,7 @@
 package surveyape.entity;
 
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * This UserEntity mapped to the users table in the database.
@@ -13,19 +14,29 @@ public class UserEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-		private int 	userid;
-	@Column(length=50)
-		private String 	firstname;
-	@Column(length=50)
-		private String 	lastname;
-	@Column(unique=true)
-		private String 	email;
-	@Column(length=100)
-		private String 	password;
-	@Column(columnDefinition="tinyint(1) default 0")
-		private int 	isactivated;
-		private String 	code;
+	private Long userid;
 
+	@Column(length = 50)
+	private String firstname;
+
+	@Column(length = 50)
+	private String lastname;
+
+	@Column(unique = true)
+	private String email;
+
+	@Column(length = 100)
+	private String password;
+
+	@Column(columnDefinition = "tinyint(1) default 0")
+	private int isactivated;
+	private String code;
+
+	@OneToMany(mappedBy = "userEntity", cascade=CascadeType.ALL)
+	private Set<SurveyEntity> surveys;
+
+    @OneToMany(mappedBy = "userEntity", cascade=CascadeType.ALL)
+    private Set<ResponseEntity> responses;
 
 	public UserEntity() {};
 
@@ -38,8 +49,8 @@ public class UserEntity {
 		this.code = code;
 	}
 
-	public int getUserid() { return userid; }
-	public void setUserid(int userid) { this.userid = userid; }
+	public Long getUserid() { return userid; }
+	public void setUserid(Long userid) { this.userid = userid; }
 
 	public String getFirstname() { return firstname; }
 	public void setFirstname(String firstname) { this.firstname = firstname; }
