@@ -145,19 +145,19 @@ class CustomRouter extends Component {
                 )}/>
                 <Route exact path="/CreateSurvey" render={() => (
                     <div>
-                        <Header handleAddSurvey={this.handleAddSurvey} handleGetSurveyListing={this.handleGetSurveyListing}/>
+                        <Header history={this.props.history} handleAddSurvey={this.handleAddSurvey} handleGetSurveyListing={this.handleGetSurveyListing}/>
                         <Samplesurveypage surveydata={this.state}/>
                     </div>
                 )}/>
                 <Route exact path="/surveys" render={() => (
                     <div>
-                        <Header handleAddSurvey={this.handleAddSurvey} handleGetSurveyListing={this.handleGetSurveyListing}/>
+                        <Header history={this.props.history} handleAddSurvey={this.handleAddSurvey} handleGetSurveyListing={this.handleGetSurveyListing}/>
                         <SurveyListing surveydata={this.state}/>
                     </div>
                 )}/>
                 <Route exact path="/surveyStats" render={(selectedSurvey) => (
                     <div>
-                        <Header handleAddSurvey={this.handleAddSurvey} handleGetSurveyListing={this.handleGetSurveyListing}/>
+                        <Header history={this.props.history} handleAddSurvey={this.handleAddSurvey} handleGetSurveyListing={this.handleGetSurveyListing}/>
                         <SurveyStats selectedSurvey={selectedSurvey.location.state.selectedSurvey}/>
                     </div>
                 )}/>

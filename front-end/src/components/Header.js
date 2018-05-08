@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '../styles/Header.css';
 import CreateSurveyModal from 'react-modal';
 import {customStyles} from "./util/modalStyles";
+import * as API from '../api/API';
 
 class Header extends Component {
     constructor() {
@@ -24,6 +25,17 @@ class Header extends Component {
         this.setState({createSurveyIsOpen: false});
     }
 
+    handleLogout = (event) => {
+
+        event.preventDefault();
+        API.doLogout()
+            .then((res) => {
+                console.log("Logout: ", res);
+                this.props.history.push("/");
+            });
+
+    };
+
 
     render() {
         return (
@@ -34,7 +46,7 @@ class Header extends Component {
                 <button className="btn btn-primary survey-button"
                         onClick={this.openCreateSurveyModal}
                 >Create</button>
-                <button className="btn btn-primary share-button">Sign Out</button>
+                <button className="btn btn-primary share-button" onClick={this.handleLogout}>Sign Out</button>
                 <button className="btn btn-primary share-button">Share</button>
                 <CreateSurveyModal
                     isOpen={this.state.createSurveyIsOpen}

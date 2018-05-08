@@ -21,6 +21,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private MailService mailService;
 
+    @Override
+    public String fetchUniqueUser(User user) {
+        if(user.getEmail() != null && userRepository.findByEmail(user.getEmail()) != null)  return "USED_EMAIL";
+        else                                                                                return "AVAILABLE";
+    }
+
     public User addUser(User user){
 
         /*int randomNumber = (int)Math.random() * ((9999 - 1000) + 1) + 1000;
@@ -45,7 +51,8 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public User login(User user){
+    public User login(User user) {
+
         UserEntity userEntity = userRepository.findByEmailAndPassword(user.getEmail(),user.getPassword());
         if(userEntity!=null){
             return Convertors.mapUserEntityToUser(userEntity);
