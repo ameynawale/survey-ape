@@ -34,8 +34,8 @@ class SignUpVerification extends Component {
         API.doSignUpVerification(payload)
             .then((res) => {
                 if (res.status === 200) {
-                    alert("Registration successful")
-                    this.props.history.push('/surveys');
+                    alert("Registration successful! You can sign in now");
+                    // this.props.history.push('/surveys');
                 } else if (res.response.status === 400) {
                     alert("Incorrect verification code")
                     this.setState({

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import surveyape.converters.Convertors;
 import surveyape.entity.QuestionsEntity;
+import surveyape.entity.SurveyEntity;
 import surveyape.models.Question;
 import surveyape.respositories.QuestionRepository;
 import surveyape.services.QuestionService;
@@ -18,8 +19,10 @@ public class QuestionServiceImpl implements QuestionService{
     {
         QuestionsEntity questionsEntity = new QuestionsEntity();
         System.out.println("questionid" + question.getQuestionid());
-        questionsEntity.setSurveyid(question.getSurveyid());
-        questionsEntity.setQuestionid(question.getQuestionid());
+        SurveyEntity surveyEntity = new SurveyEntity();
+        surveyEntity.setSurveyid(String.valueOf(question.getSurveyid()));
+        questionsEntity.setSurveyEntity(surveyEntity);
+        questionsEntity.setQuestionid(Long.parseLong(String.valueOf(question.getQuestionid())));
         questionsEntity.setQuestion(question.getQuestion());
         questionsEntity.setQuestiontype(question.getQuestiontype());
         QuestionsEntity newquestionsEntity = questionRepository.save(questionsEntity);

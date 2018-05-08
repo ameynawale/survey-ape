@@ -21,6 +21,22 @@ public class OptionsEntity {
     @JoinColumn(name = "questionid")
     private QuestionsEntity questionsEntity;
 
+    public String getOptions() {
+        return options;
+    }
+
+    public void setOptions(String options) {
+        this.options = options;
+    }
+
+    public QuestionsEntity getQuestionsEntity() {
+        return questionsEntity;
+    }
+
+    public void setQuestionsEntity(QuestionsEntity questionsEntity) {
+        this.questionsEntity = questionsEntity;
+    }
+
     public OptionsEntity() {}
 
     public OptionsEntity(String options) {

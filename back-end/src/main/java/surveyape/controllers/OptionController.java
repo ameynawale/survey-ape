@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import surveyape.entity.OptionsEntity;
+import surveyape.entity.QuestionsEntity;
 import surveyape.models.Option;
 import surveyape.models.Question;
 import surveyape.models.Survey;
@@ -36,8 +37,10 @@ public class OptionController {
         System.out.println("option" + option.getQuestionid());
         OptionsEntity optionsEntity = new OptionsEntity();
         optionsEntity.setOption(option.getOptions());
-        optionsEntity.setOptionid(option.getOptionid());
-        optionsEntity.setQuestionid(option.getQuestionid());
+        optionsEntity.setOptionid(Long.parseLong(String.valueOf(option.getOptionid())));
+        QuestionsEntity questionsEntity = new QuestionsEntity();
+        questionsEntity.setQuestionid(Long.parseLong(String.valueOf(option.getQuestionid())));
+        optionsEntity.setQuestionsEntity(questionsEntity);
         OptionsEntity optionsEntity1 = optionRepository.save(optionsEntity);
         return new ResponseEntity<>(optionsEntity1, HttpStatus.CREATED);
     }
