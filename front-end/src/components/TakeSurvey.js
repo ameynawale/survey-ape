@@ -1,35 +1,53 @@
 import React, { Component } from 'react';
 import '../styles/SurveyContainer.css';
 import queryString          from 'query-string';
-import { TabContent, TabPane, Nav, NavItem, NavLink, Card,Modal, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
+import EmailInput from './EmailInput';
+import OpenSurveyQuestions from './OpenSurveyQuestions';
+import SurveyQuestions from './SurveyQuestions';
 class TakeSurvey extends Component{
     constructor(props){
         super(props);
         // let x = this.props.selectedSurvey;
         this.state={
             "type":'',
-            "surveyid": ''
+            "surveyid": '',
+            "callComponent": ''
         }
     }
 
     componentWillMount(){
-        let url = this.props.urlData;
         let parsed = queryString.parse(this.props.urlData.location.search);
-        // let parsed = queryString.parse(url.search);
-        this.setState({
-            ...this.state,
-            "type":this.props.type,
-            "surveyid": parsed.surveyid
-        });
-        console.log(this.state.type+ this.state.surveyid);
-        // API.
+        let type = this.props.type;
+        if(type === 'unique'){
+            this.setState({
+                ...this.state,
+                "type":type,
+                "surveyid": parsed.surveyid,
+                "callComponent": <div> <EmailInput surveyid={parsed.surveyid}/> </div>
+            });
+        } else if(type === 'close'){
+            this.setState({
+                ...this.state,
+                "type":type,
+                "surveyid": parsed.surveyid,
+                "callComponent": <div> <EmailInput surveyid={parsed.surveyid}/> </div>
+            });
+        } else{
+            this.setState({
+                ...this.state,
+                "type":type,
+                "surveyid": parsed.surveyid,
+                "callComponent": <div> <OpenSurveyQuestions surveyid={parsed.surveyid}/> </div>
+            });
+        }
     }
 
     render(){
-        if(this.state.type)
+
         return (
             <div>
-
+                {this.state.callComponent}
+                {/*<EmailInput/>*/}
             </div>
         )
     }
