@@ -55,6 +55,7 @@ public class SurveyController {
         return new ResponseEntity<>(jsonResponse, HttpStatus.BAD_REQUEST);
     }
 
+
     private ResponseEntity<?> respondClosedCheck(String closedCheck){
 
         jsonResponse = new HashMap<>();
@@ -75,5 +76,33 @@ public class SurveyController {
             jsonResponse.put("message", "User can take the survey!");
             return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
         }
+    }
+    @RequestMapping(path="/fetchUser", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> generalSurvey(@RequestBody Survey survey) {
+        System.out.println("-----------");
+        if(surveyService.isPublished(survey))
+        {
+            if(surveyService.isValid(survey)){
+                System.out.println("the survey is published and is valid");
+                return new ResponseEntity<>("the survey is published and is valid", HttpStatus.OK);
+            }
+            else{
+                System.out.println("the survey is not valid");
+                return new ResponseEntity<>("the survey is not valid", HttpStatus.BAD_REQUEST);
+            }
+        }
+        else{
+            System.out.println("the survey is not published");
+            return new ResponseEntity<>("the survey is not published    ", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(path="/stat", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> surveyStat(@RequestBody Survey survey) {
+        System.out.println("-----------");
+        System.out.println(survey.getSurveyid());
+        // Survey newSurvey = surveyService.createSurvey(survey);
+
+        return new ResponseEntity<>(survey.getSurveyid(), HttpStatus.OK);
     }
 }

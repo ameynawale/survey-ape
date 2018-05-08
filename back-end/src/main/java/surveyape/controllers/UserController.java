@@ -8,8 +8,10 @@ import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.*;
 import surveyape.aspects.CheckSession;
 import surveyape.exceptions.InternalServerException;
+import surveyape.models.Survey;
 import surveyape.models.User;
 import surveyape.services.MailService;
+import surveyape.services.SurveyService;
 import surveyape.services.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -31,6 +33,8 @@ public class UserController {
     private MailService mailService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private SurveyService surveyService;
 
     private Map<String, String> jsonResponse = null;
 
@@ -106,6 +110,7 @@ public class UserController {
 
         }
     }
+
 
     @CheckSession @RequestMapping(path="/logout", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> logoutUser(HttpSession httpSession) {
