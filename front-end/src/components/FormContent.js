@@ -5,6 +5,7 @@ import Dropdown from "./Dropdown";
 import Text from "./Text";
 import Rating from "./Rating";
 import Date from "./Date";
+import * as API from "../api/API";
 import '../styles/FormContent.css';
 import { Button, ButtonGroup } from 'reactstrap';
 
@@ -19,8 +20,8 @@ class FormContent extends Component {
             questionsarray: [],
             index: 0,
 
-            surveyName      :   this.props.surveydata.surveyName,
-            surveyId        :   this.props.surveydata.surveyId
+            // surveyName      :   this.props.surveydata.surveyName,
+            surveyid        :   this.props.surveydata.surveyid
         };
         // var index = 0;
 
@@ -59,81 +60,113 @@ class FormContent extends Component {
 
     addQuestion = (event) => {
         event.preventDefault();
-        var questions = this.state.questions;
-            questions.push(
-                <div className="form-inline">
-                    <SingleSelect index={this.state.index++} handleSubmit={this.handleSubmit}/>
-                </div>
-            );
-        this.state.questionsarray.push({});
-        this.setState({
-            questions: questions
-        });
+        API.addQuestion(this.state)
+            .then((res) => {
+                if(res.status === 201)
+                {
+                    var questions = this.state.questions;
+                    questions.push(
+                        <div className="form-inline">
+                            <SingleSelect surveydata={res.data} handleSubmit={this.handleSubmit}/>
+                        </div>
+                    );
+                    this.setState({
+                        questions: questions
+                    });
+                }
+            });
     }
+
     addCheckbox = (event) => {
         event.preventDefault();
-        var questions = this.state.questions;
-        questions.push(
-            <div className="form-inline">
-                <Checkbox index={this.state.index++} handleSubmit={this.handleSubmit}/>
-            </div>
-        );
-        this.state.questionsarray.push({});
-        this.setState({
-            questions: questions
-        });
+        API.addQuestion(this.state)
+            .then((res) => {
+                if(res.status === 201)
+                {
+                    var questions = this.state.questions;
+                    questions.push(
+                        <div className="form-inline">
+                            <Checkbox surveydata={res.data} handleSubmit={this.handleSubmit}/>
+                        </div>
+                    );
+                    this.setState({
+                        questions: questions
+                    });
+                }
+            });
     }
+
     addDropdown = (event) => {
         event.preventDefault();
-        var questions = this.state.questions;
-        questions.push(
-            <div className="form-inline">
-                <Dropdown index={this.state.index++} handleSubmit={this.handleSubmit}/>
-            </div>
-        );
-        this.state.questionsarray.push({});
-        this.setState({
-            questions: questions
-        });
+        API.addQuestion(this.state)
+            .then((res) => {
+                if(res.status === 201)
+                {
+                    var questions = this.state.questions;
+                    questions.push(
+                        <div className="form-inline">
+                            <Dropdown surveydata={res.data} handleSubmit={this.handleSubmit}/>
+                        </div>
+                    );
+                    this.setState({
+                        questions: questions
+                    });
+                }
+            });
     }
     addText = (event) => {
         event.preventDefault();
-        var questions = this.state.questions;
-        questions.push(
-            <div className="form-inline">
-                <Text index={this.state.index++} handleSubmit={this.handleSubmit}/>
-            </div>
-        );
-        this.state.questionsarray.push({});
-        this.setState({
-            questions: questions
-        });
+        API.addQuestion(this.state)
+            .then((res) => {
+                if(res.status === 201)
+                {
+                    var questions = this.state.questions;
+                    questions.push(
+                        <div className="form-inline">
+                            <Text surveydata={res.data} handleSubmit={this.handleSubmit}/>
+                        </div>
+                    );
+                    this.setState({
+                        questions: questions
+                    });
+                }
+            });
     }
     addRating = (event) => {
         event.preventDefault();
-        var questions = this.state.questions;
-        questions.push(
-            <div className="form-inline">
-                <Rating index={this.state.index++} handleSubmit={this.handleSubmit}/>
-            </div>
-        );
-        this.state.questionsarray.push({});
-        this.setState({
-            questions: questions
-        });
+        API.addQuestion(this.state)
+            .then((res) => {
+                if(res.status === 201)
+                {
+                    var questions = this.state.questions;
+                    questions.push(
+                        <div className="form-inline">
+                            <Rating surveydata={res.data} handleSubmit={this.handleSubmit}/>
+                        </div>
+                    );
+                    this.setState({
+                        questions: questions
+                    });
+                }
+            });
     }
     addDate = (event) => {
         event.preventDefault();
-        var questions = this.state.questions;
-        questions.push(
-            <div className="form-inline">
-                <Date index={this.state.index++} handleSubmit={this.handleSubmit}/>
-            </div>
-        );
-        this.state.questionsarray.push({});
-        this.setState({
-            questions: questions
-        });
+        API.addQuestion(this.state)
+            .then((res) => {
+                if(res.status === 201)
+                {
+                    var questions = this.state.questions;
+                    questions.push(
+                        <div className="form-inline">
+                            <Date surveydata={res.data} handleSubmit={this.handleSubmit}/>
+                        </div>
+                    );
+                    this.setState({
+                        questions: questions
+                    });
+                }
+            });
     }
 
 

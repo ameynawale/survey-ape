@@ -31,11 +31,13 @@ class CustomRouter extends Component {
 
         API.addSurvey(Survey)
             .then((res) => {
+                console.log(res);
                 if(res.status === 201)
                 {
+                    console.log(res.status + " " + res.data.surveyid);
                     this.setState({
-                        surveyName: res.surveyName,
-                        surveyId: res.surveyId
+                        surveyname: res.data.surveyname,
+                        surveyid: res.data.surveyid
                     });
                     this.props.history.push("/CreateSurvey");
                 }

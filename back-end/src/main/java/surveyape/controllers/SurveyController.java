@@ -28,6 +28,6 @@ public class SurveyController {
 
         Survey newSurvey = surveyService.createSurvey(survey);
 
-        return new ResponseEntity<>(newSurvey, HttpStatus.OK);
+        return new ResponseEntity<>(newSurvey, HttpStatus.CREATED);
     }
 }

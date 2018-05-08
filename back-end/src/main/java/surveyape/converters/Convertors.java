@@ -1,8 +1,10 @@
 package surveyape.converters;
 
+import surveyape.entity.QuestionsEntity;
 import surveyape.entity.SurveyEntity;
 import surveyape.entity.UserEntity;
 import surveyape.models.Invitees;
+import surveyape.models.Question;
 import surveyape.models.Survey;
 import surveyape.models.User;
 
@@ -30,5 +32,14 @@ public class Convertors {
                 null);
 
         return survey;
+    }
+
+    public static Question mapQuestionsEntityToQuestion(QuestionsEntity questionsEntity){
+
+        Question question = new Question(questionsEntity.getQuestionid(),
+                                        questionsEntity.getQuestion(),
+                                        questionsEntity.getSurveyid(),
+                                        questionsEntity.getQuestiontype());
+        return question;
     }
 }
