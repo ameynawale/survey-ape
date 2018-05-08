@@ -6,11 +6,13 @@ import surveyape.converters.Convertors;
 import surveyape.entity.InviteesEntity;
 import surveyape.entity.SurveyEntity;
 import surveyape.entity.UserEntity;
+import surveyape.entity.UserSurveyEntity;
 import surveyape.models.Invitees;
 import surveyape.models.Survey;
 import surveyape.respositories.InviteeRepository;
 import surveyape.respositories.SurveyRepository;
 import surveyape.respositories.UserRepository;
+import surveyape.respositories.UserSurveyRepository;
 import surveyape.services.SurveyService;
 
 import java.util.ArrayList;
@@ -21,8 +23,9 @@ public class SurveyServiceImpl implements SurveyService {
 
     @Autowired
     private SurveyRepository surveyRepository;
+
     @Autowired
-    private InviteeRepository inviteeRespository;
+    private UserSurveyRepository userSurveyRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -44,6 +47,33 @@ public class SurveyServiceImpl implements SurveyService {
         r.setSurveytype(s.getSurveytype());
 
         return r;
+    }
+
+    @Override
+    public String isInvitedOrHasCompleted(String email, String surveyid) {
+
+        SurveyEntity fetchedSurveyEntity = surveyRepository.findBySurveyid(surveyid);
+
+        if(fetchedSurveyEntity == null) return "SURVEY_NOT_FOUND";
+        InviteesEntity foundInvitee = fetchedSurveyEntity
+                                                    .getInvitees()  // Fetch Invitees
+                                                    .stream()       // Convert to stream
+                                                    .filter(inviteesEntity -> email.equals(inviteesEntity.getEmail())) // We want invited user only
+                                                    .findAny()      // If 'findAny' then return found and the entity
+                                                    .orElse(null);  // If not found, return null
+        if(foundInvitee != null) {
+
+            UserSurveyEntity fetchUserSurveyEntity = userSurveyRepository.findBySurveyidAndEmail(surveyid, email);
+
+            if(fetchUserSurveyEntity.getHascompleted() != 0) {
+                return "HAS_COMPLETED";
+            } else {
+                return "USER_CAN_TAKE_SURVEY";
+            }
+
+        } else {
+            return "NOT_INVITED";
+        }
     }
 
     /*public Survey createSurvey(Survey survey){

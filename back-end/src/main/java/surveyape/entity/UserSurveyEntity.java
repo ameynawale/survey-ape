@@ -11,11 +11,13 @@ public class UserSurveyEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dummyid;
     private String email;
-    private int surveyid;
+    private String surveyid;
     @Column(columnDefinition="tinyint(1) default 0")
     private int hascompleted;
 
-    public UserSurveyEntity(String email, int surveyid, int hascompleted) {
+    public UserSurveyEntity() {}
+
+    public UserSurveyEntity(String email, String surveyid, int hascompleted) {
         this.email = email;
         this.surveyid = surveyid;
         this.hascompleted = hascompleted;
@@ -24,23 +26,20 @@ public class UserSurveyEntity {
     public String getEmail() {
         return email;
     }
-
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public int getSurveyid() {
+    public String getSurveyid() {
         return surveyid;
     }
-
-    public void setSurveyid(int surveyid) {
+    public void setSurveyid(String surveyid) {
         this.surveyid = surveyid;
     }
 
     public int getHascompleted() {
         return hascompleted;
     }
-
     public void setHascompleted(int hascompleted) {
         this.hascompleted = hascompleted;
     }

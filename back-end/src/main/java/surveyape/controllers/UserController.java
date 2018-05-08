@@ -5,14 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import surveyape.aspects.CheckSession;
-import surveyape.converters.Convertors;
-import surveyape.entity.UserEntity;
 import surveyape.exceptions.InternalServerException;
 import surveyape.models.User;
-import surveyape.respositories.UserRepository;
 import surveyape.services.MailService;
 import surveyape.services.UserService;
 

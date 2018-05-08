@@ -10,6 +10,7 @@ public class Survey {
     private String surveytype;
     private String validity;
     private int ispublished;
+    private String email;
     private List<Invitees> invitees;
 
     public Survey(){}
@@ -76,4 +77,8 @@ public class Survey {
     public void setInvitees(List<Invitees> invitees) {
         this.invitees = invitees;
     }
+
+    public String getEmail() { return email; }
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    public void setEmail(String email) { this.email = email; }
 }
