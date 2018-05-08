@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import '../styles/FormContent.css';
 import '../styles/Header.css';
 import '../styles/SingleSelect.css';
+import * as API from "../api/API";
 
 
 class Text extends Component {
@@ -13,7 +14,9 @@ class Text extends Component {
             options: [],
             question: "",
             optionsarray: [],
-            index: this.props.index
+            questionid: this.props.surveydata.questionid,
+            surveyid: this.props.surveydata.surveyid,
+            questiontype: 'text'
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -27,112 +30,9 @@ class Text extends Component {
         handleSubmit: PropTypes.func.isRequired
     }
 
-    handleInputChange(event) {
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
-        var index = name/2;
-        console.log("index"+index);
-        var optionsarray = this.state.optionsarray;
-        optionsarray[index] = value;
-        // optionsarray.push(value);
-        this.setState({
-            optionsarray: optionsarray
-        });
-        console.log(this.state.optionsarray);
+    handleInputChange() {
+        API.addQuestion(this.state);
     }
-
-    /*addOption = (event) => {
-        event.preventDefault();
-        console.log(this.state.optionsarray);
-        this.state.optionsarray.push("");
-        let optionsarray = this.state.optionsarray;
-        let options = optionsarray.map((option, index) =>
-            // console.log("index "+index)
-            <div className="form-group">
-                <label>
-                    <input type="checkbox" disabled/>
-                    <input type="text" className="form-control ml-2"
-                        // onBlurCapture={this.handleInputChange}
-                        // value={option}
-                           placeholder="Option"
-                        // value={this.state.optionsarray[index]}
-                           onChange={(event) => {
-                               let value = event.target.value;
-                               let optionsarray = this.state.optionsarray;
-                               optionsarray[index] = value;
-                               // this.state.optionsarray[index] = event.target.value;
-                               this.setState({
-                                   optionsarray: optionsarray
-                               });
-                           }}
-                    />
-                    <span className="fa fa-trash ml-2" onClick={this.removeOption} data-id={index}></span>
-                </label>
-                <br/><br/>
-            </div>
-        );
-*/
-        /*var options = this.state.options;
-        let index = options.length;
-        options.push(
-            <div className="form-group">
-                <label>
-                    <input type="radio" disabled/>
-                    <input type="text" className="form-control ml-2" name={index} onBlurCapture={this.handleInputChange}/>
-                    <span className="fa fa-trash ml-2" name={index} onClick={this.removeOption} data-id={index}></span>
-                </label>
-            </div>
-        );*/
-        // options.push(<br/>);
-  /*      this.setState({
-            options: options
-        });
-
-        this.props.handleSubmit(this.state);
-
-    }
-
-    removeOption = (event) => {
-        console.log("dataid "+event.currentTarget.dataset.id);
-        event.preventDefault();
-
-        this.state.optionsarray.splice(event.currentTarget.dataset.id, 1);
-        let optionsarray = this.state.optionsarray;
-        // optionsarray.r
-        let options = optionsarray.map((option, index) =>
-            // console.log("index "+index)
-            <div className="form-group">
-                <label>
-                    <input type="radio" disabled/>
-                    <input type="text" className="form-control ml-2"
-                        // onBlurCapture={this.handleInputChange}
-                           defaultValue={option}
-                        // placeholder="Option"
-                        // value={this.state.optionsarray[index]}
-                           onChange={(event) => {
-                               let value = event.target.value;
-                               let optionsarray = this.state.optionsarray;
-                               optionsarray[index] = value;
-                               // this.state.optionsarray[index] = event.target.value;
-                               this.setState({
-                                   optionsarray: optionsarray
-                               });
-                           }}
-                    />
-                    <span className="fa fa-trash ml-2" onClick={this.removeOption} data-id={index}></span>
-                </label>
-                <br/><br/>
-            </div>
-        );
-        this.setState({
-            options: options
-        });
-        console.log(this.state.optionsarray);
-
-    }
-
-*/
 
     render() {
         return (
@@ -143,7 +43,7 @@ class Text extends Component {
                                this.setState({
                                    question: event.target.value
                                });
-                               this.props.handleSubmit(this.state);
+                               this.handleInputChange();
                            }}
                     /><br/>
                 </div>

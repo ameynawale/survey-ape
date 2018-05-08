@@ -97,6 +97,31 @@ export const addSurvey = (payload) =>{
         });
 };
 
+export const addQuestion = (payload) =>{
+    return axios.post('http://localhost:8080/question/create', payload)
+        .then(function (response) {
+            console.log(response);
+            return response;
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error;
+        });
+};
+
+export const addOption = (payload) =>{
+    return axios.post('http://localhost:8080/option/create', payload)
+        .then(function (response) {
+            console.log(response);
+            return response;
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error;
+        });
+};
+
+
 export const getSurveyListing = () =>
     fetch(`${api}/surveys/getsurveylisting`, {
         method: 'GET',
@@ -112,6 +137,7 @@ export const getSurveyListing = () =>
             console.log("This is error");
             return error;
         });
+
 
 
 /*
