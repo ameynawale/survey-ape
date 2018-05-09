@@ -29,11 +29,11 @@ class EmailInput extends Component{
                 response => {
                     if(response.status === 200){
                         this.props.history.push('./SurveyQuestions', {surveyData: this.state});
-                    } else if(response.response.status === 404){
+                    } else if(response.status === 208){
+                        alert(response.data.message);
+                    }else if(response.response.status === 404){
                         alert(response.response.data.message);
-                    } else if(response.response.status === 208){
-                        //show his/her response page of the user
-                    } else if(response.response.status === 401){
+                    }  else if(response.response.status === 401){
                         alert(response.response.data.message);
                     } else {
                         alert("An error occured. Please try again with correc URL");
