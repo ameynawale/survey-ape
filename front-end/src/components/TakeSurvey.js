@@ -23,14 +23,14 @@ class TakeSurvey extends Component{
                 ...this.state,
                 "type":type,
                 "surveyid": parsed.surveyid,
-                "callComponent": <div> <EmailInput surveyid={parsed.surveyid}/> </div>
+                "callComponent": <div> <EmailInput surveyid={parsed.surveyid} stype={type}/> </div>
             });
         } else if(type === 'close'){
             this.setState({
                 ...this.state,
                 "type":type,
                 "surveyid": parsed.surveyid,
-                "callComponent": <div> <EmailInput surveyid={parsed.surveyid}/> </div>
+                "callComponent": <div> <EmailInput surveyid={parsed.surveyid} stype={type}/> </div>
             });
         } else{
             this.setState({
