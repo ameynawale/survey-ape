@@ -7,9 +7,11 @@ class EmailInput extends Component{
     constructor(props){
         super(props);
         let id = this.props.surveyid;
+        let type = this.props.stype;
         this.state={
             "email":'',
-            "surveyid":id
+            "surveyid":id,
+            "type": type
         }
     }
     handleSignIn(){
@@ -18,7 +20,11 @@ class EmailInput extends Component{
     handleEmailInput(){
         //API call to save the email in response and provide email and id both
         // get all the questions of the survey
-        API.validateEmail(this.state)
+        var payload= {
+            "email":this.state.email,
+            "surveyid":this.state.surveyid
+        }
+        API.validateEmail(payload)
             .then(
                 response => {
                     if(response.status === 200){

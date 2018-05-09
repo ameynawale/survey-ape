@@ -56,6 +56,18 @@ export const getSurvey = (payload) =>{
             return error
         });
 }
+
+export const saveSurveyResponse = (payload) =>{
+    return axios.post('http://localhost:8080/survey/saveSurvey', payload)
+        .then(function (response) {
+            console.log(response);
+            return response
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error
+        });
+}
     // fetch(`${url}/users/signin`, {
     //     method: 'POST',
     //     headers: {
