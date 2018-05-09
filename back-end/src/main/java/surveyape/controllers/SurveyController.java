@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import surveyape.aspects.CheckSession;
 import surveyape.converters.Convertors;
 import surveyape.entity.QuestionsEntity;
+import surveyape.models.SurveyListing;
+import surveyape.models.User;
 import surveyape.respositories.SurveyRepository;
 import surveyape.respositories.QuestionRepository;
 import surveyape.entity.SurveyEntity;
@@ -54,6 +56,16 @@ public class SurveyController {
         Survey newSurvey = surveyService.publishSurvey(survey);
 
         return new ResponseEntity<>(newSurvey, HttpStatus.OK);
+    }
+
+    @CheckSession @RequestMapping(path="/surveylisting", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> surveyListing(@RequestBody User user) {
+        System.out.println("-----------");
+
+        System.out.println("inside survey listing controller");
+        SurveyListing surveyListing = surveyService.getSurveyListing(user);
+
+        return new ResponseEntity<>(surveyListing, HttpStatus.OK);
     }
 
     @RequestMapping(path="/validateEmail", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

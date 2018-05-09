@@ -6,6 +6,8 @@ import surveyape.converters.Convertors;
 import surveyape.entity.*;
 import surveyape.models.Invitees;
 import surveyape.models.Survey;
+import surveyape.models.SurveyListing;
+import surveyape.models.User;
 import surveyape.respositories.InviteeRepository;
 import surveyape.respositories.SurveyRepository;
 import surveyape.respositories.UserRepository;
@@ -79,6 +81,40 @@ public class SurveyServiceImpl implements SurveyService {
         r.setSurveytype(s.getSurveytype());
 
         return r;
+    }
+
+    public SurveyListing getSurveyListing(User user)
+    {
+        Set<SurveyEntity> surveyEntitiesCreatedByMe = new HashSet<SurveyEntity>();
+        Set<SurveyEntity> surveyEntitiesSharedWithMe = new HashSet<SurveyEntity>();
+
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUserid(user.getUserid());
+        surveyEntitiesCreatedByMe = surveyRepository.findAllByUserEntity(userEntity);
+
+        Set<InviteesEntity> inviteesEntities = inviteeRepository.findAllByEmail(user.getEmail());
+
+        for(InviteesEntity inviteesEntity: inviteesEntities)
+        {
+            surveyEntitiesSharedWithMe.add(surveyRepository.findBySurveyid(inviteesEntity.getSurveyEntity().getSurveyid()));
+        }
+
+        Set<Survey> surveysCreatedByMe = new HashSet<Survey>();
+        Set<Survey> surveysSharedWithMe = new HashSet<Survey>();
+
+        for(SurveyEntity surveyEntity: surveyEntitiesCreatedByMe)
+        {
+            surveysCreatedByMe.add(Convertors.mapSurveyEntityToSurvey(surveyEntity));
+        }
+
+        for(SurveyEntity surveyEntity: surveyEntitiesSharedWithMe)
+        {
+            surveysSharedWithMe.add(Convertors.mapSurveyEntityToSurvey(surveyEntity));
+        }
+
+        SurveyListing surveyListing = new SurveyListing(surveysCreatedByMe,surveysSharedWithMe);
+
+        return surveyListing;
     }
 
     @Override
