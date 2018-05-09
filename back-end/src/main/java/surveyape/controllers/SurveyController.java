@@ -8,13 +8,17 @@ import org.springframework.web.bind.annotation.*;
 import surveyape.aspects.CheckSession;
 import surveyape.converters.Convertors;
 import surveyape.entity.QuestionsEntity;
+import surveyape.entity.UserSurveyEntity;
 import surveyape.models.SurveyListing;
+import surveyape.models.UniqueSurveyListing;
 import surveyape.models.User;
 import surveyape.respositories.ResponseRepository;
 import surveyape.respositories.SurveyRepository;
 import surveyape.respositories.QuestionRepository;
 import surveyape.entity.SurveyEntity;
 import surveyape.models.Survey;
+import surveyape.respositories.UserSurveyRepository;
+import surveyape.services.MailService;
 import surveyape.services.SurveyService;
 
 import java.util.HashMap;
@@ -37,9 +41,13 @@ public class SurveyController {
     @Autowired
     private SurveyRepository surveyRepository;
     @Autowired
+    private UserSurveyRepository userSurveyRepository;
+    @Autowired
     private QuestionRepository questionRepository;
     @Autowired
     private ResponseRepository responseRepository;
+    @Autowired
+    private MailService mailService;
 
     private Map<String, String> jsonResponse = null;
 
@@ -80,6 +88,16 @@ public class SurveyController {
         return new ResponseEntity<>(surveyListing, HttpStatus.OK);
     }
 
+    @RequestMapping(path="/uniqueSurveylisting", method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> uniqueSurveyListing() {
+        System.out.println("-----------");
+
+        System.out.println("inside unique survey listing controller");
+        UniqueSurveyListing uniqueSurveyListing = surveyService.getUniqueSurveyListing();
+
+        return new ResponseEntity<>(uniqueSurveyListing, HttpStatus.OK);
+    }
+
     @RequestMapping(path="/validateEmail", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> validateEmail(@RequestBody Survey survey) {
 
@@ -98,6 +116,42 @@ public class SurveyController {
         return new ResponseEntity<>(jsonResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @RequestMapping(path="/validateUniqueEmail", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> validateUniqueEmail(@RequestBody Survey survey) {
+        System.out.println("validateUniqueEmail");
+        String email = survey.getEmail();
+        System.out.println(email);
+        System.out.println(survey.getSurveyid());
+        SurveyEntity surveyEntity = surveyRepository.findBySurveyid(survey.getSurveyid());
+        UserSurveyEntity userSurveyEntity = userSurveyRepository.findBySurveyidAndEmail(survey.getSurveyid(), email);
+        //        survey.getInvitees().forEach(invitee -> System.out.println(invitee));
+        jsonResponse = new HashMap<>();
+        if (surveyEntity != null) {
+            System.out.println("validateUniqueEmail");
+            String URL = surveyEntity.getURL();
+            System.out.println(URL);
+            if (URL != null) {
+                if (userSurveyEntity == null) {
+                    System.out.println(URL);
+                  //  if (userSurveyEntity.getHascompleted() == 0) {
+                        mailService.sendUniqueMail(URL,email);
+                        System.out.println("sendUniqueMail");
+                        return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
+                  //  } else {
+
+                    }
+                System.out.println("You have already completed the survey");
+                jsonResponse.put("message", "You have already completed the survey");
+                return new ResponseEntity<>(jsonResponse, HttpStatus.ALREADY_REPORTED);
+                }
+            else {
+                jsonResponse.put("message", "Survey not found. Please enter correct URL");
+                return new ResponseEntity<>(jsonResponse, HttpStatus.NOT_FOUND);
+            }
+        }
+        jsonResponse.put("message", "Invalid details provided.");
+        return new ResponseEntity<>(jsonResponse, HttpStatus.BAD_REQUEST);
+    }
 
     private ResponseEntity<?> respondClosedCheck(String closedCheck){
 

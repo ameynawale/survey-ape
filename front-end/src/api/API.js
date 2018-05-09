@@ -45,6 +45,18 @@ export const validateEmail = (payload) =>{
         });
 }
 
+export const validateUniqueEmail = (payload) =>{
+    return axios.post('http://localhost:8080/survey/validateUniqueEmail', payload)
+        .then(function (response) {
+            console.log(response);
+            return response
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error
+        });
+}
+
 export const getSurvey = (payload) =>{
     return axios.post('http://localhost:8080/survey/getSurvey', payload)
         .then(function (response) {
@@ -111,6 +123,18 @@ export const doSignUp = (payload) =>{
 
 export const doSignUpVerification = (payload) =>{
     return axios.post('http://localhost:8080/users/signUpVerification', payload)
+        .then(function (response) {
+            console.log(response);
+            return response
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error
+        });
+};
+
+export const doRegister = (payload) =>{
+    return axios.post('http://localhost:8080/survey/register', payload)
         .then(function (response) {
             console.log(response);
             return response
@@ -188,6 +212,18 @@ export const closeSurvey = (payload) =>{
 
 export const surveyListing = (payload) =>{
     return axios.post('http://localhost:8080/survey/surveylisting', payload)
+        .then(function (response) {
+            console.log(response);
+            return response;
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error;
+        });
+};
+
+export const uniqueSurveyListing = () =>{
+    return axios.post('http://localhost:8080/survey/uniqueSurveylisting',null)
         .then(function (response) {
             console.log(response);
             return response;

@@ -2,7 +2,10 @@ import React, {Component} from 'react';
 import { Route, withRouter } from 'react-router-dom';
 import Samplesurveypage from './samplesurveypage';
 import SurveyListing from './SurveyListing';
+import UniqueSurveyListing from './UniqueSurveyListing';
 import HomeHeader from "./HomeHeader";
+import Register from "./UniqueEmailInput";
+import UniqueEmailInput from "./UniqueEmailInput";
 import SignIn from "./SignIn";
 import SignUp from './SignUp';
 import SignUpVerification from './SignUpVerification';
@@ -181,6 +184,18 @@ class CustomRouter extends Component {
                         <SurveyListing surveydata={this.state}/>
                     </div>
                 )}/>
+                <Route exact path="/uniqueSurveys" render={() => (
+                    <div>
+                        <Header history={this.props.history} handleAddSurvey={this.handleAddSurvey} />
+                        <UniqueSurveyListing surveydata={this.state}/>
+                    </div>
+                )}/>
+                <Route exact path="/register" render={() => (
+                    <div>
+                        <Header history={this.props.history} handleAddSurvey={this.handleAddSurvey} />
+                        <Register surveydata={this.state}/>
+                    </div>
+                )}/>
                 <Route exact path="/surveyStats" render={(selectedSurvey) => (
                     <div>
                         <Header history={this.props.history} handleAddSurvey={this.handleAddSurvey} handleGetSurveyListing={this.handleGetSurveyListing}/>
@@ -205,6 +220,11 @@ class CustomRouter extends Component {
                 <Route exact path="/SurveyQuestions" render={(surveyData) => (
                     <div>
                         <SurveyQuestions surveyData={surveyData.location.state.surveyData}/>
+                    </div>
+                )}/>
+                <Route exact path="/UniqueEmailInput" render={(survey) => (
+                    <div>
+                        <UniqueEmailInput selectedSurvey={survey.location.state.selectedSurvey}/>
                     </div>
                 )}/>
             </div>

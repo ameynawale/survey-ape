@@ -3,6 +3,7 @@ package surveyape.services;
 import org.springframework.http.ResponseEntity;
 import surveyape.models.Survey;
 import surveyape.models.SurveyListing;
+import surveyape.models.UniqueSurveyListing;
 import surveyape.models.User;
 
 public interface SurveyService {
@@ -11,6 +12,7 @@ public interface SurveyService {
     Survey publishSurvey(Survey survey);
     Survey closeSurvey(Survey survey);
     SurveyListing getSurveyListing(User user);
+    UniqueSurveyListing getUniqueSurveyListing(); // return the list of unique surveys
     public ResponseEntity<byte[]> getQRCode(String text);
 
     String isInvitedOrHasCompleted(String email, String surveyId);
