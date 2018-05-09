@@ -25,6 +25,14 @@ public class ResponseEntity {
     @JoinColumn(name = "questionid")
     private QuestionsEntity questionsEntity;
 
+    public Long getDummyid() {
+        return dummyid;
+    }
+
+    public void setDummyid(Long dummyid) {
+        this.dummyid = dummyid;
+    }
+
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 

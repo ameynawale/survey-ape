@@ -13,6 +13,7 @@ export const doLogout = () =>{
     return axios.get('http://localhost:8080/users/logout', null)
         .then(function (response) {
             console.log(response);
+            localStorage.removeItem("userEmail");
             return response
         })
         .catch(function (error) {
@@ -58,7 +59,7 @@ export const getSurvey = (payload) =>{
 }
 
 export const saveSurveyResponse = (payload) =>{
-    return axios.post('http://localhost:8080/survey/saveSurvey', payload)
+    return axios.post('http://localhost:8080/response/saveSurveyResponse', payload)
         .then(function (response) {
             console.log(response);
             return response
