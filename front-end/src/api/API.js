@@ -197,6 +197,32 @@ export const surveyListing = (payload) =>{
             return error;
         });
 };
+
+
+export const getQuestions = (payload) =>{
+    return axios.post('http://localhost:8080/survey/getquestions', payload)
+        .then(function (response) {
+            console.log(response);
+            return response;
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error;
+        });
+};
+
+export const getOptions = (payload) =>{
+    return axios.post('http://localhost:8080/question/getoptions', payload)
+        .then(function (response) {
+            console.log(response);
+            return response;
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error;
+        });
+};
+
 export const getSurveyListing = () =>
     fetch(`${api}/survey/surveylisting`, {
         method: 'GET',

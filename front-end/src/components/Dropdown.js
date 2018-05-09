@@ -12,7 +12,7 @@ class Dropdown extends Component {
         super(props);
         this.state = {
             options: [],
-            question: "",
+            question: this.props.surveydata.question,
             optionsarray: [],
             questionid: this.props.surveydata.questionid,
             surveyid: this.props.surveydata.surveyid,
@@ -23,15 +23,51 @@ class Dropdown extends Component {
     }
 
     componentWillMount() {
-        console.log("index in child "+this.props.index);
+        console.log("index in child "+this.state.question);
+        API.getOptions(this.state)
+            .then((res) => {
+                // console.log("options", res.data.options[0].options);
+                this.setState({
+                    optionsarray: res.data.options
+                })
+                res.data.options.map((option) => {
+                    var optionstemp = this.state.options;
+                    optionstemp.push(
+                        <div className="form-group">
+                            <label>
+                                <input type="checkbox" disabled/>
+                                <input type="text" className="form-control ml-2"
+                                       defaultValue={option.options}
+                                       onBlurCapture={(event) => {
+                                           this.handleOptionInputChange(event)}}
+                                       // placeholder="Option"
+                                       name={option.optionid}
+                                />
+                                <span className="fa fa-trash ml-2" onClick={this.removeOption} ></span>
+                            </label>
+                            <br/><br/>
+                        </div>
+                    )
+                    this.setState({
+                        options: optionstemp
+                    })
+                })
+
+            })
     }
 
     static propTypes = {
         handleSubmit: PropTypes.func.isRequired
     }
 
-    handleInputChange() {
-        API.addQuestion(this.state);
+    handleInputChange(event) {
+        let question = {
+            question: event.target.value,
+            questionid: this.state.questionid,
+            surveyid: this.state.surveyid,
+            questiontype: this.state.questiontype
+        }
+        API.addQuestion(question);
     }
 
     handleOptionInputChange(event) {
@@ -157,7 +193,7 @@ class Dropdown extends Component {
                                });
                            }}
                     />
-                    <span className="fa fa-trash ml-2" onClick={this.removeOption} data-id={index}></span>
+                    <span className="fa fa-trash ml-2" onClick={(e) => this.removeOption(e)} data-id={index}></span>
                 </label>
                 <br/><br/>
             </div>
@@ -191,11 +227,12 @@ class Dropdown extends Component {
             <div className="question-container">
                 <div className="col-lg-12">
                     <input type="text" className="form-control question-input"
+                           defaultValue={this.state.question}
                            onBlurCapture={(event) => {
                                this.setState({
                                    question: event.target.value
                                });
-                               this.handleInputChange();
+                               this.handleInputChange(event);
                            }}
                     /><br/>
                 </div>

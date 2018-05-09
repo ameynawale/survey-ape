@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import surveyape.converters.Convertors;
 import surveyape.entity.*;
-import surveyape.models.Invitees;
-import surveyape.models.Survey;
-import surveyape.models.SurveyListing;
-import surveyape.models.User;
+import surveyape.models.*;
 import surveyape.respositories.InviteeRepository;
 import surveyape.respositories.SurveyRepository;
 import surveyape.respositories.UserRepository;
@@ -100,6 +97,20 @@ public class SurveyServiceImpl implements SurveyService {
         return r;
     }
 
+    public Questions getQuestions(Survey survey)
+    {
+        SurveyEntity surveyEntity = new SurveyEntity();
+        surveyEntity = surveyRepository.findBySurveyid(survey.getSurveyid());
+        Set<QuestionsEntity> questionsEntities = surveyEntity.getQuestions();
+        Set<Question> questions = new HashSet<Question>();
+
+        for(QuestionsEntity questionsEntity: questionsEntities)
+        {
+            questions.add(Convertors.mapQuestionsEntityToQuestion(questionsEntity));
+        }
+
+        return new Questions(questions);
+    }
 
     public SurveyListing getSurveyListing(User user)
     {
