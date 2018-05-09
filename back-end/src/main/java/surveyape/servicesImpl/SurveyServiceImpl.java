@@ -115,28 +115,45 @@ public class SurveyServiceImpl implements SurveyService {
         String sessionEmail = Convertors.fetchSessionEmail();
         UserEntity userEntity = userRepository.findByEmail(sessionEmail);
         SurveyEntity surveyEntity = surveyRepository.findBySurveyid(survey.getSurveyid());
+        if(surveyEntity == null){
+            Survey r = new Survey();
+            return r;
+        }
         surveyEntity.setIspublished(1);
         SurveyEntity s = surveyRepository.save(surveyEntity);
         System.out.println("session email"+sessionEmail);
         System.out.println("survey type/"+surveyEntity.getSurveytype()+"/");
+        String URL = "http://localhost:8080/survey" +"/" +surveyEntity.getSurveytype()+ "?surveyid=" +survey.getSurveyid();
+        System.out.println(URL);
+        surveyEntity.setURL(URL);
+        SurveyEntity Q= surveyRepository.save(surveyEntity);
         //if general
+
         if((surveyEntity.getSurveytype()).equalsIgnoreCase("general") ){
-            String URL = "http://localhost:8080/survey" +"/" +surveyEntity.getSurveytype()+ "?surveyid=" +survey.getSurveyid();
-            System.out.println(URL);
+
             ResponseEntity<byte[]> QRCode = this.getQRCode(URL);
             System.out.println(QRCode);
             mailService.sendpublishMailGeneral(URL,sessionEmail);
         }
         else if((surveyEntity.getSurveytype()).equalsIgnoreCase("closed")){
+            System.out.println("closed type");
+            Set<InviteesEntity> set = inviteeRepository.findBySurveyEntity(surveyEntity);
+            for(InviteesEntity invitees: set)
+            {
+                String email = invitees.getEmail();
+                System.out.println(email);
+                mailService.sendpublishMailGeneral(URL,email);
+            }
 
         }
 
-        Survey r = new Survey();
-        r.setSurveyid(s.getSurveyid());
-        r.setSurveyname(s.getSurveyname());
-        r.setIspublished(s.getIspublished());
-        r.setSurveytype(s.getSurveytype());
 
+        Survey r = new Survey();
+        r.setSurveyid(Q.getSurveyid());
+        r.setSurveyname(Q.getSurveyname());
+        r.setIspublished(Q.getIspublished());
+        r.setSurveytype(Q.getSurveytype());
+        r.setURL(Q.getURL());
         return r;
     }
 
@@ -235,6 +252,9 @@ public class SurveyServiceImpl implements SurveyService {
         String id =   survey.getSurveyid();
         System.out.println(id);
         SurveyEntity surveyEntity = surveyRepository.findBySurveyid(id);
+
+        if(surveyEntity == null) return false;
+
         System.out.println(surveyEntity.getValidity());
         System.out.println(surveyEntity.getValidity());
         Calendar cal = Calendar.getInstance();

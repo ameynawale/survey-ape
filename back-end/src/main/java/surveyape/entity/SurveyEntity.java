@@ -26,6 +26,23 @@ public class SurveyEntity {
     private String validity;
     private String createdon;
 
+
+    public SurveyEntity(String surveyname, String surveytype, String validity, String createdon, String URL, int ispublished, int isclosed, Set<InviteesEntity> invitees, Set<QuestionsEntity> questions, UserEntity userEntity) {
+        this.surveyname = surveyname;
+        this.surveytype = surveytype;
+        this.validity = validity;
+        this.createdon = createdon;
+        this.URL = URL;
+        this.ispublished = ispublished;
+        this.isclosed = isclosed;
+        this.invitees = invitees;
+        this.questions = questions;
+        this.userEntity = userEntity;
+    }
+
+    @Column(length=200)
+    private String URL;
+
     @Column(columnDefinition="tinyint(1) default 0")
     private int ispublished;
 
@@ -62,6 +79,7 @@ public class SurveyEntity {
         this.ispublished = ispublished;
         this.isclosed = isclosed;
         this.userEntity = userEntity;
+
     }
 
     public SurveyEntity() { }
@@ -98,7 +116,13 @@ public class SurveyEntity {
     public void setUserEntity(UserEntity userEntity) {
         this.userEntity = userEntity;
     }
+    public String getURL() {
+        return URL;
+    }
 
+    public void setURL(String URL) {
+        this.URL = URL;
+    }
 
     public String getSurveyid() {
         return surveyid;

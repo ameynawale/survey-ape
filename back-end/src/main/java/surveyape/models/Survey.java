@@ -11,9 +11,33 @@ public class Survey {
     private String surveytype;
     private String validity;
     private int ispublished;
+
+    public Survey(String surveyid, String surveyname, int ownerid, String surveytype, String validity, int ispublished, int isclosed, String email, Set<Invitees> invitees, String URL) {
+        this.surveyid = surveyid;
+        this.surveyname = surveyname;
+        this.ownerid = ownerid;
+        this.surveytype = surveytype;
+        this.validity = validity;
+        this.ispublished = ispublished;
+        this.isclosed = isclosed;
+        this.email = email;
+        this.invitees = invitees;
+        this.URL = URL;
+    }
+
     private int isclosed;
     private String email;
     private Set<Invitees> invitees;
+
+    public String getURL() {
+        return URL;
+    }
+
+    public void setURL(String URL) {
+        this.URL = URL;
+    }
+
+    private String URL;
 
     public Survey(){}
 
