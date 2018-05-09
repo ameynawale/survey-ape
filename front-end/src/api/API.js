@@ -31,6 +31,30 @@ export const doLogin = (payload) =>{
             return error
         });
 };
+
+export const validateEmail = (payload) =>{
+    return axios.post('http://localhost:8080/survey/validateEmail', payload)
+        .then(function (response) {
+            console.log(response);
+            return response
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error
+        });
+}
+
+export const getSurvey = (payload) =>{
+    return axios.post('http://localhost:8080/survey/getSurvey', payload)
+        .then(function (response) {
+            console.log(response);
+            return response
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error
+        });
+}
     // fetch(`${url}/users/signin`, {
     //     method: 'POST',
     //     headers: {

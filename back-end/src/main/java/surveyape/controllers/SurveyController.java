@@ -65,15 +65,15 @@ public class SurveyController {
         jsonResponse = new HashMap<>();
 
         if(closedCheck.equalsIgnoreCase("NOT_INVITED")) {
-            jsonResponse.put("message", "User is not invited");
+            jsonResponse.put("message", "You are not invited to take the survey. Please enter correct URL");
             return new ResponseEntity<>(jsonResponse, HttpStatus.UNAUTHORIZED);
         }
         else if(closedCheck.equalsIgnoreCase("HAS_COMPLETED")) {
-            jsonResponse.put("message", "User has already completed");
-            return new ResponseEntity<>(jsonResponse, HttpStatus.UNAUTHORIZED);
+            jsonResponse.put("message", "You have already completed the survey");
+            return new ResponseEntity<>(jsonResponse, HttpStatus.ALREADY_REPORTED);
         }
         else if(closedCheck.equalsIgnoreCase("SURVEY_NOT_FOUND")) {
-            jsonResponse.put("message", "Survey not found");
+            jsonResponse.put("message", "Survey not found. Please enter correct URL");
             return new ResponseEntity<>(jsonResponse, HttpStatus.NOT_FOUND);
         }
         else {
