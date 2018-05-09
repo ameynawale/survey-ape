@@ -18,27 +18,36 @@ class TakeSurvey extends Component{
     componentWillMount(){
         let parsed = queryString.parse(this.props.urlData.location.search);
         let type = this.props.type;
-        if(type === 'unique'){
-            this.setState({
-                ...this.state,
-                "type":type,
-                "surveyid": parsed.surveyid,
-                "callComponent": <div> <EmailInput surveyid={parsed.surveyid} stype={type}/> </div>
-            });
-        } else if(type === 'close'){
-            this.setState({
-                ...this.state,
-                "type":type,
-                "surveyid": parsed.surveyid,
-                "callComponent": <div> <EmailInput surveyid={parsed.surveyid} stype={type}/> </div>
-            });
-        } else{
+        if(type === 'unique' || type === 'close'){
+            if(localStorage.getItem("userEmail") !== null){
+                let surveyData = {
+                    "type":type,
+                    "surveyid": parsed.surveyid,
+                    "email":localStorage.getItem("userEmail")
+                }
+                this.setState({
+                    ...this.state,
+                    "type":type,
+                    "surveyid": parsed.surveyid,
+                    "callComponent": <div> <SurveyQuestions surveyData={surveyData}/> </div>
+                });
+            } else{
+                this.setState({
+                    ...this.state,
+                    "type":type,
+                    "surveyid": parsed.surveyid,
+                    "callComponent": <div> <EmailInput surveyid={parsed.surveyid} stype={type}/> </div>
+                });
+            }
+        } else if(type === 'general'){
             this.setState({
                 ...this.state,
                 "type":type,
                 "surveyid": parsed.surveyid,
                 "callComponent": <div> <OpenSurveyQuestions surveyid={parsed.surveyid}/> </div>
             });
+        } else{
+            alert("Wrong URL");
         }
     }
 

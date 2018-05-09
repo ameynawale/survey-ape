@@ -8,6 +8,7 @@ import QuestionDropDown from  './QuestionDropDown';
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import * as API from '../api/API';
+import StarRatingComponent      from 'react-star-rating-component';
 import {Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import QuestionRadio from  './QuestionRadio';
 class SurveyQuestions extends Component{
@@ -18,7 +19,7 @@ class SurveyQuestions extends Component{
             "textValue":'',
             "type": x.type,
             "email": x.email,
-            "surveyid": '',
+            "surveyid": x.surveyid,
             "surveyQuestions": {
                 "surveyid": "1",
                 "surveyname": "Survey for cars",
@@ -143,6 +144,7 @@ class SurveyQuestions extends Component{
             },
             "displayQues": []
         }
+
     }
 
     componentWillMount(){
@@ -229,7 +231,7 @@ class SurveyQuestions extends Component{
         let x = this.state.displayQues;
 
         for(let i= 0; i<this.state.surveyQuestions.surveyquestions.length ;i++){
-            let questionid= this.state.surveyQuestions.surveyquestions[i].questionid
+            let questionid= this.state.surveyQuestions.surveyquestions[i].questionid;
             x.push(
                 <Row>
                     <Col xs="1">{i+1}</Col>
@@ -312,14 +314,18 @@ class SurveyQuestions extends Component{
                 for(let k= 1; k<=this.state.surveyQuestions.surveyquestions[i].options[0].option; k++){
                     opt.push({value: k, label: k});
                 }
-
                 x.push(
                     <Row>
                         <Col xs="1"></Col>
                         <Col xs="5">
-                            <Dropdown options={opt} value={opt[0]}
-                                      placeholder="Select an option"
-                                      onChange={(e) => this.saveRating(questionid, e)}/>
+                            <StarRatingComponent
+                                name={this.state.surveyQuestions.surveyquestions[i].options[0].optionid +","+questionid}
+                                renderStarIcon={() => <i className="fa fa-star" aria-hidden="true"></i> }
+                                starColor="#ffb400"
+                                emptyStarColor="#000000"
+                                starCount={this.state.surveyQuestions.surveyquestions[i].options[0].option}
+                                onStarClick={ this.saveRating }
+                            />
                         </Col>
                     </Row>
                 )
@@ -346,12 +352,17 @@ class SurveyQuestions extends Component{
         this.autoSaveSurvey(option, questionid, optionid)
     }
     saveText(questionid, event){
-        var optionid = "";
-        this.autoSaveSurvey(this.state.textValue, questionid, optionid)
+        var optionid = null;
+        this.autoSaveSurvey(event.target.value, questionid, optionid)
     }
-    saveRating(questionid, event){
-        var optionid = "";
-        this.autoSaveSurvey(event.label, questionid, optionid)
+    saveRating=(nextValue, questionid, optionid )=>{
+        // this.autoSaveSurvey(21, optionid)
+        var value = optionid.split(",");
+        this.autoSaveSurvey(nextValue, value[1], value[0])
+
+        // onStarClick = (nextValue, prevValue, name) => {
+        //     this.setState({ reviewedRating : nextValue });
+        // };
     }
     autoSaveSurvey(response, questionid, optionid){
         var payload = {
@@ -366,15 +377,10 @@ class SurveyQuestions extends Component{
             .then(
                 response => {
                     if(response.status === 200){
+                        console.log("saved");
                         // this.props.history.push('./SurveyQuestions', {surveyData: this.state});
-                    } else if(response.response.status === 404){
-                        alert(response.response.data.message);
-                    } else if(response.response.status === 208){
-                        //show his/her response page of the user
-                    } else if(response.response.status === 401){
-                        alert(response.response.data.message);
                     } else {
-                        alert("An error occured. Please try again with correc URL");
+                        // alert("An error occured. Please try again with correc URL");
                     }
                 },
                 error => {

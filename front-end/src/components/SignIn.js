@@ -46,15 +46,15 @@ class SignIn extends Component {
     }
     render() {
         let messageDivLogin =null;
-        if(this.state.messageDivLogin !== ''){
-            messageDivLogin = <div className="clearfix">
-                                <div className="alert alert-danger text-center" role="alert">
-                                    {this.state.messageDivLogin}
-                                </div>
-                              </div>;
-        } else{
-            messageDivLogin = <div></div>;
-        }
+        // if(this.state.messageDivLogin !== ''){
+        //     messageDivLogin = <div className="clearfix">
+        //                         <div className="alert alert-danger text-center" role="alert">
+        //                             {this.state.messageDivLogin}
+        //                         </div>
+        //                       </div>;
+        // } else{
+        //     messageDivLogin = <div></div>;
+        // }
 
         return (
                 <div className="survey-container">
