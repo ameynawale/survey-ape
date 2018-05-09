@@ -7,10 +7,11 @@ class EmailInput extends Component{
     constructor(props){
         super(props);
         let id = this.props.surveyid;
+        let type = this.props.stype;
         this.state={
             "email":'',
             "surveyid":id,
-            "type":
+            "type": type
         }
     }
     handleSignIn(){
@@ -23,7 +24,7 @@ class EmailInput extends Component{
             "email":this.state.email,
             "surveyid":this.state.surveyid
         }
-        API.validateEmail(this.state)
+        API.validateEmail(payload)
             .then(
                 response => {
                     if(response.status === 200){

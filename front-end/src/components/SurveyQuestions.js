@@ -7,6 +7,7 @@ import '../styles/FormContent.css';
 import QuestionDropDown from  './QuestionDropDown';
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
+import * as API from '../api/API';
 import {Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import QuestionRadio from  './QuestionRadio';
 class SurveyQuestions extends Component{
@@ -14,7 +15,9 @@ class SurveyQuestions extends Component{
         super(props);
         let x = this.props.surveyData;
         this.state= {
-            "type": '',
+            "textValue":'',
+            "type": x.type,
+            "email": x.email,
             "surveyid": '',
             "surveyQuestions": {
                 "surveyid": "1",
@@ -116,23 +119,23 @@ class SurveyQuestions extends Component{
                         "question": "Which car is more liked in 2018",
                         "options":[
                             {
-                                "optionid":1,
+                                "optionid":14,
                                 "option":"Accord"
                             },
                             {
-                                "optionid":2,
+                                "optionid":15,
                                 "option":"BMW"
                             },
                             {
-                                "optionid":3,
+                                "optionid":16,
                                 "option":"BMW1"
                             },
                             {
-                                "optionid":4,
+                                "optionid":17,
                                 "option":"BMW2"
                             },
                             {
-                                "optionid":5,
+                                "optionid":18,
                                 "option":"BMW3"
                             }]
                     }
@@ -226,6 +229,7 @@ class SurveyQuestions extends Component{
         let x = this.state.displayQues;
 
         for(let i= 0; i<this.state.surveyQuestions.surveyquestions.length ;i++){
+            let questionid= this.state.surveyQuestions.surveyquestions[i].questionid
             x.push(
                 <Row>
                     <Col xs="1">{i+1}</Col>
@@ -243,11 +247,8 @@ class SurveyQuestions extends Component{
                     <Row>
                         <Col xs="1"></Col>
                         <Col xs="5">
-                            <Dropdown options={opt}
-                                      onChange={this._onSelect} value={opt[0]}
-                                      placeholder="Select an option" />
-                            {/*<QuestionDropDown*/}
-                            {/*optionsValue ={this.state.surveyQuestions.surveyquestions[i].options}/>*/}
+                            <Dropdown options={opt} value={opt[0]} placeholder="Select an option"
+                                      onChange={(e) => this.saveDropdown(questionid, e)}/>
                         </Col>
                     </Row>
                 )
@@ -256,7 +257,7 @@ class SurveyQuestions extends Component{
                 this.state.surveyQuestions.surveyquestions[i].options.map((opt, index) => {
                         temp.push(<div>
                             <input type="radio" name={this.state.surveyQuestions.surveyquestions[i].questionid}
-                             value={opt.option}/>
+                             value={opt.option} onClick={(e) => this.saveRadio(opt.option, opt.optionid, questionid, e)}/>
                             <label>{opt.option}</label>
                             </div>
                         );
@@ -277,7 +278,7 @@ class SurveyQuestions extends Component{
                 let temp =[];
                 this.state.surveyQuestions.surveyquestions[i].options.map((opt, index) => {
                     temp.push(<div>
-                        <input type="checkbox" />
+                        <input type="checkbox" onClick={(e) => this.saveCheckBox(opt.option, opt.optionid, questionid, e)}/>
                         <label>{opt.option}</label>
                        </div>
                     );
@@ -296,7 +297,13 @@ class SurveyQuestions extends Component{
                     <Row>
                         <Col xs="1"></Col>
                         <Col xs="5">
-                            <textarea width="50" value="" placeholder="Your response here"/>
+                            <textarea width="50" placeholder="Your response here"
+                                      onBlurCapture={(event) => {
+                                          this.setState({
+                                              textValue: event.target.value
+                                          });
+                                          this.saveText(questionid,event)}}
+                                      />
                         </Col>
                     </Row>
                 )
@@ -310,9 +317,9 @@ class SurveyQuestions extends Component{
                     <Row>
                         <Col xs="1"></Col>
                         <Col xs="5">
-                            <Dropdown options={opt}
-                                      onChange={this._onSelect} value={opt[0]}
-                                      placeholder="Select an option" />
+                            <Dropdown options={opt} value={opt[0]}
+                                      placeholder="Select an option"
+                                      onChange={(e) => this.saveRating(questionid, e)}/>
                         </Col>
                     </Row>
                 )
@@ -325,11 +332,55 @@ class SurveyQuestions extends Component{
         });
     }
 
-    autoSaveSurvey(type){
+    saveDropdown(questionid, event){
+        this.autoSaveSurvey(event.label, questionid, event.value)
+    }
+    saveRadio(option, optionid, questionid, event){
+        // this.autoSaveSurvey()
+        console.log(" dfg");
+        this.autoSaveSurvey(option, questionid, optionid)
+    }
+    saveCheckBox(option, optionid, questionid, event){
+        // this.autoSaveSurvey()
+        console.log(" dfg");
+        this.autoSaveSurvey(option, questionid, optionid)
+    }
+    saveText(questionid, event){
+        var optionid = "";
+        this.autoSaveSurvey(this.state.textValue, questionid, optionid)
+    }
+    saveRating(questionid, event){
+        var optionid = "";
+        this.autoSaveSurvey(event.label, questionid, optionid)
+    }
+    autoSaveSurvey(response, questionid, optionid){
         var payload = {
-            "type": "unique",
-            ""
+            "type": this.state.type,
+            "email": this.state.email,
+            "response": response,
+            "questionid": questionid,
+            "optionid": optionid
         }
+        //API call to backend
+        API.saveSurveyResponse(payload)
+            .then(
+                response => {
+                    if(response.status === 200){
+                        // this.props.history.push('./SurveyQuestions', {surveyData: this.state});
+                    } else if(response.response.status === 404){
+                        alert(response.response.data.message);
+                    } else if(response.response.status === 208){
+                        //show his/her response page of the user
+                    } else if(response.response.status === 401){
+                        alert(response.response.data.message);
+                    } else {
+                        alert("An error occured. Please try again with correc URL");
+                    }
+                },
+                error => {
+                    console.log(error.data.message);
+                }
+            );
     }
     render(){
         return(
