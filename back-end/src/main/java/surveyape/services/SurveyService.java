@@ -9,6 +9,7 @@ public interface SurveyService {
 
     Survey createSurvey(Survey survey);
     Survey publishSurvey(Survey survey);
+    Survey closeSurvey(Survey survey);
     SurveyListing getSurveyListing(User user);
     public ResponseEntity<byte[]> getQRCode(String text);
 

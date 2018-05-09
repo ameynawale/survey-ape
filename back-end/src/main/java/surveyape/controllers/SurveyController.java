@@ -61,6 +61,15 @@ public class SurveyController {
         return new ResponseEntity<>(newSurvey, HttpStatus.OK);
     }
 
+    @CheckSession @RequestMapping(path="/close", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> closeSurvey(@RequestBody Survey survey) {
+        System.out.println("-----------");
+
+        Survey newSurvey = surveyService.closeSurvey(survey);
+
+        return new ResponseEntity<>(newSurvey, HttpStatus.OK);
+    }
+
     @CheckSession @RequestMapping(path="/surveylisting", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> surveyListing(@RequestBody User user) {
         System.out.println("-----------");

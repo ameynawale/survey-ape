@@ -174,7 +174,7 @@ class FormContent extends Component {
         // event.preventDefault();
         API.publishSurvey(this.state)
             .then((res) => {
-                if(res.status === 201)
+                if(res.status === 200)
                 {
                     console.log('inside 200');
                     alert("Survey is published successfully");
