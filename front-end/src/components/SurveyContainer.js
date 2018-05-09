@@ -5,6 +5,7 @@ import FormContainer from "./FormContainer";
 // import {Button, Modal} from 'react-bootstrap';
 import { TabContent, TabPane, Nav, NavItem, NavLink, Card,Modal, Button, CardTitle, CardText, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
+import * as API from "../api/API";
 const customStyles = {
     content : {
         top                   : '80%',
@@ -43,10 +44,23 @@ class SurveyContainer extends Component {
                     surveyId: 4,
                     surveyName: 'Survey 4'
                 }
-            ]
+            ],
+            user: this.props.surveydata.user
         };
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
+    }
+
+    componentWillMount()
+    {
+        console.log("will mount ", this.state.user.email);
+        API.surveyListing(this.state.user)
+            .then((res) => {
+                this.setState({
+                    createdbyme:res.data.createdbyme,
+                    sharedwithme:res.data.sharedwithme
+                })
+            })
     }
 
     toggle(tab) {
@@ -120,7 +134,7 @@ class SurveyContainer extends Component {
                                 {this.state.createdbyme.map((survey) =>
                                     <Row>
                                     <Col sm="12">
-                                        <h6>{survey.surveyName}</h6>
+                                        <h6>{survey.surveyname}</h6>
                                         <button className="btn btn-primary share-button"
                                                 onClick={() => {
                                                     this.openStats(survey);
@@ -134,7 +148,7 @@ class SurveyContainer extends Component {
                                 {this.state.sharedwithme.map((survey) =>
                                     <Row>
                                         <Col sm="12">
-                                           <h6>{survey.surveyName}</h6>
+                                           <h6>{survey.surveyname}</h6>
                                         </Col>
                                     </Row>)
                                 }

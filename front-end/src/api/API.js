@@ -174,8 +174,19 @@ export const publishSurvey = (payload) =>{
         });
 };
 
+export const surveyListing = (payload) =>{
+    return axios.post('http://localhost:8080/survey/surveylisting', payload)
+        .then(function (response) {
+            console.log(response);
+            return response;
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error;
+        });
+};
 export const getSurveyListing = () =>
-    fetch(`${api}/surveys/getsurveylisting`, {
+    fetch(`${api}/survey/surveylisting`, {
         method: 'GET',
         headers: {
             ...headers,

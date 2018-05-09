@@ -20,7 +20,8 @@ class CustomRouter extends Component {
             surveyName: '',
             surveyId: '',
             createdbyme: [],
-            sharedwithme: []
+            sharedwithme: [],
+            user: {}
         };
     }
      UserSignUpAPICall = (payload) => {
@@ -55,8 +56,11 @@ class CustomRouter extends Component {
             API.doLogin(payload)
                 .then((res) => {
                     if (res.status === 200) {
-
                         console.log('email', res.data.email);
+                        this.setState({
+                            user: res.data
+                        })
+                        console.log("state user", this.state.user.email);
                         if(res.data.isactivated === 0){
                             this.setState({
                                 ...this.state,
