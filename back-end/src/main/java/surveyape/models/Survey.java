@@ -11,18 +11,28 @@ public class Survey {
     private String surveytype;
     private String validity;
     private int ispublished;
+    private int isclosed;
     private String email;
     private Set<Invitees> invitees;
 
     public Survey(){}
 
-    public Survey(String surveyid, String surveyname, String surveytype, String validity, int ispublished, Set<Invitees> invitees) {
+    public Survey(String surveyid, String surveyname, String surveytype, String validity, int ispublished, int isclosed, Set<Invitees> invitees) {
         this.surveyid = surveyid;
         this.surveyname = surveyname;
         this.surveytype = surveytype;
         this.validity = validity;
         this.ispublished = ispublished;
+        this.isclosed = isclosed;
         this.invitees = invitees;
+    }
+
+    public int getIsclosed() {
+        return isclosed;
+    }
+
+    public void setIsclosed(int isclosed) {
+        this.isclosed = isclosed;
     }
 
     public String getSurveyid() {

@@ -174,6 +174,18 @@ export const publishSurvey = (payload) =>{
         });
 };
 
+export const closeSurvey = (payload) =>{
+    return axios.post('http://localhost:8080/survey/close', payload)
+        .then(function (response) {
+            console.log(response);
+            return response;
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error;
+        });
+};
+
 export const surveyListing = (payload) =>{
     return axios.post('http://localhost:8080/survey/surveylisting', payload)
         .then(function (response) {

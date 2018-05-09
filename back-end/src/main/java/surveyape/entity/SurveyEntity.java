@@ -29,6 +29,10 @@ public class SurveyEntity {
     @Column(columnDefinition="tinyint(1) default 0")
     private int ispublished;
 
+    @Column(columnDefinition="tinyint(1) default 0")
+    private int isclosed;
+
+
     @OneToMany(mappedBy = "surveyEntity", cascade=CascadeType.ALL)
     private Set<InviteesEntity> invitees;
 
@@ -50,12 +54,13 @@ public class SurveyEntity {
         this.userEntity = userEntity;
     }
 
-    public SurveyEntity(String surveyname, String surveytype, String validity, String createdon, int ispublished, UserEntity userEntity) {
+    public SurveyEntity(String surveyname, String surveytype, String validity, String createdon, int ispublished, int isclosed, UserEntity userEntity) {
         this.surveyname = surveyname;
         this.surveytype = surveytype;
         this.validity = validity;
         this.createdon = createdon;
         this.ispublished = ispublished;
+        this.isclosed = isclosed;
         this.userEntity = userEntity;
     }
 
@@ -77,6 +82,23 @@ public class SurveyEntity {
         this.ispublished = ispublished;
         this.invitees = invitees;
     }
+
+    public int getIsclosed() {
+        return isclosed;
+    }
+
+    public void setIsclosed(int isclosed) {
+        this.isclosed = isclosed;
+    }
+
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
+    }
+
 
     public String getSurveyid() {
         return surveyid;
