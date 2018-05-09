@@ -5,6 +5,10 @@ public class Invitees {
     private int 	surveyid;
     private String 	email;
 
+    /*public Invitees(String email) {
+        this.email = email;
+    }*/
+
     public int getInviteeid() {
         return inviteeid;
     }

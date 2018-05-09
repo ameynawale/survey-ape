@@ -4,12 +4,12 @@ import java.util.List;
 public class Question {
     private int questionid;
     private String question;
-    private int surveyid;
+    private String surveyid;
     private String questiontype;
 
     public Question(){}
 
-    public Question(int questionid, String question, int surveyid, String questiontype) {
+    public Question(int questionid, String question, String surveyid, String questiontype) {
         this.questionid = questionid;
         this.question = question;
         this.surveyid = surveyid;
@@ -32,11 +32,11 @@ public class Question {
         this.question = question;
     }
 
-    public int getSurveyid() {
+    public String getSurveyid() {
         return surveyid;
     }
 
-    public void setSurveyid(int surveyid) {
+    public void setSurveyid(String surveyid) {
         this.surveyid = surveyid;
     }
 

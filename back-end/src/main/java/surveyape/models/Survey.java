@@ -2,6 +2,7 @@ package surveyape.models;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;
+import java.util.Set;
 
 public class Survey {
     private String surveyid;
@@ -11,11 +12,11 @@ public class Survey {
     private String validity;
     private int ispublished;
     private String email;
-    private List<Invitees> invitees;
+    private Set<Invitees> invitees;
 
     public Survey(){}
 
-    public Survey(String surveyid, String surveyname, String surveytype, String validity, int ispublished, List<Invitees> invitees) {
+    public Survey(String surveyid, String surveyname, String surveytype, String validity, int ispublished, Set<Invitees> invitees) {
         this.surveyid = surveyid;
         this.surveyname = surveyname;
         this.surveytype = surveytype;
@@ -70,11 +71,11 @@ public class Survey {
         this.ispublished = ispublished;
     }
 
-    public List<Invitees> getInvitees() {
+    public Set<Invitees> getInvitees() {
         return invitees;
     }
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    public void setInvitees(List<Invitees> invitees) {
+    public void setInvitees(Set<Invitees> invitees) {
         this.invitees = invitees;
     }
 

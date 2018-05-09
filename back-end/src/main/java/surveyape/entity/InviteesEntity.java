@@ -26,6 +26,11 @@ public class InviteesEntity {
         this.email = email;
     }
 
+    public InviteesEntity(String email, SurveyEntity surveyEntity) {
+        this.email = email;
+        this.surveyEntity = surveyEntity;
+    }
+
     public Long getInviteeid() { return inviteeid; }
     public void setInviteeid(Long inviteeid) { this.inviteeid = inviteeid; }
 

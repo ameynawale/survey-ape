@@ -38,11 +38,21 @@ public class SurveyController {
         return new ResponseEntity<>(newSurvey, HttpStatus.CREATED);
     }
 
+    @CheckSession @RequestMapping(path="/publish", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> publishSurvey(@RequestBody Survey survey) {
+        System.out.println("-----------");
+
+        Survey newSurvey = surveyService.publishSurvey(survey);
+
+        return new ResponseEntity<>(newSurvey, HttpStatus.OK);
+    }
+
     @RequestMapping(path="/validateEmail", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> validateEmail(@RequestBody Survey survey) {
 
         String sessionEmail = Convertors.fetchSessionEmail();
 
+//        survey.getInvitees().forEach(invitee -> System.out.println(invitee));
         if (sessionEmail != null) {
             return respondClosedCheck(surveyService.isInvitedOrHasCompleted(sessionEmail, survey.getSurveyid()));
         }
