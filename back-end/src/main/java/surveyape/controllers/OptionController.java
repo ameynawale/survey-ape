@@ -38,7 +38,7 @@ public class OptionController {
         System.out.println("option" + option.getOptionid());
         System.out.println("option" + option.getQuestionid());
         OptionsEntity optionsEntity = new OptionsEntity();
-        optionsEntity.setOption(option.getOptions());
+        optionsEntity.setOptions(option.getOptions());
         optionsEntity.setOptionid(Long.parseLong(String.valueOf(option.getOptionid())));
         QuestionsEntity questionsEntity = new QuestionsEntity();
         questionsEntity.setQuestionid(Long.parseLong(String.valueOf(option.getQuestionid())));

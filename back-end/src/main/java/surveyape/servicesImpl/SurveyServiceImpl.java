@@ -285,6 +285,23 @@ public class SurveyServiceImpl implements SurveyService {
         }
         return false;
     }
+
+    @Override
+    public Boolean isSurveyClosed(Survey survey) {
+        return (surveyRepository.findBySurveyid(survey.getSurveyid()).getIsclosed() == 1);
+    }
+
+    @Override
+    public Survey findSurvey(Survey survey) {
+        SurveyEntity surveyEntity = surveyRepository.findBySurveyid(survey.getSurveyid());
+        return surveyEntity != null ? Convertors.mapSurveyEntityToSurvey(surveyEntity) : null;
+    }
+
+    @Override
+    public Map<String, Object> fetchSurveyQuestions(Survey survey) {
+        return Convertors.mapSurveyEntityToSurveyQuestions(surveyRepository.findBySurveyid(survey.getSurveyid()));
+    }
+
     /*public Survey createSurvey(Survey survey){
         List<InviteesEntity> inviteesEntity = new ArrayList<>();
 //        List<Invitees> invitees = new ArrayList<>();

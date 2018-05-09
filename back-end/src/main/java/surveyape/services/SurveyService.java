@@ -5,6 +5,8 @@ import surveyape.models.Survey;
 import surveyape.models.SurveyListing;
 import surveyape.models.User;
 
+import java.util.Map;
+
 public interface SurveyService {
 
     Survey createSurvey(Survey survey);
@@ -18,4 +20,10 @@ public interface SurveyService {
     Boolean isPublished(Survey survey);
 
     Boolean isValid(Survey survey);
+
+    Boolean isSurveyClosed(Survey survey);
+
+    Survey findSurvey(Survey survey);
+
+    Map<String, Object> fetchSurveyQuestions(Survey survey);
 }

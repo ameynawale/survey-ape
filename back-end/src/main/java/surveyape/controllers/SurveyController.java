@@ -184,4 +184,35 @@ public class SurveyController {
 
         return new ResponseEntity<>(jsonResponse1, HttpStatus.OK);
     }
+
+    @RequestMapping(path="/fetchQuestions", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> fetchQuestions(@RequestBody Survey survey) {
+
+        if(surveyService.findSurvey(survey) == null) {
+            jsonResponse = new HashMap<>();
+            jsonResponse.put("message", "Survey is not present!");
+            return new ResponseEntity<>(jsonResponse, HttpStatus.NOT_FOUND);
+        }
+
+        if(!surveyService.isPublished(survey)) {
+            jsonResponse = new HashMap<>();
+            jsonResponse.put("message", "Survey is not published yet!");
+            return new ResponseEntity<>(jsonResponse, HttpStatus.NOT_FOUND);
+        }
+
+        if(!surveyService.isValid(survey)) {
+            jsonResponse = new HashMap<>();
+            jsonResponse.put("message", "Survey is not valid anymore!");
+            return new ResponseEntity<>(jsonResponse, HttpStatus.NOT_FOUND);
+        }
+
+        if(surveyService.isSurveyClosed(survey)) {
+            jsonResponse = new HashMap<>();
+            jsonResponse.put("message", "Survey is already closed!");
+            return new ResponseEntity<>(jsonResponse, HttpStatus.NOT_FOUND);
+        }
+
+        Map<String, Object> surveyQuestions = surveyService.fetchSurveyQuestions(survey);
+        return new ResponseEntity<>(surveyQuestions, HttpStatus.NOT_FOUND);
+    }
 }
