@@ -25,6 +25,7 @@ public class Convertors {
                 surveyEntity.getSurveytype(),
                 surveyEntity.getValidity(),
                 surveyEntity.getIspublished(),
+                surveyEntity.getIsclosed(),
                 null);
 
         return survey;

@@ -43,8 +43,7 @@ public class SurveyServiceImpl implements SurveyService {
         String sessionEmail = Convertors.fetchSessionEmail();
         UserEntity userEntity = userRepository.findByEmail(sessionEmail);
         SurveyEntity surveyEntity;
-            surveyEntity = new SurveyEntity(survey.getSurveyname(), survey.getSurveytype(), survey.getValidity(), String.valueOf(java.time.LocalDate.now()) , survey.getIspublished(), userEntity);
-
+            surveyEntity = new SurveyEntity(survey.getSurveyname(), survey.getSurveytype(), survey.getValidity(), String.valueOf(java.time.LocalDate.now()) , survey.getIspublished(), survey.getIsclosed(), userEntity);
 
         SurveyEntity s = surveyRepository.save(surveyEntity);
             if(survey.getSurveytype().equals("closed"))
@@ -82,6 +81,25 @@ public class SurveyServiceImpl implements SurveyService {
 
         return r;
     }
+
+    public Survey closeSurvey(Survey survey) {
+
+        String sessionEmail = Convertors.fetchSessionEmail();
+        UserEntity userEntity = userRepository.findByEmail(sessionEmail);
+        SurveyEntity surveyEntity = surveyRepository.findBySurveyid(survey.getSurveyid());
+        surveyEntity.setIsclosed(1);
+
+        SurveyEntity s = surveyRepository.save(surveyEntity);
+
+        Survey r = new Survey();
+        r.setSurveyid(s.getSurveyid());
+        r.setSurveyname(s.getSurveyname());
+        r.setIspublished(s.getIspublished());
+        r.setSurveytype(s.getSurveytype());
+
+        return r;
+    }
+
 
     public SurveyListing getSurveyListing(User user)
     {

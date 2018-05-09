@@ -8,6 +8,7 @@ public interface SurveyService {
 
     Survey createSurvey(Survey survey);
     Survey publishSurvey(Survey survey);
+    Survey closeSurvey(Survey survey);
     SurveyListing getSurveyListing(User user);
 
     String isInvitedOrHasCompleted(String email, String surveyId);
