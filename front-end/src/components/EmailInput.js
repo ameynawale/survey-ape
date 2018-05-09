@@ -9,7 +9,8 @@ class EmailInput extends Component{
         let id = this.props.surveyid;
         this.state={
             "email":'',
-            "surveyid":id
+            "surveyid":id,
+            "type":
         }
     }
     handleSignIn(){
@@ -18,6 +19,10 @@ class EmailInput extends Component{
     handleEmailInput(){
         //API call to save the email in response and provide email and id both
         // get all the questions of the survey
+        var payload= {
+            "email":this.state.email,
+            "surveyid":this.state.surveyid
+        }
         API.validateEmail(this.state)
             .then(
                 response => {

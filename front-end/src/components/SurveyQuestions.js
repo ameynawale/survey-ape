@@ -325,6 +325,12 @@ class SurveyQuestions extends Component{
         });
     }
 
+    autoSaveSurvey(type){
+        var payload = {
+            "type": "unique",
+            ""
+        }
+    }
     render(){
         return(
             <div className="survey-container">
