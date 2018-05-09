@@ -215,7 +215,7 @@ public class SurveyController {
         }
 
         Map<String, Object> surveyQuestions = surveyService.fetchSurveyQuestions(survey);
-        return new ResponseEntity<>(surveyQuestions, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(surveyQuestions, HttpStatus.OK);
     }
 
 }
