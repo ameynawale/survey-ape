@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import surveyape.aspects.CheckSession;
 import surveyape.converters.Convertors;
 import surveyape.entity.QuestionsEntity;
+import surveyape.respositories.ResponseRepository;
 import surveyape.respositories.SurveyRepository;
 import surveyape.respositories.QuestionRepository;
 import surveyape.entity.SurveyEntity;
@@ -35,6 +36,8 @@ public class SurveyController {
     private SurveyRepository surveyRepository;
     @Autowired
     private QuestionRepository questionRepository;
+    @Autowired
+    private ResponseRepository responseRepository;
 
     private Map<String, String> jsonResponse = null;
 
@@ -122,18 +125,41 @@ public class SurveyController {
     }*/
     @RequestMapping(path="/stat", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> surveyStat(@RequestBody Survey survey) {
+        Map<Long, Integer> jsonResponse1;
         System.out.println("-----------");
         System.out.println(survey.getSurveyid());
         // Survey newSurvey = surveyService.createSurvey(survey);
+
         SurveyEntity surveyEntity = surveyRepository.findBySurveyid(survey.getSurveyid());
-        System.out.println(surveyEntity.getCreatedon() + " " + surveyEntity.getValidity());
+        System.out.println("created on "+surveyEntity.getCreatedon() + " " +"valid untill " + surveyEntity.getValidity());
 
         Set<QuestionsEntity> questionEntityForSurvey = questionRepository.findBySurveyEntity(surveyEntity);
+
+        jsonResponse1 = new HashMap<Long, Integer>();
+
         for (QuestionsEntity questionsEntity : questionEntityForSurvey){
+            int count= 0;
+              Set<surveyape.entity.ResponseEntity> responseEntityForSurvey = responseRepository.findByQuestionsEntity(questionsEntity);
+            for( surveyape.entity.ResponseEntity questionResponseEntityForSurvey: responseEntityForSurvey){
+                questionResponseEntityForSurvey.getQuestionsEntity();
+                count++;
+            }
 
+            jsonResponse1.put(questionsEntity.getQuestionid(), count);
         }
+        Map.Entry<Long, Integer> maxEntry = null;
 
+        for (Map.Entry<Long, Integer> entry : jsonResponse1.entrySet()) {
 
-        return new ResponseEntity<>(survey.getSurveyid(), HttpStatus.OK);
+            if (maxEntry == null
+                    || entry.getValue().compareTo(maxEntry.getValue()) > 0) {
+                maxEntry = entry;
+            }
+        }
+        System.out.println("No of participants: "+maxEntry.getValue());
+
+        //no of submissions
+
+        return new ResponseEntity<>(jsonResponse1, HttpStatus.OK);
     }
 }
