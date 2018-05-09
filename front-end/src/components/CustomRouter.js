@@ -27,7 +27,7 @@ class CustomRouter extends Component {
                 .then((res) => {
                     if (res.status === 200) {
                         console.log('email', res.data.email);
-                        alert("successful SignUp");
+                        alert("Please verify your email using the verification code sent to your email to complete registration");
                         this.setState({
                             ...this.state,
                             messageDivSignup: "SignUp successful",
@@ -54,7 +54,7 @@ class CustomRouter extends Component {
             API.doLogin(payload)
                 .then((res) => {
                     if (res.status === 200) {
-                        alert("successful login");
+
                         console.log('email', res.data.email);
                         if(res.data.isactivated == 0){
                             this.setState({
@@ -62,9 +62,11 @@ class CustomRouter extends Component {
                                 messageDivLogin: "SignIn successful",
                                 user: res.data
                             });
+                            alert("Email is not verified. Please verify your email");
                             this.props.history.push('/signUpVerification');
                         }
                         else{
+                            alert("Login successful");
                             this.props.history.push('/surveys');
                         }
 

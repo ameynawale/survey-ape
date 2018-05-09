@@ -34,7 +34,7 @@ class SignUpVerification extends Component {
         API.doSignUpVerification(payload)
             .then((res) => {
                 if (res.status === 200) {
-                    alert("Registration successful! You can sign in now");
+                    alert("Verification successful! You can sign in now");
                     // this.props.history.push('/surveys');
                     this.props.history.push('/');
                 } else if (res.response.status === 400) {
@@ -69,7 +69,11 @@ class SignUpVerification extends Component {
                 <div className="form-design-container">
                     <div className="form-container">
                         <div className="form-design-container">
-
+                            <div className="form-group row">
+                                <label className="col-sm-12 col-form-label">
+                                    Please enter the verification code sent to your registered email
+                                </label>
+                            </div>
                             {messageDivSignUpVerification}
                             <div className="form-group row">
                                 <label className="col-3 col-form-label">Enter verification code</label>

@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import surveyape.aspects.CheckSession;
 import surveyape.converters.Convertors;
+import surveyape.respositories.SurveyRepository;
+import surveyape.entity.SurveyEntity;
 import surveyape.models.Survey;
 import surveyape.services.SurveyService;
 
@@ -26,6 +28,8 @@ public class SurveyController {
 
     @Autowired
     private SurveyService surveyService;
+    @Autowired
+    private SurveyRepository surveyRepository;
 
     private Map<String, String> jsonResponse = null;
 
@@ -77,7 +81,7 @@ public class SurveyController {
             return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
         }
     }
-    @RequestMapping(path="/fetchUser", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(path="/validateSurvey", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> generalSurvey(@RequestBody Survey survey) {
         System.out.println("-----------");
         if(surveyService.isPublished(survey))
@@ -93,15 +97,21 @@ public class SurveyController {
         }
         else{
             System.out.println("the survey is not published");
-            return new ResponseEntity<>("the survey is not published    ", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("the survey is not published", HttpStatus.BAD_REQUEST);
         }
     }
 
+    /*@RequestMapping(path="/saveSurvey", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> generalSurvey(@RequestBody Survey survey) {
+
+    }*/
     @RequestMapping(path="/stat", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> surveyStat(@RequestBody Survey survey) {
         System.out.println("-----------");
         System.out.println(survey.getSurveyid());
         // Survey newSurvey = surveyService.createSurvey(survey);
+        SurveyEntity surveyEntity = surveyRepository.findBySurveyid(survey.getSurveyid());
+        System.out.println(surveyEntity.getCreatedon() + " " + surveyEntity.getValidity() );
 
         return new ResponseEntity<>(survey.getSurveyid(), HttpStatus.OK);
     }
