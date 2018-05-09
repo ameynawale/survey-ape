@@ -47,11 +47,21 @@ public class SurveyController {
         return new ResponseEntity<>(newSurvey, HttpStatus.CREATED);
     }
 
+    @CheckSession @RequestMapping(path="/publish", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> publishSurvey(@RequestBody Survey survey) {
+        System.out.println("-----------");
+
+        Survey newSurvey = surveyService.publishSurvey(survey);
+
+        return new ResponseEntity<>(newSurvey, HttpStatus.OK);
+    }
+
     @RequestMapping(path="/validateEmail", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> validateEmail(@RequestBody Survey survey) {
 
         String sessionEmail = Convertors.fetchSessionEmail();
 
+//        survey.getInvitees().forEach(invitee -> System.out.println(invitee));
         if (sessionEmail != null) {
             return respondClosedCheck(surveyService.isInvitedOrHasCompleted(sessionEmail, survey.getSurveyid()));
         }
@@ -70,15 +80,15 @@ public class SurveyController {
         jsonResponse = new HashMap<>();
 
         if(closedCheck.equalsIgnoreCase("NOT_INVITED")) {
-            jsonResponse.put("message", "User is not invited");
+            jsonResponse.put("message", "You are not invited to take the survey. Please enter correct URL");
             return new ResponseEntity<>(jsonResponse, HttpStatus.UNAUTHORIZED);
         }
         else if(closedCheck.equalsIgnoreCase("HAS_COMPLETED")) {
-            jsonResponse.put("message", "User has already completed");
-            return new ResponseEntity<>(jsonResponse, HttpStatus.UNAUTHORIZED);
+            jsonResponse.put("message", "You have already completed the survey");
+            return new ResponseEntity<>(jsonResponse, HttpStatus.ALREADY_REPORTED);
         }
         else if(closedCheck.equalsIgnoreCase("SURVEY_NOT_FOUND")) {
-            jsonResponse.put("message", "Survey not found");
+            jsonResponse.put("message", "Survey not found. Please enter correct URL");
             return new ResponseEntity<>(jsonResponse, HttpStatus.NOT_FOUND);
         }
         else {

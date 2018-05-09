@@ -1,14 +1,9 @@
 package surveyape.converters;
 
-import surveyape.entity.QuestionsEntity;
+import surveyape.entity.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import surveyape.entity.SurveyEntity;
-import surveyape.entity.UserEntity;
-import surveyape.models.Invitees;
-import surveyape.models.Question;
-import surveyape.models.Survey;
-import surveyape.models.User;
+import surveyape.models.*;
 
 public class Convertors {
 
@@ -39,10 +34,21 @@ public class Convertors {
 
         Question question = new Question(Integer.parseInt(String.valueOf(questionsEntity.getQuestionid())),
                 questionsEntity.getQuestion(),
-                Integer.parseInt(questionsEntity.getSurveyEntity().getSurveyid()),
+                questionsEntity.getSurveyEntity().getSurveyid(),
                 questionsEntity.getQuestiontype());
         return question;
     }
+
+    public static Option mapOptionEntityToOption(OptionsEntity optionsEntity)
+    {
+        Option option = new Option(Integer.parseInt(String.valueOf(optionsEntity.getOptionid())), optionsEntity.getOptions(), Integer.parseInt(String.valueOf(optionsEntity.getQuestionsEntity().getQuestionid())));
+        return option;
+    }
+
+    /*public static Invitees mapInviteesEntityToInvitees(InviteesEntity inviteesEntity)
+    {
+
+    }*/
 
     public static String fetchSessionEmail() {
         return (String)((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession().getAttribute("email");

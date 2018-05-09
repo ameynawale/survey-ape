@@ -3,10 +3,7 @@ package surveyape.servicesImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import surveyape.converters.Convertors;
-import surveyape.entity.InviteesEntity;
-import surveyape.entity.SurveyEntity;
-import surveyape.entity.UserEntity;
-import surveyape.entity.UserSurveyEntity;
+import surveyape.entity.*;
 import surveyape.models.Invitees;
 import surveyape.models.Survey;
 import surveyape.respositories.InviteeRepository;
@@ -15,6 +12,10 @@ import surveyape.respositories.UserRepository;
 import surveyape.respositories.UserSurveyRepository;
 import surveyape.services.SurveyService;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -31,15 +32,45 @@ public class SurveyServiceImpl implements SurveyService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private InviteeRepository inviteeRepository;
+
 
     public Survey createSurvey(Survey survey) {
 
         String sessionEmail = Convertors.fetchSessionEmail();
         UserEntity userEntity = userRepository.findByEmail(sessionEmail);
+        SurveyEntity surveyEntity;
+            surveyEntity = new SurveyEntity(survey.getSurveyname(), survey.getSurveytype(), survey.getValidity(), String.valueOf(java.time.LocalDate.now()) , survey.getIspublished(), userEntity);
 
-        SurveyEntity s = new SurveyEntity(survey.getSurveyname(), survey.getSurveytype(), survey.getValidity(), survey.getIspublished(), userEntity);
 
-        s = surveyRepository.save(s);
+        SurveyEntity s = surveyRepository.save(surveyEntity);
+            if(survey.getSurveytype().equals("closed"))
+            {
+                for(Invitees invitees: survey.getInvitees())
+                {
+                    InviteesEntity inviteesEntity = new InviteesEntity(invitees.getEmail(), s);
+                    inviteeRepository.save(inviteesEntity);
+                }
+            }
+
+        Survey r = new Survey();
+        r.setSurveyid(s.getSurveyid());
+        r.setSurveyname(s.getSurveyname());
+        r.setIspublished(s.getIspublished());
+        r.setSurveytype(s.getSurveytype());
+
+        return r;
+    }
+
+    public Survey publishSurvey(Survey survey) {
+
+        String sessionEmail = Convertors.fetchSessionEmail();
+        UserEntity userEntity = userRepository.findByEmail(sessionEmail);
+        SurveyEntity surveyEntity = surveyRepository.findBySurveyid(survey.getSurveyid());
+        surveyEntity.setIspublished(1);
+
+        SurveyEntity s = surveyRepository.save(surveyEntity);
 
         Survey r = new Survey();
         r.setSurveyid(s.getSurveyid());

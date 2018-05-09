@@ -90,11 +90,28 @@ class CustomRouter extends Component {
                 });
         }
     handleAddSurvey = (surveydata) => {
-        var Survey = {
-            surveyname: surveydata.surveyname,
-            surveytype: surveydata.surveytype,
-            validity: surveydata.validity
+        if(surveydata.surveytype === 'closed')
+        {
+            var inviteesEmails = surveydata.invitees.split(',');
+            var invitees = [];
+            inviteesEmails.forEach((invitee) => invitees.push({"email": invitee}));
+            var Survey = {
+                surveyname: surveydata.surveyname,
+                surveytype: surveydata.surveytype,
+                validity: surveydata.validity,
+                invitees: invitees
+            }
+
         }
+        else
+        {
+            var Survey = {
+                surveyname: surveydata.surveyname,
+                surveytype: surveydata.surveytype,
+                validity: surveydata.validity
+            }
+        }
+
         console.log('inside handleAddSurvey');
 
         API.addSurvey(Survey)

@@ -191,7 +191,7 @@ class Dropdown extends Component {
             <div className="question-container">
                 <div className="col-lg-12">
                     <input type="text" className="form-control question-input"
-                           onChange={(event) => {
+                           onBlurCapture={(event) => {
                                this.setState({
                                    question: event.target.value
                                });

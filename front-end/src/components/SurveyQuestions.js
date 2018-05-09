@@ -6,7 +6,8 @@ import { Container, Row, Col } from 'reactstrap';
 import '../styles/FormContent.css';
 import QuestionDropDown from  './QuestionDropDown';
 import Dropdown from 'react-dropdown';
-import 'react-dropdown/style.css'
+import 'react-dropdown/style.css';
+import {Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import QuestionRadio from  './QuestionRadio';
 class SurveyQuestions extends Component{
     constructor(props){
@@ -47,7 +48,7 @@ class SurveyQuestions extends Component{
                     },
                     {
                         "questionid": 2,
-                        "questiontype": "radio",
+                        "questiontype": "checkbox",
                         "question": "What is the color you like most",
                         "options":[
                             {
@@ -82,6 +83,58 @@ class SurveyQuestions extends Component{
                                 "option":"Female"
                             }
                         ]
+                    },
+                    {
+                        "questionid": 4,
+                        "questiontype": "text",
+                        "question": "What is your education"
+                    },
+                    {
+                        "questionid": 5,
+                        "questiontype": "rating",
+                        "question": "Give rating out of 5",
+                        "options":[
+                            {
+                                "optionid":12,
+                                "option":"5"
+                            }
+                        ]
+                    },
+                    {
+                        "questionid": 6,
+                        "questiontype": "rating",
+                        "question": "Give rating out of 10",
+                        "options":[
+                            {
+                                "optionid":13,
+                                "option":"10"
+                            }
+                        ]
+                    },{
+                        "questionid": 7,
+                        "questiontype": "dropdown",
+                        "question": "Which car is more liked in 2018",
+                        "options":[
+                            {
+                                "optionid":1,
+                                "option":"Accord"
+                            },
+                            {
+                                "optionid":2,
+                                "option":"BMW"
+                            },
+                            {
+                                "optionid":3,
+                                "option":"BMW1"
+                            },
+                            {
+                                "optionid":4,
+                                "option":"BMW2"
+                            },
+                            {
+                                "optionid":5,
+                                "option":"BMW3"
+                            }]
                     }
                 ]
             },
@@ -176,7 +229,7 @@ class SurveyQuestions extends Component{
             x.push(
                 <Row>
                     <Col xs="1">{i+1}</Col>
-                    <Col xs="11">{this.state.surveyQuestions.surveyquestions[i].question}</Col>
+                    <Col xs="11" className="questionColor">{this.state.surveyQuestions.surveyquestions[i].question}</Col>
                 </Row>
             )
             if(this.state.surveyQuestions.surveyquestions[i].questiontype === "dropdown"){
@@ -202,9 +255,11 @@ class SurveyQuestions extends Component{
                 let temp =[];
                 this.state.surveyQuestions.surveyquestions[i].options.map((opt, index) => {
                         temp.push(<div>
-                            <input type="radio" value={opt.option} checked={false} />
+                            <input type="radio" name={this.state.surveyQuestions.surveyquestions[i].questionid}
+                             value={opt.option}/>
                             <label>{opt.option}</label>
-                        </div>);
+                            </div>
+                        );
                 });
                 x.push(
                     <Row>
@@ -215,6 +270,49 @@ class SurveyQuestions extends Component{
                             }
                             {/*<QuestionRadio*/}
                                 {/*radioValue ={this.state.surveyQuestions.surveyquestions[i].options}/>*/}
+                        </Col>
+                    </Row>
+                )
+            } else if(this.state.surveyQuestions.surveyquestions[i].questiontype === "checkbox"){
+                let temp =[];
+                this.state.surveyQuestions.surveyquestions[i].options.map((opt, index) => {
+                    temp.push(<div>
+                        <input type="checkbox" />
+                        <label>{opt.option}</label>
+                       </div>
+                    );
+                });
+                x.push(
+                    <Row>
+                        <Col xs="1"></Col>
+                        <Col xs="11">
+                            {temp}
+                        </Col>
+                    </Row>
+                )
+            }
+            else if(this.state.surveyQuestions.surveyquestions[i].questiontype === "text"){
+                x.push(
+                    <Row>
+                        <Col xs="1"></Col>
+                        <Col xs="5">
+                            <textarea width="50" value="" placeholder="Your response here"/>
+                        </Col>
+                    </Row>
+                )
+            } else if(this.state.surveyQuestions.surveyquestions[i].questiontype === "rating"){
+                let opt = [];
+                for(let k= 1; k<=this.state.surveyQuestions.surveyquestions[i].options[0].option; k++){
+                    opt.push({value: k, label: k});
+                }
+
+                x.push(
+                    <Row>
+                        <Col xs="1"></Col>
+                        <Col xs="5">
+                            <Dropdown options={opt}
+                                      onChange={this._onSelect} value={opt[0]}
+                                      placeholder="Select an option" />
                         </Col>
                     </Row>
                 )

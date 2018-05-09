@@ -25,6 +25,7 @@ public class QuestionController {
     private QuestionService questionService;
 
     @RequestMapping(path="/create", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @CrossOrigin(origins = "*", allowCredentials = "true", allowedHeaders = {"*"})
     public ResponseEntity<?> createQuestion(@RequestBody Question question) {
         System.out.println("-----------");
 

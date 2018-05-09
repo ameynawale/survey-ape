@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import surveyape.converters.Convertors;
 import surveyape.entity.OptionsEntity;
 import surveyape.entity.QuestionsEntity;
 import surveyape.models.Option;
@@ -29,6 +30,7 @@ public class OptionController {
     private OptionRepository optionRepository;
 
     @RequestMapping(path="/create", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @CrossOrigin(origins = "*", allowCredentials = "true", allowedHeaders = {"*"})
     public ResponseEntity<?> createOption(@RequestBody Option option) {
         System.out.println("-----------");
 
@@ -42,6 +44,7 @@ public class OptionController {
         questionsEntity.setQuestionid(Long.parseLong(String.valueOf(option.getQuestionid())));
         optionsEntity.setQuestionsEntity(questionsEntity);
         OptionsEntity optionsEntity1 = optionRepository.save(optionsEntity);
-        return new ResponseEntity<>(optionsEntity1, HttpStatus.CREATED);
+
+        return new ResponseEntity<>(Convertors.mapOptionEntityToOption(optionsEntity1), HttpStatus.CREATED);
     }
 }

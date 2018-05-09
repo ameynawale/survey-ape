@@ -170,6 +170,18 @@ class FormContent extends Component {
     }
 
 
+    publishSurvey = () => {
+        // event.preventDefault();
+        API.publishSurvey(this.state)
+            .then((res) => {
+                if(res.status === 201)
+                {
+                    console.log('inside 200');
+                    alert("Survey is published successfully");
+                }
+            });
+    }
+
 
 
     render() {
@@ -187,7 +199,9 @@ class FormContent extends Component {
                         <Button onClick={this.addText}>Text</Button>
                         <Button onClick={this.addRating}>Rating</Button>
                         <Button onClick={this.addDate}>Date</Button>
-                    </ButtonGroup>
+                    </ButtonGroup><br/><br/>
+                    <button className="btn btn-basic">Save</button>
+                    <button className="btn btn-primary" onClick={this.publishSurvey}>Publish</button>
                 </div>
             </form>
         );

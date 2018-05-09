@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import '../styles/SurveyContainer.css';
 import { Route, withRouter } from 'react-router-dom';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
-
+import * as API from '../api/API';
 class EmailInput extends Component{
     constructor(props){
         super(props);
@@ -18,7 +18,25 @@ class EmailInput extends Component{
     handleEmailInput(){
         //API call to save the email in response and provide email and id both
         // get all the questions of the survey
-        this.props.history.push('./SurveyQuestions', {surveyData: this.state});
+        API.validateEmail(this.state)
+            .then(
+                response => {
+                    if(response.status === 200){
+                        this.props.history.push('./SurveyQuestions', {surveyData: this.state});
+                    } else if(response.response.status === 404){
+                        alert(response.response.data.message);
+                    } else if(response.response.status === 208){
+                        //show his/her response page of the user
+                    } else if(response.response.status === 401){
+                        alert(response.response.data.message);
+                    } else {
+                        alert("An error occured. Please try again with correc URL");
+                    }
+                },
+                error => {
+                    console.log(error.data.message);
+                }
+            );
     }
     render(){
         return(

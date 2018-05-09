@@ -9,7 +9,8 @@ class Header extends Component {
         super();
         this.state = {
             createSurveyIsOpen: false,
-            isClosed: true
+            isClosed: true,
+            surveytype: 'general'
         };
 
         this.openCreateSurveyModal = this.openCreateSurveyModal.bind(this);
@@ -85,7 +86,7 @@ class Header extends Component {
                                         else if(event.target.value == 'Open unique survey')
                                         {
                                             this.setState({
-                                                surveytype: 'open',
+                                                surveytype: 'unique',
                                                 isClosed: true
                                             })
                                         }

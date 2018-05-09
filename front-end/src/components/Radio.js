@@ -90,7 +90,7 @@ class SingleSelect extends Component {
                     <input type="radio" disabled/>
                     <input type="text" className="form-control ml-2"
                            defaultValue={option}
-                           onChange={(event) => {
+                           onBlurCapture={(event) => {
                                let value = event.target.value;
                                let optionsarray = this.state.optionsarray;
                                optionsarray[index] = value;

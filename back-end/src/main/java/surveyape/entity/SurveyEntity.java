@@ -39,6 +39,26 @@ public class SurveyEntity {
     @JoinColumn(name = "userid") // ownerid
     private UserEntity userEntity;
 
+    public SurveyEntity(String surveyname, String surveytype, String validity, String createdon, int ispublished, Set<InviteesEntity> invitees, UserEntity userEntity) {
+        this.surveyname = surveyname;
+        this.surveytype = surveytype;
+        this.validity = validity;
+        this.createdon = createdon;
+        this.ispublished = ispublished;
+        this.invitees = invitees;
+//        this.questions = questions;
+        this.userEntity = userEntity;
+    }
+
+    public SurveyEntity(String surveyname, String surveytype, String validity, String createdon, int ispublished, UserEntity userEntity) {
+        this.surveyname = surveyname;
+        this.surveytype = surveytype;
+        this.validity = validity;
+        this.createdon = createdon;
+        this.ispublished = ispublished;
+        this.userEntity = userEntity;
+    }
+
     public SurveyEntity() { }
 
     public SurveyEntity(String surveyname, String surveytype, String validity, int ispublished, UserEntity userEntity) {

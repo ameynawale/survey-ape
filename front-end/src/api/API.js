@@ -1,6 +1,7 @@
 const api = process.env.REACT_APP_CONTACTS_API_URL || 'http://localhost:8080'
 const url = 'http://localhost:8080';
 const axios = require("axios");
+// import axios from 'axios';
 
 const headers = {
     'Accept': 'application/json'
@@ -31,6 +32,30 @@ export const doLogin = (payload) =>{
             return error
         });
 };
+
+export const validateEmail = (payload) =>{
+    return axios.post('http://localhost:8080/survey/validateEmail', payload)
+        .then(function (response) {
+            console.log(response);
+            return response
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error
+        });
+}
+
+export const getSurvey = (payload) =>{
+    return axios.post('http://localhost:8080/survey/getSurvey', payload)
+        .then(function (response) {
+            console.log(response);
+            return response
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error
+        });
+}
     // fetch(`${url}/users/signin`, {
     //     method: 'POST',
     //     headers: {
@@ -98,7 +123,11 @@ export const addSurvey = (payload) =>{
 };
 
 export const addQuestion = (payload) =>{
-    return axios.post('http://localhost:8080/question/create', payload)
+    return axios.post('http://localhost:8080/question/create', payload, {headers: {
+        // 'Content-Type': 'application/json;charset=UTF-8',
+            "Access-Control-Allow-Origin": "*",
+        // "credentials":"include"
+    }})
         .then(function (response) {
             console.log(response);
             return response;
@@ -121,6 +150,17 @@ export const addOption = (payload) =>{
         });
 };
 
+export const publishSurvey = (payload) =>{
+    return axios.post('http://localhost:8080/survey/publish', payload)
+        .then(function (response) {
+            console.log(response);
+            return response;
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error;
+        });
+};
 
 export const getSurveyListing = () =>
     fetch(`${api}/surveys/getsurveylisting`, {

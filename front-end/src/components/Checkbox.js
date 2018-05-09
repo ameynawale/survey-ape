@@ -40,6 +40,8 @@ class Checkbox extends Component {
             options: event.target.value,
             questionid: this.state.questionid
         }
+        console.log("before sending edit option", option.optionid);
+        console.log("event.target.name", event.target.name);
         API.addOption(option);
     }
 
@@ -53,6 +55,7 @@ class Checkbox extends Component {
             .then((res) => {
                 if(res.status === 201)
                 {
+                    console.log("after adding option1", res.data.optionid);
                     this.state.optionsarray.push("");
                     let options = this.state.options;
                     options.push(
@@ -72,7 +75,8 @@ class Checkbox extends Component {
                     );
                     this.setState({
                         options: options
-                    })
+                    });
+                    console.log("after adding option", res.data.optionid);
                 }
             })
     }
@@ -146,7 +150,7 @@ class Checkbox extends Component {
                            defaultValue={option}
                         // placeholder="Option"
                         // value={this.state.optionsarray[index]}
-                           onChange={(event) => {
+                           onBlurCapture={(event) => {
                                let value = event.target.value;
                                let optionsarray = this.state.optionsarray;
                                optionsarray[index] = value;
