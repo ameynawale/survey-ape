@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class SurveyServiceImpl implements SurveyService {
@@ -104,7 +107,51 @@ public class SurveyServiceImpl implements SurveyService {
             return "NOT_INVITED";
         }
     }
+    public Boolean isPublished(Survey survey){
+        String id =   survey.getSurveyid();
+        SurveyEntity surveyEntity = surveyRepository.findBySurveyid(id) ;
+        if(surveyEntity.getIspublished()==1)
+        {
+            return true;
+        }
+        else
+            return false;
+    }
 
+    public Boolean isValid(Survey survey){
+        String id =   survey.getSurveyid();
+        System.out.println(id);
+        SurveyEntity surveyEntity = surveyRepository.findBySurveyid(id);
+        System.out.println(surveyEntity.getValidity());
+        System.out.println(surveyEntity.getValidity());
+        Calendar cal = Calendar.getInstance();
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            System.out.println(surveyEntity.getValidity());
+            Date validTime = dateFormat.parse(surveyEntity.getValidity());
+            Date currentTime = cal.getTime();
+            /*cal1.setTime(validTime);
+            cal2.setTime(currentTime);
+            System.out.println(validTime);
+            System.out.println(currentTime);*/
+            System.out.println("date1 : " + dateFormat.format(validTime));
+            System.out.println("date2 : " + dateFormat.format(currentTime));
+
+            System.out.println(cal1.compareTo(cal2));
+            System.out.println(cal2.before(cal1));
+            if (currentTime.before(validTime)) {
+                return true;
+            }
+
+        } catch (ParseException e) {              // Insert this block.
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return false;
+    }
     /*public Survey createSurvey(Survey survey){
         List<InviteesEntity> inviteesEntity = new ArrayList<>();
 //        List<Invitees> invitees = new ArrayList<>();

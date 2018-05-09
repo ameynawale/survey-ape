@@ -8,8 +8,10 @@ import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.*;
 import surveyape.aspects.CheckSession;
 import surveyape.exceptions.InternalServerException;
+import surveyape.models.Survey;
 import surveyape.models.User;
 import surveyape.services.MailService;
+import surveyape.services.SurveyService;
 import surveyape.services.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -31,6 +33,8 @@ public class UserController {
     private MailService mailService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private SurveyService surveyService;
 
     private Map<String, String> jsonResponse = null;
 
@@ -70,7 +74,7 @@ public class UserController {
                 try {
                     System.out.println("mail service before check point: " + newUser.getCode());
                     mailService.sendSimpleMessage(newUser);
-                    System.out.println("mail service check point");
+                  //  System.out.println("mail service check point");
                 } catch (MailException e) {
                     System.out.println("error: " + e.getMessage());
                 }
@@ -93,9 +97,14 @@ public class UserController {
             if ((checkUser.getCode()).equalsIgnoreCase(user.getCode())) {
 
                 userService.activateUser(user);
-
+                try {
+                    mailService.sendConfirmationMessage(user);
+                    System.out.println("mail service check point");
+                } catch (MailException e) {
+                    System.out.println("error: " + e.getMessage());
+                }
                 jsonResponse = new HashMap<>();
-                jsonResponse.put("message", "User account activated. ");
+                jsonResponse.put("message", "User account activated and mail sent. ");
 
                 return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
             } else {
@@ -106,6 +115,7 @@ public class UserController {
 
         }
     }
+
 
     @CheckSession @RequestMapping(path="/logout", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> logoutUser(HttpSession httpSession) {

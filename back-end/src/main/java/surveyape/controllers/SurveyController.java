@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import surveyape.aspects.CheckSession;
 import surveyape.converters.Convertors;
+import surveyape.respositories.SurveyRepository;
+import surveyape.entity.SurveyEntity;
 import surveyape.models.Survey;
 import surveyape.services.SurveyService;
 
@@ -26,6 +28,8 @@ public class SurveyController {
 
     @Autowired
     private SurveyService surveyService;
+    @Autowired
+    private SurveyRepository surveyRepository;
 
     private Map<String, String> jsonResponse = null;
 
@@ -65,25 +69,60 @@ public class SurveyController {
         return new ResponseEntity<>(jsonResponse, HttpStatus.BAD_REQUEST);
     }
 
+
     private ResponseEntity<?> respondClosedCheck(String closedCheck){
 
         jsonResponse = new HashMap<>();
 
         if(closedCheck.equalsIgnoreCase("NOT_INVITED")) {
-            jsonResponse.put("message", "User is not invited");
+            jsonResponse.put("message", "You are not invited to take the survey. Please enter correct URL");
             return new ResponseEntity<>(jsonResponse, HttpStatus.UNAUTHORIZED);
         }
         else if(closedCheck.equalsIgnoreCase("HAS_COMPLETED")) {
-            jsonResponse.put("message", "User has already completed");
-            return new ResponseEntity<>(jsonResponse, HttpStatus.UNAUTHORIZED);
+            jsonResponse.put("message", "You have already completed the survey");
+            return new ResponseEntity<>(jsonResponse, HttpStatus.ALREADY_REPORTED);
         }
         else if(closedCheck.equalsIgnoreCase("SURVEY_NOT_FOUND")) {
-            jsonResponse.put("message", "Survey not found");
+            jsonResponse.put("message", "Survey not found. Please enter correct URL");
             return new ResponseEntity<>(jsonResponse, HttpStatus.NOT_FOUND);
         }
         else {
             jsonResponse.put("message", "User can take the survey!");
             return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
         }
+    }
+    @RequestMapping(path="/validateSurvey", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> generalSurvey(@RequestBody Survey survey) {
+        System.out.println("-----------");
+        if(surveyService.isPublished(survey))
+        {
+            if(surveyService.isValid(survey)){
+                System.out.println("the survey is published and is valid");
+                return new ResponseEntity<>("the survey is published and is valid", HttpStatus.OK);
+            }
+            else{
+                System.out.println("the survey is not valid");
+                return new ResponseEntity<>("the survey is not valid", HttpStatus.BAD_REQUEST);
+            }
+        }
+        else{
+            System.out.println("the survey is not published");
+            return new ResponseEntity<>("the survey is not published", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /*@RequestMapping(path="/saveSurvey", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> generalSurvey(@RequestBody Survey survey) {
+
+    }*/
+    @RequestMapping(path="/stat", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> surveyStat(@RequestBody Survey survey) {
+        System.out.println("-----------");
+        System.out.println(survey.getSurveyid());
+        // Survey newSurvey = surveyService.createSurvey(survey);
+        SurveyEntity surveyEntity = surveyRepository.findBySurveyid(survey.getSurveyid());
+        System.out.println(surveyEntity.getCreatedon() + " " + surveyEntity.getValidity() );
+
+        return new ResponseEntity<>(survey.getSurveyid(), HttpStatus.OK);
     }
 }

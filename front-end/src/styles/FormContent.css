@@ -11,3 +11,9 @@
 p {
     width: 100%;
 }
+.displayQuestions{
+    text-align: left !important;
+}
+.questionColor{
+    color: #0062ff;
+}

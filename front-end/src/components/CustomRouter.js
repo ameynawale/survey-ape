@@ -9,6 +9,7 @@ import SignUpVerification from './SignUpVerification';
 import Header from './Header';
 import SurveyStats from './SurveyStats';
 import TakeSurvey from './TakeSurvey';
+import SurveyQuestions from './SurveyQuestions';
 import * as API from '../api/API';
 
 class CustomRouter extends Component {
@@ -27,7 +28,7 @@ class CustomRouter extends Component {
                 .then((res) => {
                     if (res.status === 200) {
                         console.log('email', res.data.email);
-                        alert("successful SignUp");
+                        alert("Please verify your email using the verification code sent to your email to complete registration");
                         this.setState({
                             ...this.state,
                             messageDivSignup: "SignUp successful",
@@ -54,17 +55,19 @@ class CustomRouter extends Component {
             API.doLogin(payload)
                 .then((res) => {
                     if (res.status === 200) {
-                        alert("successful login");
+
                         console.log('email', res.data.email);
-                        if(res.data.isactivated == 0){
+                        if(res.data.isactivated === 0){
                             this.setState({
                                 ...this.state,
                                 messageDivLogin: "SignIn successful",
                                 user: res.data
                             });
+                            alert("Email is not verified. Please verify your email");
                             this.props.history.push('/signUpVerification');
                         }
                         else{
+                            alert("Login successful");
                             this.props.history.push('/surveys');
                         }
 
@@ -193,6 +196,11 @@ class CustomRouter extends Component {
                 <Route exact path="/unique" render={(data) => (
                     <div>
                         <TakeSurvey urlData={data} type={"unique"}/>
+                    </div>
+                )}/>
+                <Route exact path="/SurveyQuestions" render={(surveyData) => (
+                    <div>
+                        <SurveyQuestions surveyData={surveyData.location.state.surveyData}/>
                     </div>
                 )}/>
             </div>
