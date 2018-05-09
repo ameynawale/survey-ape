@@ -7,13 +7,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import surveyape.aspects.CheckSession;
 import surveyape.converters.Convertors;
+import surveyape.entity.QuestionsEntity;
 import surveyape.respositories.SurveyRepository;
+import surveyape.respositories.QuestionRepository;
 import surveyape.entity.SurveyEntity;
 import surveyape.models.Survey;
 import surveyape.services.SurveyService;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * SurveyController a RestController class which manages the Surveys.
@@ -30,6 +33,8 @@ public class SurveyController {
     private SurveyService surveyService;
     @Autowired
     private SurveyRepository surveyRepository;
+    @Autowired
+    private QuestionRepository questionRepository;
 
     private Map<String, String> jsonResponse = null;
 
@@ -111,7 +116,13 @@ public class SurveyController {
         System.out.println(survey.getSurveyid());
         // Survey newSurvey = surveyService.createSurvey(survey);
         SurveyEntity surveyEntity = surveyRepository.findBySurveyid(survey.getSurveyid());
-        System.out.println(surveyEntity.getCreatedon() + " " + surveyEntity.getValidity() );
+        System.out.println(surveyEntity.getCreatedon() + " " + surveyEntity.getValidity());
+
+        Set<QuestionsEntity> questionEntityForSurvey = questionRepository.findBySurveyEntity(surveyEntity);
+        for (QuestionsEntity questionsEntity : questionEntityForSurvey){
+
+        }
+
 
         return new ResponseEntity<>(survey.getSurveyid(), HttpStatus.OK);
     }
