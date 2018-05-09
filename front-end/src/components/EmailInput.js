@@ -31,7 +31,9 @@ class EmailInput extends Component{
                         this.props.history.push('./SurveyQuestions', {surveyData: this.state});
                     } else if(response.status === 208){
                         alert(response.data.message);
-                    }else if(response.response.status === 404){
+                    }else if(response.response.status === 400){
+                        alert(response.response.data.message);
+                    } else if(response.response.status === 404){
                         alert(response.response.data.message);
                     }  else if(response.response.status === 401){
                         alert(response.response.data.message);
@@ -63,7 +65,7 @@ class EmailInput extends Component{
                                 </FormGroup>
                             </Form>
                             <br/>
-                                <h3>OR</h3>
+                                <h3>OR you can sign up/in to our app</h3>
                                 <Button color="primary" onClick={() => {
                                     this.handleSignIn()
                                 }}>SignUp or SignIn</Button>
