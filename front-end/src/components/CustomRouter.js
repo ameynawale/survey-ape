@@ -9,6 +9,7 @@ import SignUpVerification from './SignUpVerification';
 import Header from './Header';
 import SurveyStats from './SurveyStats';
 import TakeSurvey from './TakeSurvey';
+import SurveyQuestions from './SurveyQuestions';
 import * as API from '../api/API';
 
 class CustomRouter extends Component {
@@ -56,7 +57,7 @@ class CustomRouter extends Component {
                     if (res.status === 200) {
 
                         console.log('email', res.data.email);
-                        if(res.data.isactivated == 0){
+                        if(res.data.isactivated === 0){
                             this.setState({
                                 ...this.state,
                                 messageDivLogin: "SignIn successful",
@@ -178,6 +179,11 @@ class CustomRouter extends Component {
                 <Route exact path="/unique" render={(data) => (
                     <div>
                         <TakeSurvey urlData={data} type={"unique"}/>
+                    </div>
+                )}/>
+                <Route exact path="/SurveyQuestions" render={(surveyData) => (
+                    <div>
+                        <SurveyQuestions surveyData={surveyData.location.state.surveyData}/>
                     </div>
                 )}/>
             </div>
