@@ -5,10 +5,13 @@ import org.springframework.stereotype.Service;
 import surveyape.entity.QuestionsEntity;
 import surveyape.entity.ResponseEntity;
 import surveyape.entity.UserEntity;
+import surveyape.models.OpenResponses;
+import surveyape.models.OpenSurveyResponse;
 import surveyape.models.Response;
 import surveyape.respositories.QuestionRepository;
 import surveyape.respositories.ResponseRepository;
 import surveyape.respositories.UserRepository;
+import surveyape.services.MailService;
 import surveyape.services.ResponseService;
 
 @Service
@@ -22,6 +25,9 @@ public class ResponseServiceImpl implements ResponseService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private MailService mailService;
 
     public Response saveSurveyResponse(Response response, String email){
 
@@ -64,5 +70,34 @@ public class ResponseServiceImpl implements ResponseService {
             r.setResponse(res.getResponse());
             return r;
         }
+    }
+
+    public Response saveOpenSurveyResponse(OpenSurveyResponse openS){
+        Response r = new Response();
+        ResponseEntity res = null;
+        for(OpenResponses open: openS.getOpenResponses()){
+            ResponseEntity responseEntity = new ResponseEntity();
+
+            if(open.getOptionid() == null){
+                responseEntity.setOptionid(null);
+            } else{
+                responseEntity.setOptionid(Long.parseLong(open.getOptionid()));
+            }
+
+            responseEntity.setResponse(open.getResponse());
+
+            QuestionsEntity question = questionRepository.findById(Long.parseLong(open.getQuestionid()));
+            responseEntity.setQuestionsEntity(question);
+
+            res = responseRepository.save(responseEntity);
+
+        }
+        r.setEmail(res.getEmail());
+        r.setResponse(res.getResponse());
+
+        if(openS.getSendEmail() != null ){
+            mailService.sendSuccessMailGeneral(openS.getSendEmail());
+        }
+        return r;
     }
 }

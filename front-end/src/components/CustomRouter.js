@@ -222,9 +222,9 @@ class CustomRouter extends Component {
                         <SurveyStats selectedSurvey={selectedSurvey.location.state.selectedSurvey}/>
                     </div>
                 )}/>
-                <Route exact path="/open" render={(data) => (
+                <Route exact path="/general" render={(data) => (
                     <div>
-                        <TakeSurvey urlData={data} type={"open"}/>
+                        <TakeSurvey urlData={data} type={"general"}/>
                     </div>
                 )}/>
                 <Route exact path="/close" render={(data) => (

@@ -94,4 +94,15 @@ public class MailService{
         emailSender.send(message);
 
     }
+
+    public void sendSuccessMailGeneral (String email) throws MailException{
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject("Successfully completed survey");
+        message.setFrom(emailFrom);
+        message.setText("You have successfully submitted the survey");
+        emailSender.send(message);
+
+    }
 }

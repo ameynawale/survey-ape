@@ -13,11 +13,11 @@ import QuestionRadio from  './QuestionRadio';
 class OpenSurveyQuestions extends Component{
     constructor(props){
         super(props);
-        let x = this.props.surveyData;
+        let x = this.props.surveyid;
         this.state= {
             "textValue":'',
-            "type": x.type,
-            "email": x.email,
+            // "type": x.type,
+            // "email": x.email,
             "surveyid": x.surveyid,
             "surveyQuestions": {},
             "displayQues": [],
@@ -28,10 +28,10 @@ class OpenSurveyQuestions extends Component{
     }
 
     componentWillMount() {
-        let data = this.props.surveyData;
-        var email = data.email;
-        var id = data.surveyid;
-        var payload = {
+        let data = this.props.surveyid;
+        // var email = data.email;
+        let id = data.surveyid;
+        let payload = {
             "surveyid": id
         }
         //api call to get all the questions and options of the survey
@@ -196,28 +196,7 @@ class OpenSurveyQuestions extends Component{
         //     this.setState({ reviewedRating : nextValue });
         // };
     }
-    submitSurvey(){
-        var payload={
-            "email": this.state.email,
-            "responses": this.state.surveyResponses
-        }
-        API.submitSurvey(payload)
-            .then(
-                response => {
-                    if (response.status === 200) {
-                        alert("You have Successfully submitted the survey");
-                        this.props.history.push("/");
-                    } else if (response.response.status === 404) {
-                        alert(response.response.data.message);
-                    } else {
-                        alert("An error occured. Please try again with correct URL");
-                    }
-                },
-                error => {
-                    console.log(error.data.message);
-                }
-            );
-    }
+
     autoSaveSurvey(response, questionid, optionid){
         var payload = {
             "type": this.state.type,
@@ -230,19 +209,30 @@ class OpenSurveyQuestions extends Component{
 
     }
 
-    submitSurvey(){
-        var payload={
-            surveyResponses: this.state.surveyResponses,
-            sendEmail: this.state.sendEmail
+    submitGeneralSurvey(){
+        if(this.state.sendEmail === '' || this.state.sendEmail === ' ' || this.state.sendEmail === undefined){
+            var payload={
+                openResponses: this.state.surveyResponses,
+                sendEmail: this.state.sendEmail
+            }
+        } else{
+            var payload={
+                openResponses: this.state.surveyResponses,
+                sendEmail: null
+            }
         }
+
         API.saveGeneralSurveyResponse(payload)
             .then(
                 response => {
                     if(response.status === 200){
                         console.log("saved");
+                        alert("You have Successfully submitted the survey");
                         this.props.history.push('/');
+                    } else if (response.response.status === 404) {
+                        alert(response.response.data.message);
                     } else {
-                        // alert("An error occured. Please try again with correc URL");
+                        alert("An error occured. Please try again with correct URL");
                     }
                 },
                 error => {
@@ -273,7 +263,7 @@ class OpenSurveyQuestions extends Component{
                         </div>
                         <button className="btn btn-primary share-button"
                                 onClick={() => {
-                                    this.submitSurvey();
+                                    this.submitGeneralSurvey();
                                 }}>Submit Survey</button>
                     </div>
                 </div>

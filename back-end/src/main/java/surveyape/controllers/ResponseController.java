@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import surveyape.converters.Convertors;
+import surveyape.models.OpenSurveyResponse;
 import surveyape.models.Response;
 import surveyape.services.ResponseService;
 
@@ -47,5 +48,12 @@ public class ResponseController {
             jsonResponse.put("message", "Invalid details provided.");
             return new ResponseEntity<>(jsonResponse, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @RequestMapping(path="/saveGeneralSurveyResponse", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> saveGeneralSurveyResponse(@RequestBody OpenSurveyResponse response) {
+        Response res = null;
+        res = responseService.saveOpenSurveyResponse(response);
+        return new ResponseEntity<>(res,HttpStatus.OK);
     }
 }

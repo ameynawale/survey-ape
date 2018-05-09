@@ -58,7 +58,7 @@ export const fetchQuestions = (payload) => {
         });
 }
 
-export const submitSurvey = (payload) => {
+export const submitCloseUniqueSurvey = (payload) => {
     return axios.post('http://localhost:8080/survey/fetchQuestions', payload)
         .then(function (response) {
             console.log(response);

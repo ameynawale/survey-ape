@@ -31,7 +31,8 @@ class SurveyQuestions extends Component{
         var email = data.email;
         var id = data.surveyid;
         var payload = {
-            "surveyid": id
+            "surveyid": id,
+            "email": this.state.email
         }
         //api call to get all the questions and options of the survey
         API.fetchQuestions(payload)
@@ -200,7 +201,7 @@ class SurveyQuestions extends Component{
             "email": this.state.email,
             "surveyid": this.state.surveyid
         }
-        API.submitSurvey(payload)
+        API.submitCloseUniqueSurvey(payload)
             .then(
                 response => {
                     if (response.status === 200) {
@@ -244,9 +245,6 @@ class SurveyQuestions extends Component{
             );
     }
 
-    submitSurvey(){
-
-    }
     render(){
         return(
             <div className="survey-container">
