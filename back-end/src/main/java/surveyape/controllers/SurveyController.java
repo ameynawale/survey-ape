@@ -112,7 +112,7 @@ public class SurveyController {
         }
     }
     @RequestMapping(path="/validateSurvey", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> generalSurvey(@RequestBody Survey survey) {
+    public ResponseEntity<?> validateSurvey(@RequestBody Survey survey) {
         System.out.println("-----------");
         if(surveyService.isPublished(survey))
         {
@@ -130,6 +130,7 @@ public class SurveyController {
             return new ResponseEntity<>("the survey is not published", HttpStatus.BAD_REQUEST);
         }
     }
+
 
     /*@RequestMapping(path="/saveSurvey", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> generalSurvey(@RequestBody Survey survey) {

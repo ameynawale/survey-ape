@@ -1,5 +1,6 @@
 package surveyape.services;
 
+import org.springframework.http.ResponseEntity;
 import surveyape.models.Survey;
 import surveyape.models.SurveyListing;
 import surveyape.models.User;
@@ -9,6 +10,7 @@ public interface SurveyService {
     Survey createSurvey(Survey survey);
     Survey publishSurvey(Survey survey);
     SurveyListing getSurveyListing(User user);
+    public ResponseEntity<byte[]> getQRCode(String text);
 
     String isInvitedOrHasCompleted(String email, String surveyId);
 

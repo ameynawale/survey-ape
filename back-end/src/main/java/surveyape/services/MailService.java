@@ -1,6 +1,7 @@
 package surveyape.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -34,6 +35,8 @@ public class MailService{
     public /*void*/ MailService(JavaMailSender javaMailSender) {
         this.emailSender = javaMailSender;
     }
+    @Autowired
+    SurveyService surveyService;
 
     public String getCode(){
        /* double randomNumber = Math.random() * ((9999 - 1000) + 1) + 1000;
@@ -74,6 +77,19 @@ public class MailService{
         message.setSubject("Welcome to Survey");
         message.setFrom(emailFrom);
         message.setText("Hi " +"," + " Welcome to the Survey Ape. Thank you for registering, your account is verified");
+        // System.out.println("Hi " + user.getFirstname()+"," + " Welcome to the Survey Ape, here is your registration code: " +user.getCode());
+        emailSender.send(message);
+
+    }
+
+    public void sendpublishMailGeneral (String URL, String email) throws MailException{
+        //  System.out.println();
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject("Welcome to Survey");
+        message.setFrom(emailFrom);
+        message.setText("Hi " +"," + " This is the URL for the survey<br/>" + URL +"<br/>"+ "This is the QR Scan code for the survey <br/>" + surveyService.getQRCode(URL));
         // System.out.println("Hi " + user.getFirstname()+"," + " Welcome to the Survey Ape, here is your registration code: " +user.getCode());
         emailSender.send(message);
 
