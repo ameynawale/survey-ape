@@ -1,5 +1,7 @@
 package surveyape.services;
 
+import surveyape.models.*;
+import java.util.Set;
 import org.springframework.http.ResponseEntity;
 import surveyape.models.Survey;
 import surveyape.models.SurveyListing;
@@ -12,6 +14,7 @@ public interface SurveyService {
     Survey createSurvey(Survey survey);
     Survey publishSurvey(Survey survey);
     Survey closeSurvey(Survey survey);
+    Questions getQuestions(Survey survey);
     SurveyListing getSurveyListing(User user);
     public ResponseEntity<byte[]> getQRCode(String text);
 

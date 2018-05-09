@@ -80,6 +80,29 @@ class SurveyContainer extends Component {
 
     }
 
+    editSurvey = (event) => {
+        console.log(event.target.name);
+        var surveydata = {
+            surveyid: event.target.name
+        }
+        this.props.editSurvey(surveydata);
+        /*
+        event.preventDefault();
+        console.log("inside function ", event.target.name);
+        var Survey = {
+            surveyid: event.target.name
+        }
+        API.closeSurvey(Survey)
+            .then((res) => {
+                if(res.status === 200)
+                {
+                    console.log('inside 200');
+                    alert("Survey is closed successfully");
+                }
+            });
+*/
+    }
+
     toggle(tab) {
         if (this.state.activeTab !== tab) {
             this.setState({
@@ -152,6 +175,10 @@ class SurveyContainer extends Component {
                                     <Row>
                                     <Col sm="12">
                                         <h6>{survey.surveyname}</h6>
+                                        <button className="btn btn-basic share-button"
+                                                name={survey.surveyid}
+                                                onClick={(event) => {this.editSurvey(event)}}
+                                        >Edit</button>
                                         <button className="btn btn-basic share-button"
                                                 name={survey.surveyid}
                                                 onClick={(event) => {this.closeSurvey(event)}}
