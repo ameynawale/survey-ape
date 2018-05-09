@@ -34,21 +34,6 @@ public class QuestionsEntity {
 
     public QuestionsEntity() {}
 
-    public Set<OptionsEntity> getOptions() {
-        return options;
-    }
-
-    public void setOptions(Set<OptionsEntity> options) {
-        this.options = options;
-    }
-
-    public Set<ResponseEntity> getResponses() {
-        return responses;
-    }
-
-    public void setResponses(Set<ResponseEntity> responses) {
-        this.responses = responses;
-    }
 
     public QuestionsEntity(String question, String questiontype) {
         this.question = question;

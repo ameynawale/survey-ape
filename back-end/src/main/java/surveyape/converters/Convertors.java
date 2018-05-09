@@ -73,10 +73,7 @@ public class Convertors {
                         question.setQuestiontype( questionsEntity.getQuestiontype() );
                         question.setQuestion    ( questionsEntity.getQuestion() );
 
-                        Map<String, Object> options = new HashMap<>();
-                        options.put("options", fetchOptions(questionsEntity));
-
-                        question.setOptions(options);
+                        question.setOptions(fetchOptions(questionsEntity));
                         questionsList.add(question);
                     });
 

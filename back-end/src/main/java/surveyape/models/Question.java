@@ -3,13 +3,14 @@ package surveyape.models;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.Map;
+import java.util.Set;
 
 public class Question {
     private int questionid;
     private String question;
     private String surveyid;
     private String questiontype;
-    private Map<String, Object> options;
+    private Set<Option> options;
 
     public Question(){}
 
@@ -44,6 +45,6 @@ public class Question {
     }
     @JsonInclude(JsonInclude.Include.NON_EMPTY) public void setQuestiontype(String questiontype) {this.questiontype = questiontype; }
 
-    public Map<String, Object> getOptions() { return options; }
-    @JsonInclude(JsonInclude.Include.NON_EMPTY) public void setOptions(Map<String, Object> options) { this.options = options; }
+    public Set<Option> getOptions() { return options; }
+    @JsonInclude(JsonInclude.Include.NON_EMPTY) public void setOptions(Set<Option> options) { this.options = options; }
 }

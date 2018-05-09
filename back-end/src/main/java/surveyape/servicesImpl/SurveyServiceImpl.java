@@ -223,7 +223,7 @@ public class SurveyServiceImpl implements SurveyService {
     }
 
     @Override
-    public String isInvitedOrHasCompleted(String email, String surveyid) {
+    public String isClosedSurveyInvitedOrCompleted(String email, String surveyid)  {
 
         SurveyEntity fetchedSurveyEntity = surveyRepository.findBySurveyid(surveyid);
 
@@ -313,63 +313,66 @@ public class SurveyServiceImpl implements SurveyService {
         return Convertors.mapSurveyEntityToSurveyQuestions(surveyRepository.findBySurveyid(survey.getSurveyid()));
     }
 
-    /*public Survey createSurvey(Survey survey){
-        List<InviteesEntity> inviteesEntity = new ArrayList<>();
-//        List<Invitees> invitees = new ArrayList<>();
+    @Override
+    public Boolean isUniqueSurveyAlreadyCompleted(String email, String surveyid) {
+        return (userSurveyRepository.findBySurveyidAndEmail(surveyid, email).getHascompleted() == 1);
+    }
 
-        for(Invitees invitee : survey.getInvitees()){
-            InviteesEntity i = new InviteesEntity();
-            i.setEmail(invitee.getEmail());
-            inviteesEntity.add(i);
+    @Override
+    public Boolean finishClosedUniqueSurveys(Survey survey, String email) {
+        UserSurveyEntity userSurveyEntity = userSurveyRepository.findBySurveyidAndEmail(survey.getSurveyid(), email);
+        if(userSurveyEntity.getHascompleted() == 0) {
+            userSurveyEntity.setHascompleted(1);
+            userSurveyRepository.save(userSurveyEntity);
+            return true;
+        } else {
+            return false;
         }
+    }
 
+    @Override
+    public Map<String, Object> fetchStats(Survey survey) {
 
-        SurveyEntity surveyEntity = new SurveyEntity(survey.getSurveyname(), survey.getOwnerid(), survey.getSurveytype(),
-                survey.getValidity(), survey.getIspublished());
-        SurveyEntity newSurvey = surveyRepository.save(surveyEntity);
-
-        for(Invitees invitee : survey.getInvitees()){
-            InviteesEntity i = new InviteesEntity();
-            i.setSurveyid(newSurvey.getSurveyid());
-            i.setEmail(invitee.getEmail());
-            inviteeRespository.save(i);
-        }
-
-
-
-        return getSurvey(newSurvey.getSurveyid());
-
-//        return s;
-    }*/
-
-//    public Survey createSurvey(Survey survey){
-//        SurveyEntity surveyEntity = new SurveyEntity(survey.getSurveyname(), 7, survey.getSurveyname(), survey.getValidity(),
-//        0, null);
-//        return Convertors.mapSurveyEntityToSurvey(surveyRepository.save(surveyEntity));
-//    }
-
-//    public Survey getSurvey(int surveyId){
 //
-//        List<Invitees> invitees = new ArrayList<>();
-//        Survey s = new Survey();
+//        SurveyEntity surveyEntity = surveyRepository.findBySurveyid(survey.getSurveyid());
 //
-//        SurveyEntity newSurvey = surveyRepository.findBySurveyid(surveyId);
+//        switch (surveyEntity.getSurveytype()) {
 //
-//        s.setSurveyid(newSurvey.getSurveyid());
-//        s.setSurveyname(newSurvey.getSurveyname());
-//        s.setOwnerid(newSurvey.getOwnerid());
-//        s.setIspublished(newSurvey.getIspublished());
-//        s.setSurveytype(newSurvey.getSurveytype());
-//        s.setValidity(newSurvey.getValidity());
+//            case "closed":
 //
-//        for(InviteesEntity invitee : newSurvey.getInvitees()){
-//            Invitees i = new Invitees();
-//            i.setSurveyid(invitee.getSurveyid());
-//            i.setEmail(invitee.getEmail());
-//            invitees.add(i);
+////                double total_price  =  projectEntity.getBids()
+////                        .stream()
+////                        .filter(bidsEntity -> bidsEntity.getBid_price() != null)
+////                        .mapToDouble(BidsEntity::getBid_price)
+////                        .sum();
+//                long numberOfParticipants = surveyEntity.getInvitees()  // Fetch All Invitees
+//                                                        .stream()       // Convert to stream
+//                                                        .filter(inviteesEntity -> (userSurveyRepository.findBySurveyidAndEmail(surveyEntity.getSurveyid(),inviteesEntity.getEmail()).getHascompleted() == 1) )
+//                                                        .count();       // Count the invitees
+//
+//
+//                break;
+//
+//            case "open":
+//
+//                break;
+//
+//            case "unique":
+//
+//                break;
+//            default:
+//                throw new InternalServerException("Internal Server Error");
 //        }
-//        s.setInvitees(invitees);
 //
-//        return s;
-//    }
+//
+//
+//        Map<String, Object> statsResponse = new HashMap<>();
+//
+//        statsResponse.put("startTime", surveyEntity.getCreatedon());
+//        statsResponse.put("endTime", surveyEntity.getValidity());
+//
+
+
+        return null;
+    }
 }

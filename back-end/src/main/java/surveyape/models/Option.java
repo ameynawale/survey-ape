@@ -1,5 +1,7 @@
 package surveyape.models;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 public class Option {
     private int optionid;
     private String options;
@@ -16,24 +18,19 @@ public class Option {
     public int getOptionid() {
         return optionid;
     }
-
-    public void setOptionid(int optionid) {
+    @JsonInclude(JsonInclude.Include.NON_EMPTY) public void setOptionid(int optionid) {
         this.optionid = optionid;
     }
 
     public String getOptions() {
         return options;
     }
-
-    public void setOptions(String options) {
+    @JsonInclude(JsonInclude.Include.NON_EMPTY) public void setOptions(String options) {
         this.options = options;
     }
 
     public int getQuestionid() {
         return questionid;
     }
-
-    public void setQuestionid(int questionid) {
-        this.questionid = questionid;
-    }
+    @JsonInclude(JsonInclude.Include.NON_EMPTY) public void setQuestionid(int questionid) { this.questionid = questionid; }
 }

@@ -18,7 +18,7 @@ public interface SurveyService {
     SurveyListing getSurveyListing(User user);
     public ResponseEntity<byte[]> getQRCode(String text);
 
-    String isInvitedOrHasCompleted(String email, String surveyId);
+    String isClosedSurveyInvitedOrCompleted(String email, String surveyId);
 
     Boolean isPublished(Survey survey);
 
@@ -29,4 +29,10 @@ public interface SurveyService {
     Survey findSurvey(Survey survey);
 
     Map<String, Object> fetchSurveyQuestions(Survey survey);
+
+    Boolean isUniqueSurveyAlreadyCompleted(String email, String surveyId);
+
+    Map<String, Object> fetchStats(Survey survey);
+
+    Boolean finishClosedUniqueSurveys(Survey survey, String email);
 }
