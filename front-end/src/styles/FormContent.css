@@ -14,3 +14,6 @@ p {
 .displayQuestions{
     text-align: left !important;
 }
+.questionColor{
+    color: #0062ff;
+}
