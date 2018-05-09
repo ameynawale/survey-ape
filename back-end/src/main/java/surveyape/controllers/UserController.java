@@ -54,6 +54,7 @@ public class UserController {
 
         if(existingUser != null) {
             httpSession.setAttribute("email", existingUser.getEmail());
+            httpSession.setAttribute("userid", existingUser.getUserid());
             return new ResponseEntity<>(existingUser, HttpStatus.OK);
         } else {
             // Invalid credentials

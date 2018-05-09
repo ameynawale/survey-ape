@@ -5,6 +5,11 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import surveyape.models.*;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 public class Convertors {
 
     public static User mapUserEntityToUser(UserEntity userEntity){
@@ -54,4 +59,50 @@ public class Convertors {
     public static String fetchSessionEmail() {
         return (String)((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession().getAttribute("email");
     }
+
+    public static Map<String, Object> mapSurveyEntityToSurveyQuestions(SurveyEntity surveyEntity) {
+
+        Set<Question> questionsList = new HashSet<>();
+
+        surveyEntity.getQuestions()
+                    .stream()
+                    .forEach(questionsEntity -> {
+                        Question question = new Question();
+
+                        question.setQuestionid  ( questionsEntity.getQuestionid().intValue() );
+                        question.setQuestiontype( questionsEntity.getQuestiontype() );
+                        question.setQuestion    ( questionsEntity.getQuestion() );
+
+                        Map<String, Object> options = new HashMap<>();
+                        options.put("options", fetchOptions(questionsEntity));
+
+                        question.setOptions(options);
+                        questionsList.add(question);
+                    });
+
+        Map<String, Object> surveyQuestionsResponse = new HashMap<>();
+
+        surveyQuestionsResponse.put("surveyid", surveyEntity.getSurveyid());
+        surveyQuestionsResponse.put("surveyname", surveyEntity.getSurveyname());
+        surveyQuestionsResponse.put("surveyquestions", questionsList);
+
+        return surveyQuestionsResponse;
+    }
+
+    private static Set<Option> fetchOptions(QuestionsEntity questionsEntity) {
+
+        Set<Option> optionsSet = new HashSet<>();
+
+        questionsEntity.getOptions()
+                       .stream()
+                       .forEach(optionsEntity -> {
+                           Option option = new Option();
+                           option.setOptionid( optionsEntity.getOptionid().intValue() );
+                           option.setOptions ( optionsEntity.getOptions() );
+                           optionsSet.add(option);
+                       });
+
+        return  optionsSet;
+    }
+
 }

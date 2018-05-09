@@ -74,6 +74,7 @@ class CustomRouter extends Component {
                         }
                         else{
                             alert("Login successful");
+                            localStorage.setItem("userEmail", res.data.email);
                             this.props.history.push('/surveys');
                         }
 

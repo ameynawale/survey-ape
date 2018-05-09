@@ -59,15 +59,15 @@ class SignUp extends Component {
     }*/
     render() {
         let messageDivSignUp =null;
-        if(this.state.messageDivSignUp !== ''){
-            messageDivSignUp = <div className="clearfix">
-                <div className="alert alert-danger text-center" role="alert">
-                    {this.state.messageDivSignUp}
-                </div>
-            </div>;
-        } else{
-            messageDivSignUp = <div></div>;
-        }
+        // if(this.state.messageDivSignUp !== ''){
+        //     messageDivSignUp = <div className="clearfix">
+        //         <div className="alert alert-danger text-center" role="alert">
+        //             {this.state.messageDivSignUp}
+        //         </div>
+        //     </div>;
+        // } else{
+        //     messageDivSignUp = <div></div>;
+        // }
         return (
             <div className="survey-container">
                 <div className="form-design-container">

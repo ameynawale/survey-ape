@@ -1,0 +1,9 @@
+package surveyape.services;
+
+import surveyape.models.Response;
+
+public interface ResponseService {
+
+    Response saveSurveyResponse(Response response, String email);
+
+}

@@ -1,7 +1,15 @@
 package surveyape.servicesImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import surveyape.controllers.QRController;
 import surveyape.converters.Convertors;
 import surveyape.entity.*;
 import surveyape.models.*;
@@ -9,6 +17,8 @@ import surveyape.respositories.InviteeRepository;
 import surveyape.respositories.SurveyRepository;
 import surveyape.respositories.UserRepository;
 import surveyape.respositories.UserSurveyRepository;
+import surveyape.services.MailService;
+import surveyape.services.QRService;
 import surveyape.services.SurveyService;
 
 import java.util.ArrayList;
@@ -18,6 +28,10 @@ import java.util.Set;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+
+import static surveyape.controllers.QRController.QRCODE_ENDPOINT;
+import static surveyape.controllers.QRController.THIRTY_MINUTES;
 
 @Service
 public class SurveyServiceImpl implements SurveyService {
@@ -33,6 +47,10 @@ public class SurveyServiceImpl implements SurveyService {
 
     @Autowired
     private InviteeRepository inviteeRepository;
+    @Autowired
+    private QRService imageService;
+    @Autowired
+    private MailService mailService;
 
 
     public Survey createSurvey(Survey survey) {
@@ -60,22 +78,79 @@ public class SurveyServiceImpl implements SurveyService {
 
         return r;
     }
+    @Scheduled(fixedRate = THIRTY_MINUTES)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping(value = QRCODE_ENDPOINT)
+    public void deleteAllCachedImages() {
+        imageService.purgeCache();
+    }
+
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+
+    public class InternalServerError extends RuntimeException {
+
+        private static final long serialVersionUID = 1L;
+
+        public InternalServerError(final String message, final Throwable cause) {
+            super(message);
+        }
+
+    }
+    public ResponseEntity<byte[]> getQRCode( String text) {
+        try {
+            System.out.println("Get QRcode");
+            return ResponseEntity.ok().cacheControl(CacheControl.maxAge(5, TimeUnit.SECONDS))
+                    .body(imageService.generateQRCodeAsync(text, 256, 256).get());
+        } catch (Exception ex) {
+            throw new InternalServerError("Error while generating QR code image.", ex);
+        }
+
+    }
 
     public Survey publishSurvey(Survey survey) {
-
+        System.out.println(survey.getSurveytype());
         String sessionEmail = Convertors.fetchSessionEmail();
         UserEntity userEntity = userRepository.findByEmail(sessionEmail);
         SurveyEntity surveyEntity = surveyRepository.findBySurveyid(survey.getSurveyid());
+        if(surveyEntity == null){
+            Survey r = new Survey();
+            return r;
+        }
         surveyEntity.setIspublished(1);
-
         SurveyEntity s = surveyRepository.save(surveyEntity);
+        System.out.println("session email"+sessionEmail);
+        System.out.println("survey type/"+surveyEntity.getSurveytype()+"/");
+        String URL = "http://localhost:8080/survey" +"/" +surveyEntity.getSurveytype()+ "?surveyid=" +survey.getSurveyid();
+        System.out.println(URL);
+        surveyEntity.setURL(URL);
+        SurveyEntity Q= surveyRepository.save(surveyEntity);
+        //if general
+
+        if((surveyEntity.getSurveytype()).equalsIgnoreCase("general") ){
+
+            ResponseEntity<byte[]> QRCode = this.getQRCode(URL);
+            System.out.println(QRCode);
+            mailService.sendpublishMailGeneral(URL,sessionEmail);
+        }
+        else if((surveyEntity.getSurveytype()).equalsIgnoreCase("closed")){
+            System.out.println("closed type");
+            Set<InviteesEntity> set = inviteeRepository.findBySurveyEntity(surveyEntity);
+            for(InviteesEntity invitees: set)
+            {
+                String email = invitees.getEmail();
+                System.out.println(email);
+                mailService.sendpublishMailGeneral(URL,email);
+            }
+
+        }
+
 
         Survey r = new Survey();
-        r.setSurveyid(s.getSurveyid());
-        r.setSurveyname(s.getSurveyname());
-        r.setIspublished(s.getIspublished());
-        r.setSurveytype(s.getSurveytype());
-
+        r.setSurveyid(Q.getSurveyid());
+        r.setSurveyname(Q.getSurveyname());
+        r.setIspublished(Q.getIspublished());
+        r.setSurveytype(Q.getSurveytype());
+        r.setURL(Q.getURL());
         return r;
     }
 
@@ -138,7 +213,8 @@ public class SurveyServiceImpl implements SurveyService {
 
         for(SurveyEntity surveyEntity: surveyEntitiesSharedWithMe)
         {
-            surveysSharedWithMe.add(Convertors.mapSurveyEntityToSurvey(surveyEntity));
+            if(surveyEntity.getIspublished() == 1)
+                surveysSharedWithMe.add(Convertors.mapSurveyEntityToSurvey(surveyEntity));
         }
 
         SurveyListing surveyListing = new SurveyListing(surveysCreatedByMe,surveysSharedWithMe);
@@ -187,6 +263,9 @@ public class SurveyServiceImpl implements SurveyService {
         String id =   survey.getSurveyid();
         System.out.println(id);
         SurveyEntity surveyEntity = surveyRepository.findBySurveyid(id);
+
+        if(surveyEntity == null) return false;
+
         System.out.println(surveyEntity.getValidity());
         System.out.println(surveyEntity.getValidity());
         Calendar cal = Calendar.getInstance();
@@ -217,6 +296,23 @@ public class SurveyServiceImpl implements SurveyService {
         }
         return false;
     }
+
+    @Override
+    public Boolean isSurveyClosed(Survey survey) {
+        return (surveyRepository.findBySurveyid(survey.getSurveyid()).getIsclosed() == 1);
+    }
+
+    @Override
+    public Survey findSurvey(Survey survey) {
+        SurveyEntity surveyEntity = surveyRepository.findBySurveyid(survey.getSurveyid());
+        return surveyEntity != null ? Convertors.mapSurveyEntityToSurvey(surveyEntity) : null;
+    }
+
+    @Override
+    public Map<String, Object> fetchSurveyQuestions(Survey survey) {
+        return Convertors.mapSurveyEntityToSurveyQuestions(surveyRepository.findBySurveyid(survey.getSurveyid()));
+    }
+
     /*public Survey createSurvey(Survey survey){
         List<InviteesEntity> inviteesEntity = new ArrayList<>();
 //        List<Invitees> invitees = new ArrayList<>();
