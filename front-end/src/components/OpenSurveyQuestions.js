@@ -30,9 +30,9 @@ class OpenSurveyQuestions extends Component{
     componentWillMount() {
         let data = this.props.surveyid;
         // var email = data.email;
-        let id = data.surveyid;
+
         let payload = {
-            "surveyid": id
+            "surveyid": data
         }
         //api call to get all the questions and options of the survey
         API.fetchQuestions(payload)

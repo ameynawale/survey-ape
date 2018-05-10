@@ -327,6 +327,7 @@ public class SurveyServiceImpl implements SurveyService {
 
     @Override
     public Survey findSurvey(Survey survey) {
+        System.out.println("---> " + survey.getSurveyid());
         SurveyEntity surveyEntity = surveyRepository.findBySurveyid(survey.getSurveyid());
         return surveyEntity != null ? Convertors.mapSurveyEntityToSurvey(surveyEntity) : null;
     }
