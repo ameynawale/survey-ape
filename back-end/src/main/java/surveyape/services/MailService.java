@@ -94,6 +94,18 @@ public class MailService{
 
     }
 
+    public void sendpublishMailClosed (String URL, String email) throws MailException{
+        //  System.out.println();
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject("Welcome to Survey");
+        message.setFrom(emailFrom);
+        message.setText("Hi " +"," + " This is the URL for the survey: " + URL);
+        // System.out.println("Hi " + user.getFirstname()+"," + " Welcome to the Survey Ape, here is your registration code: " +user.getCode());
+        emailSender.send(message);
+
+    }
+
     public void sendUniqueMail (String URL, String email) throws MailException{
         //  System.out.println();
         SimpleMailMessage message = new SimpleMailMessage();
@@ -101,6 +113,9 @@ public class MailService{
         message.setSubject("Welcome to Survey");
         message.setFrom(emailFrom);
         message.setText("Hi " +"," + " This is the URL for the survey you registered on SurveyApe<br/>" + URL +"<br/>");
+
+        message.setText("Hi " +"," + " This is the URL for the survey:  " + URL);
+
         // System.out.println("Hi " + user.getFirstname()+"," + " Welcome to the Survey Ape, here is your registration code: " +user.getCode());
         emailSender.send(message);
 

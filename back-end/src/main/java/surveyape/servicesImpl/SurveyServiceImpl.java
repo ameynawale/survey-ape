@@ -120,7 +120,7 @@ public class SurveyServiceImpl implements SurveyService {
         SurveyEntity s = surveyRepository.save(surveyEntity);
         System.out.println("session email"+sessionEmail);
         System.out.println("survey type/"+surveyEntity.getSurveytype()+"/");
-        String URL = "http://localhost:8080/survey" +"/" +surveyEntity.getSurveytype()+ "?surveyid=" +survey.getSurveyid();
+        String URL = "http://localhost:3000" +"/" +surveyEntity.getSurveytype()+ "?surveyid=" +survey.getSurveyid();
         System.out.println(URL);
         surveyEntity.setURL(URL);
         SurveyEntity Q= surveyRepository.save(surveyEntity);
@@ -139,7 +139,7 @@ public class SurveyServiceImpl implements SurveyService {
             {
                 String email = invitees.getEmail();
                 System.out.println(email);
-                mailService.sendpublishMailGeneral(URL,email);
+                mailService.sendpublishMailClosed(URL,email);
             }
 
         }
@@ -255,8 +255,11 @@ public class SurveyServiceImpl implements SurveyService {
                                                     .findAny()      // If 'findAny' then return found and the entity
                                                     .orElse(null);  // If not found, return null
         if(foundInvitee != null) {
-
+            System.out.println("--> "+surveyid);
+            System.out.println("--> "+email);
             UserSurveyEntity fetchUserSurveyEntity = userSurveyRepository.findBySurveyidAndEmail(surveyid, email);
+
+            if(fetchUserSurveyEntity == null) return "INVITED";
 
             if(fetchUserSurveyEntity.getHascompleted() != 0) {
                 return "HAS_COMPLETED";
@@ -341,9 +344,13 @@ public class SurveyServiceImpl implements SurveyService {
     @Override
     public Boolean finishClosedUniqueSurveys(Survey survey, String email) {
         UserSurveyEntity userSurveyEntity = userSurveyRepository.findBySurveyidAndEmail(survey.getSurveyid(), email);
-        if(userSurveyEntity.getHascompleted() == 0) {
-            userSurveyEntity.setHascompleted(1);
-            userSurveyRepository.save(userSurveyEntity);
+
+
+
+        if(userSurveyEntity == null) {
+            UserSurveyEntity userSurveyEntity1 = new UserSurveyEntity(email, survey.getSurveyid(), 1);
+            userSurveyRepository.save(userSurveyEntity1);
+            mailService.sendSuccessMailGeneral(email);
             return true;
         } else {
             return false;
