@@ -12,3 +12,7 @@
     height: auto;
     overflow-x: scroll;
 }
+
+.created{
+    border-bottom: 1px solid lightgrey;
+}

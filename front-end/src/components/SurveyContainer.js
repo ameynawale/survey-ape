@@ -173,21 +173,22 @@ class SurveyContainer extends Component {
                                 <br/>
                                 {this.state.createdbyme.map((survey) =>
                                     <Row>
-                                    <Col sm="12">
-                                        <h6>{survey.surveyname}</h6>
-                                        <button className="btn btn-basic share-button"
+                                        <Col sm="12">
+                                        <span>{survey.surveyname}</span>
+                                        <button className="btn btn-primary share-button ml-2"
                                                 name={survey.surveyid}
                                                 onClick={(event) => {this.editSurvey(event)}}
                                         >Edit</button>
-                                        <button className="btn btn-basic share-button"
+                                        <button className="btn btn-danger share-button ml-2"
                                                 name={survey.surveyid}
                                                 onClick={(event) => {this.closeSurvey(event)}}
                                         >Close</button>
-                                        <button className="btn btn-primary share-button"
+                                        <button className="btn btn-success share-button ml-2"
                                                 onClick={() => {
                                                     this.openStats(survey);
                                                 }}>View Stats</button>
-                                    </Col>
+                                            <br/><br/>
+                                        </Col>
                                 </Row>)
                                 }
                             </TabPane>

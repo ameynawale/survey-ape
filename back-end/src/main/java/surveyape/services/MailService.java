@@ -82,7 +82,7 @@ public class MailService{
 
     }
 
-    public void sendpublishMailGeneral (String URL, String email) throws MailException{
+    public void sendpublishMailClosed (String URL, String email) throws MailException{
         //  System.out.println();
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
@@ -128,6 +128,18 @@ public class MailService{
         message.setSubject("Successfully completed survey");
         message.setFrom(emailFrom);
         message.setText("You have successfully submitted the survey");
+        emailSender.send(message);
+
+    }
+
+    public void sendpublishMailGeneral (String URL, String email) throws MailException{
+        //  System.out.println();
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject("Welcome to Survey");
+        message.setFrom(emailFrom);
+        message.setText("Hi " +"," + " This is the URL for the survey<br/>" + URL +"<br/>"+ "This is the link to the QR Scan code for the survey <br/> " + "http://localhost:8080/QR/qrcode?text="+URL);
+        // System.out.println("Hi " + user.getFirstname()+"," + " Welcome to the Survey Ape, here is your registration code: " +user.getCode());
         emailSender.send(message);
 
     }
