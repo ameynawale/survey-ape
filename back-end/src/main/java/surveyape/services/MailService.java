@@ -89,7 +89,7 @@ public class MailService{
         message.setTo(email);
         message.setSubject("Welcome to Survey");
         message.setFrom(emailFrom);
-        message.setText("Hi " +"," + " This is the URL for the survey<br/>" + URL +"<br/>"+ "This is the QR Scan code for the survey <br/>" + surveyService.getQRCode(URL));
+        message.setText("Hi " +"," + " This is the URL for the survey:  " + URL);
         // System.out.println("Hi " + user.getFirstname()+"," + " Welcome to the Survey Ape, here is your registration code: " +user.getCode());
         emailSender.send(message);
 

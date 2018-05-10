@@ -75,7 +75,7 @@ class SurveyQuestions extends Component{
                 let options = survey[i].options;
                 for(let k= 0; k<options.length; k++){
                     opt.push({value: options[k].optionid,
-                        label: options[k].option});
+                        label: options[k].options});
                 }
                 x.push(
                     <Row>
@@ -90,9 +90,9 @@ class SurveyQuestions extends Component{
                 let temp =[];
                 survey[i].options.map((opt, index) => {
                         temp.push(<div>
-                            <input type="radio" name={survey[i].questionid} value={opt.option} checked={opt.response}
-                                   onClick={(e) => this.saveRadio(opt.option, opt.optionid, questionid, e)}/>
-                            <label>{opt.option}</label>
+                            <input type="radio" name={survey[i].questionid} value={opt.options} checked={opt.response}
+                                   onClick={(e) => this.saveRadio(opt.options, opt.optionid, questionid, e)}/>
+                            <label>{opt.options}</label>
                             </div>
                         );
                 });
@@ -108,12 +108,12 @@ class SurveyQuestions extends Component{
                         </Col>
                     </Row>
                 )
-            } else if(survey.questiontype === "checkbox"){
+            } else if(survey[i].questiontype === "checkbox"){
                 let temp =[];
                 survey[i].options.map((opt, index) => {
                     temp.push(<div>
-                        <input type="checkbox" onClick={(e) => this.saveCheckBox(opt.option, opt.optionid, questionid, e)}/>
-                        <label>{opt.option}</label>
+                        <input type="checkbox" onClick={(e) => this.saveCheckBox(opt.options, opt.optionid, questionid, e)}/>
+                        <label>{opt.options}</label>
                        </div>
                     );
                 });
@@ -143,7 +143,7 @@ class SurveyQuestions extends Component{
                 )
             } else if(survey[i].questiontype === "rating"){
                 let opt = [];
-                for(let k= 1; k<=survey[i].options[0].option; k++){
+                for(let k= 1; k<=survey[i].options[0].options; k++){
                     opt.push({value: k, label: k});
                 }
                 x.push(
@@ -155,7 +155,7 @@ class SurveyQuestions extends Component{
                                 renderStarIcon={() => <i className="fa fa-star" aria-hidden="true"></i> }
                                 starColor="#ffb400"
                                 emptyStarColor="#000000"
-                                starCount={survey[i].options[0].option}
+                                starCount={survey[i].options[0].options}
                                 onStarClick={ this.saveRating }
                             />
                         </Col>
@@ -205,7 +205,7 @@ class SurveyQuestions extends Component{
             .then(
                 response => {
                     if (response.status === 200) {
-                        alert("You have Successfully submitted the survey");
+                        alert("You have Successfully submitted the survey. A confirmation email has been sent to you");
                         this.props.history.push("/");
                     } else if (response.response.status === 404) {
                         alert(response.response.data.message);
@@ -226,7 +226,7 @@ class SurveyQuestions extends Component{
             "questionid": questionid,
             "optionid": optionid
         }
-        this.state.surveyResponses.push(payload);
+        // this.state.surveyResponses.push(payload);
 
         //API call to backend
         API.saveSurveyResponse(payload)

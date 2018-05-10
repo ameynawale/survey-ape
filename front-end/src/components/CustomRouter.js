@@ -227,7 +227,7 @@ class CustomRouter extends Component {
                         <TakeSurvey urlData={data} type={"general"}/>
                     </div>
                 )}/>
-                <Route exact path="/close" render={(data) => (
+                <Route exact path="/closed" render={(data) => (
                     <div>
                         <TakeSurvey urlData={data} type={"close"}/>
                     </div>
