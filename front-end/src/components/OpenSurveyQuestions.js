@@ -75,7 +75,7 @@ class OpenSurveyQuestions extends Component{
                 let options = survey[i].options;
                 for(let k= 0; k<options.length; k++){
                     opt.push({value: options[k].optionid,
-                        label: options[k].option});
+                        label: options[k].options});
                 }
                 x.push(
                     <Row>
@@ -91,8 +91,8 @@ class OpenSurveyQuestions extends Component{
                 survey[i].options.map((opt, index) => {
                     temp.push(<div>
                             <input type="radio" name={survey[i].questionid}
-                                   value={opt.option} onClick={(e) => this.saveRadio(opt.option, opt.optionid, questionid, e)}/>
-                            <label>{opt.option}</label>
+                                   value={opt.options} onClick={(e) => this.saveRadio(opt.options, opt.optionid, questionid, e)}/>
+                            <label>{opt.options}</label>
                         </div>
                     );
                 });
@@ -112,8 +112,8 @@ class OpenSurveyQuestions extends Component{
                 let temp =[];
                 survey[i].options.map((opt, index) => {
                     temp.push(<div>
-                            <input type="checkbox" onClick={(e) => this.saveCheckBox(opt.option, opt.optionid, questionid, e)}/>
-                            <label>{opt.option}</label>
+                            <input type="checkbox" onClick={(e) => this.saveCheckBox(opt.options, opt.optionid, questionid, e)}/>
+                            <label>{opt.options}</label>
                         </div>
                     );
                 });
@@ -143,7 +143,7 @@ class OpenSurveyQuestions extends Component{
                 )
             } else if(survey[i].questiontype === "rating"){
                 let opt = [];
-                for(let k= 1; k<=survey[i].options[0].option; k++){
+                for(let k= 1; k<=survey[i].options[0].options; k++){
                     opt.push({value: k, label: k});
                 }
                 x.push(
@@ -155,7 +155,7 @@ class OpenSurveyQuestions extends Component{
                                 renderStarIcon={() => <i className="fa fa-star" aria-hidden="true"></i> }
                                 starColor="#ffb400"
                                 emptyStarColor="#000000"
-                                starCount={survey[i].options[0].option}
+                                starCount={survey[i].options[0].options}
                                 onStarClick={ this.saveRating }
                             />
                         </Col>
