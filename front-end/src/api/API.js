@@ -13,6 +13,7 @@ export const doLogout = () =>{
     return axios.get('http://localhost:8080/users/logout', null)
         .then(function (response) {
             console.log(response);
+            localStorage.removeItem("userEmail");
             return response
         })
         .catch(function (error) {
@@ -45,8 +46,45 @@ export const validateEmail = (payload) =>{
         });
 }
 
+
 export const validateUniqueEmail = (payload) =>{
     return axios.post('http://localhost:8080/survey/validateUniqueEmail', payload)
+    .then(function (response) {
+    console.log(response);
+    return response
+})
+    .catch(function (error) {
+    console.log(error);
+    return error
+});
+}
+export const fetchQuestions = (payload) => {
+    return axios.post('http://localhost:8080/survey/fetchQuestions', payload)
+        .then(function (response) {
+            console.log(response);
+            return response
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error
+        });
+}
+
+export const submitCloseUniqueSurvey = (payload) => {
+    return axios.post('http://localhost:8080/survey/fetchQuestions', payload)
+        .then(function (response) {
+            console.log(response);
+            return response
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error
+        });
+}
+
+export const saveGeneralSurveyResponse = (payload) => {
+    return axios.post('http://localhost:8080/survey/fetchQuestions', payload)
+
         .then(function (response) {
             console.log(response);
             return response
@@ -70,7 +108,7 @@ export const getSurvey = (payload) =>{
 }
 
 export const saveSurveyResponse = (payload) =>{
-    return axios.post('http://localhost:8080/survey/saveSurvey', payload)
+    return axios.post('http://localhost:8080/response/saveSurveyResponse', payload)
         .then(function (response) {
             console.log(response);
             return response
@@ -105,21 +143,6 @@ export const doSignUp = (payload) =>{
             return error
         });
 };
-    // fetch(`${url}/users/signup`, {
-    //     method: 'POST',
-    //     headers: {
-    //         ...headers,
-    //         'Content-Type': 'application/json'
-    //     },
-    //     // mode: 'cors',
-    //     credentials:'include',
-    //     body: JSON.stringify(payload)
-    // }).then(res => res.json())
-    //     .catch(error => {
-    //         console.log("This is error");
-    //         return error;
-    //     });
-
 
 export const doSignUpVerification = (payload) =>{
     return axios.post('http://localhost:8080/users/signUpVerification', payload)
@@ -222,8 +245,21 @@ export const surveyListing = (payload) =>{
         });
 };
 
+
 export const uniqueSurveyListing = () =>{
     return axios.post('http://localhost:8080/survey/uniqueSurveylisting',null)
+        .then(function (response) {
+            console.log(response);
+            return response
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error
+        });
+}
+
+export const getQuestions = (payload) =>{
+    return axios.post('http://localhost:8080/survey/getquestions', payload)
         .then(function (response) {
             console.log(response);
             return response;
@@ -233,6 +269,20 @@ export const uniqueSurveyListing = () =>{
             return error;
         });
 };
+
+export const getOptions = (payload) =>{
+    return axios.post('http://localhost:8080/question/getoptions', payload)
+
+        .then(function (response) {
+            console.log(response);
+            return response;
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error;
+        });
+};
+
 export const getSurveyListing = () =>
     fetch(`${api}/survey/surveylisting`, {
         method: 'GET',

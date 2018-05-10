@@ -10,18 +10,19 @@ import '../styles/FormContent.css';
 import { Button, ButtonGroup } from 'reactstrap';
 
 
-class FormContent extends Component {
+class FormContentEdit extends Component {
     constructor(props) {
         super(props);
         this.state = {
             isGoing: true,
             numberOfGuests: 2,
             questions: [],
-            questionsarray: [],
+            questionsarray: this.props.surveydata.questions.questions,
             index: 0,
 
             // surveyName      :   this.props.surveydata.surveyName,
-            surveyid        :   this.props.surveydata.surveyid
+            surveyid        :   this.props.surveydata.questions.questions[0].surveyid,
+
         };
         // var index = 0;
 
@@ -31,6 +32,50 @@ class FormContent extends Component {
 
     componentWillMount(){
         console.log("comp will mount ", this.state);
+        console.log(this.props.surveydata.questions.questions[0].question);
+        this.state.questionsarray.map((question) => {
+            if(question.questiontype === 'dropdown')
+            {
+                this.state.questions.push(
+                    <div className="form-inline">
+                        <Dropdown surveydata={question} handleSubmit={this.handleSubmit}/>
+                    </div>
+                )
+            }
+            else if(question.questiontype === 'checkbox')
+            {
+                this.state.questions.push(
+                    <div className="form-inline">
+                        <Checkbox surveydata={question} handleSubmit={this.handleSubmit}/>
+                    </div>
+                )
+            }
+            else if(question.questiontype === 'radio')
+            {
+                this.state.questions.push(
+                    <div className="form-inline">
+                        <SingleSelect surveydata={question} handleSubmit={this.handleSubmit}/>
+                    </div>
+                )
+            }
+            else if(question.questiontype === 'text')
+            {
+                this.state.questions.push(
+                    <div className="form-inline">
+                        <Text surveydata={question} handleSubmit={this.handleSubmit}/>
+                    </div>
+                )
+            }
+            else if(question.questiontype === 'rating')
+            {
+                this.state.questions.push(
+                    <div className="form-inline">
+                        <Rating surveydata={question} handleSubmit={this.handleSubmit}/>
+                    </div>
+                )
+            }
+
+        })
         /*API.getQuestions(this.state)
             .then((res) => {
                 console.log("questions", res.data.questions);
@@ -180,7 +225,7 @@ class FormContent extends Component {
                 if(res.status === 200)
                 {
                     console.log('inside 200');
-                    alert("Survey is published successfully", res.data.url);
+                    alert("Survey is published successfully");
                 }
             });
     }
@@ -214,4 +259,4 @@ class FormContent extends Component {
     }
 }
 
-export default FormContent;
+export default FormContentEdit;

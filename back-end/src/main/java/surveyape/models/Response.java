@@ -6,35 +6,64 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * Response DTO. 
- * @author Suhas Hunsimar
+ * @author Manali Jain
  */
-@XmlRootElement(name = "Response") 
-@XmlType(propOrder = {"code", "msg"})
+
 public class Response {
-	
-	private String code;
-	private String msg;
-	
-	public Response() {};
-	
-	public Response(String code, String msg) {
-		super();
-		this.code = code;
-		this.msg = msg;
+
+	private String type;
+	private String email;
+	private String response;
+	private String questionid;
+	private String optionid;
+
+	public Response(){ };
+
+	public Response(String type, String email, String response, String questionid, String optionid) {
+		this.type = type;
+		this.email = email;
+		this.response = response;
+		this.questionid = questionid;
+		this.optionid = optionid;
 	}
-	public String getCode() {
-		return code;
+
+	public String getType() {
+		return type;
 	}
-	@XmlElement  
-	public void setCode(String code) {
-		this.code = code;
+
+	public void setType(String type) {
+		this.type = type;
 	}
-	
-	public String getMsg() {
-		return msg;
+
+	public String getEmail() {
+		return email;
 	}
-	@XmlElement  
-	public void setMsg(String msg) {
-		this.msg = msg;
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getResponse() {
+		return response;
+	}
+
+	public void setResponse(String response) {
+		this.response = response;
+	}
+
+	public String getQuestionid() {
+		return questionid;
+	}
+
+	public void setQuestionid(String questionid) {
+		this.questionid = questionid;
+	}
+
+	public String getOptionid() {
+		return optionid;
+	}
+
+	public void setOptionid(String optionid) {
+		this.optionid = optionid;
 	}
 }

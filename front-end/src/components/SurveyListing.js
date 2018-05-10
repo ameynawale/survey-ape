@@ -8,7 +8,7 @@ class SurveyListing extends Component {
     render() {
         return (
             <div>
-                <SurveyContainer surveydata={this.props.surveydata}/>
+                <SurveyContainer surveydata={this.props.surveydata} editSurvey={this.props.editSurvey}/>
             </div>
         );
     }

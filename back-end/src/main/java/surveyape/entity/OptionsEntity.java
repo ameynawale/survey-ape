@@ -45,8 +45,4 @@ public class OptionsEntity {
 
     public Long getOptionid() { return optionid; }
     public void setOptionid(Long optionid) { this.optionid = optionid; }
-
-
-    public String getOption() { return options; }
-    public void setOption(String options) { this.options = options; }
 }

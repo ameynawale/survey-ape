@@ -9,7 +9,7 @@ import java.util.Set;
 
 public interface SurveyRepository extends CrudRepository<SurveyEntity, Long> {
 
-    SurveyEntity findBySurveyid(String surveyId);
+    SurveyEntity findBySurveyid(String surveyid);
     Set<SurveyEntity> findAllByUserEntity(UserEntity userEntity);
     Set<SurveyEntity> findAllBySurveytype(String surveytype);
 }

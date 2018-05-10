@@ -1,11 +1,16 @@
 package surveyape.models;
-import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.util.Map;
+import java.util.Set;
 
 public class Question {
     private int questionid;
     private String question;
     private String surveyid;
     private String questiontype;
+    private Set<Option> options;
 
     public Question(){}
 
@@ -19,32 +24,27 @@ public class Question {
     public int getQuestionid() {
         return questionid;
     }
-
-    public void setQuestionid(int questionid) {
-        this.questionid = questionid;
-    }
+    @JsonInclude(JsonInclude.Include.NON_EMPTY) public void setQuestionid(int questionid) { this.questionid = questionid; }
 
     public String getQuestion() {
         return question;
     }
-
-    public void setQuestion(String question) {
+    @JsonInclude(JsonInclude.Include.NON_EMPTY) public void setQuestion(String question) {
         this.question = question;
     }
 
     public String getSurveyid() {
         return surveyid;
     }
-
-    public void setSurveyid(String surveyid) {
+    @JsonInclude(JsonInclude.Include.NON_EMPTY) public void setSurveyid(String surveyid) {
         this.surveyid = surveyid;
     }
 
     public String getQuestiontype() {
         return questiontype;
     }
+    @JsonInclude(JsonInclude.Include.NON_EMPTY) public void setQuestiontype(String questiontype) {this.questiontype = questiontype; }
 
-    public void setQuestiontype(String questiontype) {
-        this.questiontype = questiontype;
-    }
+    public Set<Option> getOptions() { return options; }
+    @JsonInclude(JsonInclude.Include.NON_EMPTY) public void setOptions(Set<Option> options) { this.options = options; }
 }

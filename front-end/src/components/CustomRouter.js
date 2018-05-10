@@ -13,6 +13,7 @@ import Header from './Header';
 import SurveyStats from './SurveyStats';
 import TakeSurvey from './TakeSurvey';
 import SurveyQuestions from './SurveyQuestions';
+import EditSurvey from './EditSurvey';
 import * as API from '../api/API';
 
 class CustomRouter extends Component {
@@ -24,7 +25,8 @@ class CustomRouter extends Component {
             surveyId: '',
             createdbyme: [],
             sharedwithme: [],
-            user: {}
+            user: {},
+            surveydata: {}
         };
     }
      UserSignUpAPICall = (payload) => {
@@ -75,6 +77,7 @@ class CustomRouter extends Component {
                         }
                         else{
                             alert("Login successful");
+                            localStorage.setItem("userEmail", res.data.email);
                             this.props.history.push('/surveys');
                         }
 
@@ -150,6 +153,32 @@ class CustomRouter extends Component {
             })
     }
 
+    editSurvey = (surveydata) => {
+        console.log("editurvey", surveydata.surveyid);
+        API.getQuestions(surveydata)
+            .then((res) => {
+                console.log("get questions", res.data);
+                var surveydata = {
+                    // surveyid: surveydata.surveyid,
+                    questions: res.data
+                }
+                this.setState({
+                    surveydata: surveydata
+                });
+                console.log("after edit ", this.state.surveydata);
+                this.props.history.push('/editsurvey');
+            })
+        /*this.setState({
+            surveydata: surveydata
+        },function () {
+            console.log("surveyid", this.state.surveydata.surveyid);
+            this.props.history.push('/editsurvey');
+        })*/
+
+
+    }
+
+
     render() {
         return (
             <div>
@@ -178,10 +207,16 @@ class CustomRouter extends Component {
                         <Samplesurveypage surveydata={this.state}/>
                     </div>
                 )}/>
+                <Route exact path="/editsurvey" render={() => (
+                    <div>
+                        <Header history={this.props.history} handleAddSurvey={this.handleAddSurvey} handleGetSurveyListing={this.handleGetSurveyListing}/>
+                        <EditSurvey surveydata={this.state.surveydata}/>
+                    </div>
+                )}/>
                 <Route exact path="/surveys" render={() => (
                     <div>
                         <Header history={this.props.history} handleAddSurvey={this.handleAddSurvey} handleGetSurveyListing={this.handleGetSurveyListing}/>
-                        <SurveyListing surveydata={this.state}/>
+                        <SurveyListing surveydata={this.state} editSurvey={this.editSurvey}/>
                     </div>
                 )}/>
                 <Route exact path="/uniqueSurveys" render={() => (
@@ -202,9 +237,9 @@ class CustomRouter extends Component {
                         <SurveyStats selectedSurvey={selectedSurvey.location.state.selectedSurvey}/>
                     </div>
                 )}/>
-                <Route exact path="/open" render={(data) => (
+                <Route exact path="/general" render={(data) => (
                     <div>
-                        <TakeSurvey urlData={data} type={"open"}/>
+                        <TakeSurvey urlData={data} type={"general"}/>
                     </div>
                 )}/>
                 <Route exact path="/close" render={(data) => (

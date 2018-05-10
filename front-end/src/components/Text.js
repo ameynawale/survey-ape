@@ -12,7 +12,7 @@ class Text extends Component {
         super(props);
         this.state = {
             options: [],
-            question: "",
+            question: this.props.surveydata.question,
             optionsarray: [],
             questionid: this.props.surveydata.questionid,
             surveyid: this.props.surveydata.surveyid,
@@ -30,8 +30,14 @@ class Text extends Component {
         handleSubmit: PropTypes.func.isRequired
     }
 
-    handleInputChange() {
-        API.addQuestion(this.state);
+    handleInputChange(event) {
+        let question = {
+            question: event.target.value,
+            questionid: this.state.questionid,
+            surveyid: this.state.surveyid,
+            questiontype: this.state.questiontype
+        }
+        API.addQuestion(question);
     }
 
     render() {
@@ -39,11 +45,12 @@ class Text extends Component {
             <div className="question-container">
                 <div className="col-lg-12">
                     <input type="text" className="form-control question-input"
+                           defaultValue={this.state.question}
                            onBlurCapture={(event) => {
                                this.setState({
                                    question: event.target.value
                                });
-                               this.handleInputChange();
+                               this.handleInputChange(event);
                            }}
                     /><br/>
                 </div>
