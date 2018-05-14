@@ -82,7 +82,7 @@ public class MailService{
 
     }
 
-    public void sendpublishMailClosed (String URL, String email) throws MailException{
+   /* public void sendpublishMailClosed (String URL, String email) throws MailException{
         //  System.out.println();
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
@@ -92,7 +92,7 @@ public class MailService{
         // System.out.println("Hi " + user.getFirstname()+"," + " Welcome to the Survey Ape, here is your registration code: " +user.getCode());
         emailSender.send(message);
 
-    }
+    }  */
 
     public void sendpublishMailClosed (String URL, String email) throws MailException{
         //  System.out.println();
