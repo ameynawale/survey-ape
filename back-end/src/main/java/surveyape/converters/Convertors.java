@@ -5,10 +5,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import surveyape.models.*;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Convertors {
 
@@ -60,7 +58,7 @@ public class Convertors {
         return (String)((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession().getAttribute("email");
     }
 
-    public static Map<String, Object> mapSurveyEntityToSurveyQuestions(SurveyEntity surveyEntity) {
+    public static Map<String, Object> mapSurveyEntityToSurveyQuestions(SurveyEntity surveyEntity, String email) {
 
         Set<Question> questionsList = new HashSet<>();
 
@@ -73,7 +71,24 @@ public class Convertors {
                         question.setQuestiontype( questionsEntity.getQuestiontype() );
                         question.setQuestion    ( questionsEntity.getQuestion() );
 
-                        question.setOptions(fetchOptions(questionsEntity));
+
+                        if (email != null) {
+//                            if (questionsEntity.getQuestiontype().equals("checkbox")) {
+//
+//                            }
+//                            else {
+                                Set<ResponseEntity> responseEntitySet = questionsEntity.getResponses();
+                                for (ResponseEntity responseEntity : responseEntitySet) {
+                                    if (responseEntity.getEmail() != null && responseEntity.getEmail().equals(email)) {
+                                        question.setResponse(responseEntity.getResponse());
+                                        break;
+                                    }
+                                }
+//                            }
+                        }
+
+
+                        question.setOptions(fetchOptions(questionsEntity, email));
                         questionsList.add(question);
                     });
 
@@ -86,7 +101,7 @@ public class Convertors {
         return surveyQuestionsResponse;
     }
 
-    private static Set<Option> fetchOptions(QuestionsEntity questionsEntity) {
+    private static Set<Option> fetchOptions(QuestionsEntity questionsEntity, String email) {
 
         Set<Option> optionsSet = new HashSet<>();
 
@@ -96,6 +111,7 @@ public class Convertors {
                            Option option = new Option();
                            option.setOptionid( optionsEntity.getOptionid().intValue() );
                            option.setOptions ( optionsEntity.getOptions() );
+
                            optionsSet.add(option);
                        });
 

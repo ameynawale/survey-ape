@@ -7,6 +7,7 @@ public class Option {
     private String options;
     private Integer questionid;
 
+
     public Option() {}
 
     public Option(int optionid, String options, int questionid) {
@@ -25,9 +26,7 @@ public class Option {
     public String getOptions() {
         return options;
     }
-    @JsonInclude(JsonInclude.Include.NON_EMPTY) public void setOptions(String options) {
-        this.options = options;
-    }
+    @JsonInclude(JsonInclude.Include.NON_EMPTY) public void setOptions(String options) { this.options = options; }
 
     public Integer getQuestionid() {
         return questionid;

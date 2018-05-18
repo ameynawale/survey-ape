@@ -11,6 +11,8 @@ public class Question {
     private String surveyid;
     private String questiontype;
     private Set<Option> options;
+    private String response;
+    private Set<Option> responses;
 
     public Question(){}
 
@@ -47,4 +49,10 @@ public class Question {
 
     public Set<Option> getOptions() { return options; }
     @JsonInclude(JsonInclude.Include.NON_EMPTY) public void setOptions(Set<Option> options) { this.options = options; }
+
+    public String getResponse() { return response; }
+    @JsonInclude(JsonInclude.Include.NON_EMPTY) public void setResponse(String response) { this.response = response; }
+
+    public Set<Option> getResponses() { return responses; }
+    @JsonInclude(JsonInclude.Include.NON_EMPTY) public void setResponses(Set<Option> responses) { this.responses = responses; }
 }

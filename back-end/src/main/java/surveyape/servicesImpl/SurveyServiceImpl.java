@@ -7,23 +7,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import surveyape.controllers.QRController;
 import surveyape.converters.Convertors;
 import surveyape.entity.*;
+import surveyape.exceptions.HttpBadRequestException;
+import surveyape.exceptions.InternalServerException;
 import surveyape.models.*;
-import surveyape.respositories.InviteeRepository;
-import surveyape.respositories.SurveyRepository;
-import surveyape.respositories.UserRepository;
-import surveyape.respositories.UserSurveyRepository;
+import surveyape.respositories.*;
 import surveyape.services.MailService;
 import surveyape.services.QRService;
 import surveyape.services.SurveyService;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -52,23 +47,23 @@ public class SurveyServiceImpl implements SurveyService {
     @Autowired
     private MailService mailService;
 
+    @Autowired
+    private ResponseRepository responseRepository;
 
     public Survey createSurvey(Survey survey) {
 
         String sessionEmail = Convertors.fetchSessionEmail();
         UserEntity userEntity = userRepository.findByEmail(sessionEmail);
         SurveyEntity surveyEntity;
-            surveyEntity = new SurveyEntity(survey.getSurveyname(), survey.getSurveytype(), survey.getValidity(), String.valueOf(java.time.LocalDate.now()) , survey.getIspublished(), survey.getIsclosed(), userEntity);
+        surveyEntity = new SurveyEntity(survey.getSurveyname(), survey.getSurveytype(), survey.getValidity(), String.valueOf(java.time.LocalDate.now()), survey.getIspublished(), survey.getIsclosed(), userEntity);
 
         SurveyEntity s = surveyRepository.save(surveyEntity);
-            if(survey.getSurveytype().equals("closed"))
-            {
-                for(Invitees invitees: survey.getInvitees())
-                {
-                    InviteesEntity inviteesEntity = new InviteesEntity(invitees.getEmail(), s);
-                    inviteeRepository.save(inviteesEntity);
-                }
+        if (survey.getSurveytype().equals("closed")) {
+            for (Invitees invitees : survey.getInvitees()) {
+                InviteesEntity inviteesEntity = new InviteesEntity(invitees.getEmail(), s);
+                inviteeRepository.save(inviteesEntity);
             }
+        }
 
         Survey r = new Survey();
         r.setSurveyid(s.getSurveyid());
@@ -78,6 +73,7 @@ public class SurveyServiceImpl implements SurveyService {
 
         return r;
     }
+
     @Scheduled(fixedRate = THIRTY_MINUTES)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping(value = QRCODE_ENDPOINT)
@@ -96,7 +92,8 @@ public class SurveyServiceImpl implements SurveyService {
         }
 
     }
-    public ResponseEntity<byte[]> getQRCode( String text) {
+
+    public ResponseEntity<byte[]> getQRCode(String text) {
         try {
             System.out.println("Get QRcode");
             return ResponseEntity.ok().cacheControl(CacheControl.maxAge(5, TimeUnit.SECONDS))
@@ -112,34 +109,32 @@ public class SurveyServiceImpl implements SurveyService {
         String sessionEmail = Convertors.fetchSessionEmail();
         UserEntity userEntity = userRepository.findByEmail(sessionEmail);
         SurveyEntity surveyEntity = surveyRepository.findBySurveyid(survey.getSurveyid());
-        if(surveyEntity == null){
+        if (surveyEntity == null) {
             Survey r = new Survey();
             return r;
         }
         surveyEntity.setIspublished(1);
         SurveyEntity s = surveyRepository.save(surveyEntity);
-        System.out.println("session email"+sessionEmail);
-        System.out.println("survey type/"+surveyEntity.getSurveytype()+"/");
-        String URL = "http://localhost:3000" +"/" +surveyEntity.getSurveytype()+ "?surveyid=" +survey.getSurveyid();
+        System.out.println("session email" + sessionEmail);
+        System.out.println("survey type/" + surveyEntity.getSurveytype() + "/");
+        String URL = "http://localhost:3000" + "/" + surveyEntity.getSurveytype() + "?surveyid=" + survey.getSurveyid();
         System.out.println(URL);
         surveyEntity.setURL(URL);
-        SurveyEntity Q= surveyRepository.save(surveyEntity);
+        SurveyEntity Q = surveyRepository.save(surveyEntity);
         //if general
 
-        if((surveyEntity.getSurveytype()).equalsIgnoreCase("general") ){
+        if ((surveyEntity.getSurveytype()).equalsIgnoreCase("general")) {
 
             ResponseEntity<byte[]> QRCode = this.getQRCode(URL);
             System.out.println(QRCode);
-            mailService.sendpublishMailGeneral(URL,sessionEmail);
-        }
-        else if((surveyEntity.getSurveytype()).equalsIgnoreCase("closed")){
+            mailService.sendpublishMailGeneral(URL, sessionEmail);
+        } else if ((surveyEntity.getSurveytype()).equalsIgnoreCase("closed")) {
             System.out.println("closed type");
             Set<InviteesEntity> set = inviteeRepository.findBySurveyEntity(surveyEntity);
-            for(InviteesEntity invitees: set)
-            {
+            for (InviteesEntity invitees : set) {
                 String email = invitees.getEmail();
                 System.out.println(email);
-                mailService.sendpublishMailClosed(URL,email);
+                mailService.sendpublishMailClosed(URL, email);
             }
 
         }
@@ -172,23 +167,20 @@ public class SurveyServiceImpl implements SurveyService {
         return r;
     }
 
-    public Questions getQuestions(Survey survey)
-    {
+    public Questions getQuestions(Survey survey) {
         SurveyEntity surveyEntity = new SurveyEntity();
         surveyEntity = surveyRepository.findBySurveyid(survey.getSurveyid());
         Set<QuestionsEntity> questionsEntities = surveyEntity.getQuestions();
         Set<Question> questions = new HashSet<Question>();
 
-        for(QuestionsEntity questionsEntity: questionsEntities)
-        {
+        for (QuestionsEntity questionsEntity : questionsEntities) {
             questions.add(Convertors.mapQuestionsEntityToQuestion(questionsEntity));
         }
 
         return new Questions(questions);
     }
 
-    public UniqueSurveyListing getUniqueSurveyListing()
-    {
+    public UniqueSurveyListing getUniqueSurveyListing() {
         Set<SurveyEntity> uniqueSurveyEntities = new HashSet<SurveyEntity>();
 
         uniqueSurveyEntities = surveyRepository.findAllBySurveytype("unique");
@@ -197,8 +189,7 @@ public class SurveyServiceImpl implements SurveyService {
         Set<Survey> uniqueSurvey = new HashSet<Survey>();
 
 
-        for(SurveyEntity uniqueSurveyEntity: uniqueSurveyEntities)
-        {
+        for (SurveyEntity uniqueSurveyEntity : uniqueSurveyEntities) {
             uniqueSurvey.add(Convertors.mapSurveyEntityToSurvey(uniqueSurveyEntity));
         }
 
@@ -207,8 +198,7 @@ public class SurveyServiceImpl implements SurveyService {
         return uniqueSurveyListing;
     }
 
-    public SurveyListing getSurveyListing(User user)
-    {
+    public SurveyListing getSurveyListing(User user) {
         Set<SurveyEntity> surveyEntitiesCreatedByMe = new HashSet<SurveyEntity>();
         Set<SurveyEntity> surveyEntitiesSharedWithMe = new HashSet<SurveyEntity>();
 
@@ -218,50 +208,47 @@ public class SurveyServiceImpl implements SurveyService {
 
         Set<InviteesEntity> inviteesEntities = inviteeRepository.findAllByEmail(user.getEmail());
 
-        for(InviteesEntity inviteesEntity: inviteesEntities)
-        {
+        for (InviteesEntity inviteesEntity : inviteesEntities) {
             surveyEntitiesSharedWithMe.add(surveyRepository.findBySurveyid(inviteesEntity.getSurveyEntity().getSurveyid()));
         }
 
         Set<Survey> surveysCreatedByMe = new HashSet<Survey>();
         Set<Survey> surveysSharedWithMe = new HashSet<Survey>();
 
-        for(SurveyEntity surveyEntity: surveyEntitiesCreatedByMe)
-        {
+        for (SurveyEntity surveyEntity : surveyEntitiesCreatedByMe) {
             surveysCreatedByMe.add(Convertors.mapSurveyEntityToSurvey(surveyEntity));
         }
 
-        for(SurveyEntity surveyEntity: surveyEntitiesSharedWithMe)
-        {
-            if(surveyEntity.getIspublished() == 1)
+        for (SurveyEntity surveyEntity : surveyEntitiesSharedWithMe) {
+            if (surveyEntity.getIspublished() == 1)
                 surveysSharedWithMe.add(Convertors.mapSurveyEntityToSurvey(surveyEntity));
         }
 
-        SurveyListing surveyListing = new SurveyListing(surveysCreatedByMe,surveysSharedWithMe);
+        SurveyListing surveyListing = new SurveyListing(surveysCreatedByMe, surveysSharedWithMe);
 
         return surveyListing;
     }
 
     @Override
-    public String isClosedSurveyInvitedOrCompleted(String email, String surveyid)  {
+    public String isClosedSurveyInvitedOrCompleted(String email, String surveyid) {
 
         SurveyEntity fetchedSurveyEntity = surveyRepository.findBySurveyid(surveyid);
 
-        if(fetchedSurveyEntity == null) return "SURVEY_NOT_FOUND";
+        if (fetchedSurveyEntity == null) return "SURVEY_NOT_FOUND";
         InviteesEntity foundInvitee = fetchedSurveyEntity
-                                                    .getInvitees()  // Fetch Invitees
-                                                    .stream()       // Convert to stream
-                                                    .filter(inviteesEntity -> email.equals(inviteesEntity.getEmail())) // We want invited user only
-                                                    .findAny()      // If 'findAny' then return found and the entity
-                                                    .orElse(null);  // If not found, return null
-        if(foundInvitee != null) {
-            System.out.println("--> "+surveyid);
-            System.out.println("--> "+email);
+                .getInvitees()  // Fetch Invitees
+                .stream()       // Convert to stream
+                .filter(inviteesEntity -> email.equals(inviteesEntity.getEmail())) // We want invited user only
+                .findAny()      // If 'findAny' then return found and the entity
+                .orElse(null);  // If not found, return null
+        if (foundInvitee != null) {
+            System.out.println("--> " + surveyid);
+            System.out.println("--> " + email);
             UserSurveyEntity fetchUserSurveyEntity = userSurveyRepository.findBySurveyidAndEmail(surveyid, email);
 
-            if(fetchUserSurveyEntity == null) return "INVITED";
+            if (fetchUserSurveyEntity == null) return "INVITED";
 
-            if(fetchUserSurveyEntity.getHascompleted() != 0) {
+            if (fetchUserSurveyEntity.getHascompleted() != 0) {
                 return "HAS_COMPLETED";
             } else {
                 return "USER_CAN_TAKE_SURVEY";
@@ -271,23 +258,22 @@ public class SurveyServiceImpl implements SurveyService {
             return "NOT_INVITED";
         }
     }
-    public Boolean isPublished(Survey survey){
-        String id =   survey.getSurveyid();
-        SurveyEntity surveyEntity = surveyRepository.findBySurveyid(id) ;
-        if(surveyEntity.getIspublished()==1)
-        {
+
+    public Boolean isPublished(Survey survey) {
+        String id = survey.getSurveyid();
+        SurveyEntity surveyEntity = surveyRepository.findBySurveyid(id);
+        if (surveyEntity.getIspublished() == 1) {
             return true;
-        }
-        else
+        } else
             return false;
     }
 
-    public Boolean isValid(Survey survey){
-        String id =   survey.getSurveyid();
+    public Boolean isValid(Survey survey) {
+        String id = survey.getSurveyid();
         System.out.println(id);
         SurveyEntity surveyEntity = surveyRepository.findBySurveyid(id);
 
-        if(surveyEntity == null) return false;
+        if (surveyEntity == null) return false;
 
         System.out.println(surveyEntity.getValidity());
         System.out.println(surveyEntity.getValidity());
@@ -334,7 +320,8 @@ public class SurveyServiceImpl implements SurveyService {
 
     @Override
     public Map<String, Object> fetchSurveyQuestions(Survey survey) {
-        return Convertors.mapSurveyEntityToSurveyQuestions(surveyRepository.findBySurveyid(survey.getSurveyid()));
+        String email = Convertors.fetchSessionEmail() != null ? Convertors.fetchSessionEmail() : survey.getEmail();
+        return Convertors.mapSurveyEntityToSurveyQuestions(surveyRepository.findBySurveyid(survey.getSurveyid()), email);
     }
 
     @Override
@@ -347,8 +334,7 @@ public class SurveyServiceImpl implements SurveyService {
         UserSurveyEntity userSurveyEntity = userSurveyRepository.findBySurveyidAndEmail(survey.getSurveyid(), email);
 
 
-
-        if(userSurveyEntity == null) {
+        if (userSurveyEntity == null) {
             UserSurveyEntity userSurveyEntity1 = new UserSurveyEntity(email, survey.getSurveyid(), 1);
             userSurveyRepository.save(userSurveyEntity1);
             mailService.sendSuccessMailGeneral(email);
@@ -359,48 +345,72 @@ public class SurveyServiceImpl implements SurveyService {
     }
 
     @Override
-    public Map<String, Object> fetchStats(Survey survey) {
-
-//
-//        SurveyEntity surveyEntity = surveyRepository.findBySurveyid(survey.getSurveyid());
-//
-//        switch (surveyEntity.getSurveytype()) {
-//
-//            case "closed":
-//
-////                double total_price  =  projectEntity.getBids()
-////                        .stream()
-////                        .filter(bidsEntity -> bidsEntity.getBid_price() != null)
-////                        .mapToDouble(BidsEntity::getBid_price)
-////                        .sum();
-//                long numberOfParticipants = surveyEntity.getInvitees()  // Fetch All Invitees
-//                                                        .stream()       // Convert to stream
-//                                                        .filter(inviteesEntity -> (userSurveyRepository.findBySurveyidAndEmail(surveyEntity.getSurveyid(),inviteesEntity.getEmail()).getHascompleted() == 1) )
-//                                                        .count();       // Count the invitees
-//
-//
-//                break;
-//
-//            case "open":
-//
-//                break;
-//
-//            case "unique":
-//
-//                break;
-//            default:
-//                throw new InternalServerException("Internal Server Error");
-//        }
-//
-//
-//
-//        Map<String, Object> statsResponse = new HashMap<>();
-//
-//        statsResponse.put("startTime", surveyEntity.getCreatedon());
-//        statsResponse.put("endTime", surveyEntity.getValidity());
-//
+    public StatsOverall fetchStats(Survey survey) {
 
 
-        return null;
+        SurveyEntity surveyEntity = surveyRepository.findBySurveyid(survey.getSurveyid());
+        StatsOverall statsOverall = new StatsOverall();
+        Set<StatsQuestions> statsQuestionsSet = new HashSet<>();
+        long numberOfParticipants = 0;
+        double rate = 0d;
+
+        switch (surveyEntity.getSurveytype()) {
+
+            case "closed":
+
+                numberOfParticipants = surveyEntity.getInvitees()  // Fetch All Invitees
+                        .stream()  // Convert to stream
+                        .filter(inviteesEntity -> (userSurveyRepository.findBySurveyidAndEmail(surveyEntity.getSurveyid(), inviteesEntity.getEmail()).getHascompleted() == 1))
+                        .count();  // Filter has completed invitees and Count the invitees
+
+                if (numberOfParticipants < 2)
+                    throw new HttpBadRequestException("Survey has fewer than two participants");
+                rate = (((double) numberOfParticipants / surveyEntity.getInvitees().size()) * 100);
+                rate = (Math.round(rate * 100.0) / 100.0);
+
+                for (QuestionsEntity questionsEntity : surveyEntity.getQuestions()) {
+
+                    StatsQuestions statsQuestions = new StatsQuestions();
+                    long choiceDistribution = 0;
+
+                    statsQuestions.setQuestionid      ( questionsEntity.getQuestionid() );
+                    statsQuestions.setQuestiontype  ( questionsEntity.getQuestiontype() );
+                    statsQuestions.setQuestion        ( questionsEntity.getQuestion() );
+
+                    Set<StatsChoices> statsChoicesSet = new HashSet<>();
+
+                    for(OptionsEntity optionsEntity : questionsEntity.getOptions()) {
+                        
+                        StatsChoices statsChoices = new StatsChoices();
+                        statsChoices.setOption  ( optionsEntity.getOptions() );
+                        choiceDistribution = responseRepository.countByQuestionsEntityAndOptionid(questionsEntity, optionsEntity.getOptionid());
+
+                        statsChoices.setChoiceDistribution( choiceDistribution );
+
+                        statsChoicesSet.add(statsChoices);
+                    }
+                    statsQuestionsSet.add(statsQuestions);
+                 }
+
+                break;
+
+            case "open":
+
+                break;
+
+            case "unique":
+
+                break;
+            default:
+                throw new InternalServerException("Internal Server Error");
+        }
+
+        statsOverall.setStartTime(surveyEntity.getCreatedon());
+        statsOverall.setEndTime(surveyEntity.getValidity());
+        statsOverall.setNoOfParticipants(numberOfParticipants);
+        statsOverall.setRate(rate);
+        statsOverall.setQuestions(statsQuestionsSet);
+
+        return statsOverall;
     }
 }

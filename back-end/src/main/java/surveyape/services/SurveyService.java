@@ -12,29 +12,35 @@ import java.util.Map;
 
 public interface SurveyService {
 
-    Survey createSurvey(Survey survey);
-    Survey publishSurvey(Survey survey);
-    Survey closeSurvey(Survey survey);
-    Questions getQuestions(Survey survey);
-    SurveyListing getSurveyListing(User user);
-    UniqueSurveyListing getUniqueSurveyListing(); // return the list of unique surveys
-    public ResponseEntity<byte[]> getQRCode(String text);
+  Survey createSurvey(Survey survey);
 
-    String isClosedSurveyInvitedOrCompleted(String email, String surveyId);
+  Survey publishSurvey(Survey survey);
 
-    Boolean isPublished(Survey survey);
+  Survey closeSurvey(Survey survey);
 
-    Boolean isValid(Survey survey);
+  Questions getQuestions(Survey survey);
 
-    Boolean isSurveyClosed(Survey survey);
+  SurveyListing getSurveyListing(User user);
 
-    Survey findSurvey(Survey survey);
+  UniqueSurveyListing getUniqueSurveyListing(); // return the list of unique surveys
 
-    Map<String, Object> fetchSurveyQuestions(Survey survey);
+  public ResponseEntity<byte[]> getQRCode(String text);
 
-    Boolean isUniqueSurveyAlreadyCompleted(String email, String surveyId);
+  String isClosedSurveyInvitedOrCompleted(String email, String surveyId);
 
-    Map<String, Object> fetchStats(Survey survey);
+  Boolean isPublished(Survey survey);
 
-    Boolean finishClosedUniqueSurveys(Survey survey, String email);
+  Boolean isValid(Survey survey);
+
+  Boolean isSurveyClosed(Survey survey);
+
+  Survey findSurvey(Survey survey);
+
+  Map<String, Object> fetchSurveyQuestions(Survey survey);
+
+  Boolean isUniqueSurveyAlreadyCompleted(String email, String surveyId);
+
+  StatsOverall fetchStats(Survey survey);
+
+  Boolean finishClosedUniqueSurveys(Survey survey, String email);
 }
