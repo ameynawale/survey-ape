@@ -16,15 +16,17 @@ public class Response {
 	private String response;
 	private String questionid;
 	private String optionid;
+	private String questionType;
 
 	public Response(){ };
 
-	public Response(String type, String email, String response, String questionid, String optionid) {
+	public Response(String type, String email, String response, String questionid, String optionid, String questionType) {
 		this.type = type;
 		this.email = email;
 		this.response = response;
 		this.questionid = questionid;
 		this.optionid = optionid;
+		this.questionType = questionType;
 	}
 
 	public String getType() {
@@ -65,5 +67,13 @@ public class Response {
 
 	public void setOptionid(String optionid) {
 		this.optionid = optionid;
+	}
+
+	public String getQuestionType() {
+		return questionType;
+	}
+
+	public void setQuestionType(String questionType) {
+		this.questionType = questionType;
 	}
 }

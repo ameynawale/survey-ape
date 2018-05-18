@@ -171,31 +171,53 @@ class SurveyQuestions extends Component{
     }
 
     saveDropdown(questionid, event){
-        this.autoSaveSurvey(event.label, questionid, event.value)
+        this.autoSaveSurvey(event.label, questionid, event.value, "")
     }
     saveRadio(option, optionid, questionid, event){
-        // this.autoSaveSurvey()
         console.log(" dfg");
-        this.autoSaveSurvey(option, questionid, optionid)
+        this.autoSaveSurvey(option, questionid, optionid, "")
     }
     saveCheckBox(option, optionid, questionid, event){
-        // this.autoSaveSurvey()
         console.log(" dfg");
-        this.autoSaveSurvey(option, questionid, optionid)
+        this.autoSaveSurvey(option, questionid, optionid, "check")
     }
     saveText(questionid, event){
         var optionid = null;
-        this.autoSaveSurvey(event.target.value, questionid, optionid)
+        this.autoSaveSurvey(event.target.value, questionid, optionid, "")
     }
-    saveRating=(nextValue, questionid, optionid )=>{
-        // this.autoSaveSurvey(21, optionid)
+    saveRating=(nextValue, questionid, optionid)=>{
         var value = optionid.split(",");
-        this.autoSaveSurvey(nextValue, value[1], value[0])
-
-        // onStarClick = (nextValue, prevValue, name) => {
-        //     this.setState({ reviewedRating : nextValue });
-        // };
+        this.autoSaveSurvey(nextValue, value[1], value[0], "")
     }
+
+    autoSaveSurvey(response, questionid, optionid, questionType){
+        var payload = {
+            "type": this.state.type,
+            "email": this.state.email,
+            "response": response,
+            "questionid": questionid,
+            "optionid": optionid,
+            "questionType": questionType
+        }
+        // this.state.surveyResponses.push(payload);
+
+        //API call to backend
+        API.saveSurveyResponse(payload)
+            .then(
+                response => {
+                    if(response.status === 200){
+                        console.log("saved");
+                        // this.props.history.push('./SurveyQuestions', {surveyData: this.state});
+                    } else {
+                        // alert("An error occured. Please try again with correc URL");
+                    }
+                },
+                error => {
+                    console.log(error.data.message);
+                }
+            );
+    }
+
     submitSurvey(){
         var payload={
             "email": this.state.email,
@@ -211,32 +233,6 @@ class SurveyQuestions extends Component{
                         alert(response.response.data.message);
                     } else {
                         alert("An error occured. Please try again with correct URL");
-                    }
-                },
-                error => {
-                    console.log(error.data.message);
-                }
-            );
-    }
-    autoSaveSurvey(response, questionid, optionid){
-        var payload = {
-            "type": this.state.type,
-            "email": this.state.email,
-            "response": response,
-            "questionid": questionid,
-            "optionid": optionid
-        }
-        // this.state.surveyResponses.push(payload);
-
-        //API call to backend
-        API.saveSurveyResponse(payload)
-            .then(
-                response => {
-                    if(response.status === 200){
-                        console.log("saved");
-                        // this.props.history.push('./SurveyQuestions', {surveyData: this.state});
-                    } else {
-                        // alert("An error occured. Please try again with correc URL");
                     }
                 },
                 error => {

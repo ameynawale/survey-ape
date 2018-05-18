@@ -62,7 +62,11 @@ public class ResponseServiceImpl implements ResponseService {
             } else{
                 resObject.setUserEntity(null);
             }
-            resObject.setResponse(response.getResponse());
+            if(response.getQuestionType().equals("check")){
+                resObject.setResponse(resObject.getResponse() + "," + response.getResponse());
+            } else{
+                resObject.setResponse(response.getResponse());
+            }
             resObject.setDummyid(resObject.getDummyid());
             ResponseEntity res = responseRepository.save(responseEntity);
             Response r = new Response();
