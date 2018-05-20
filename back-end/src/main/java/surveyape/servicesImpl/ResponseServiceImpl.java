@@ -94,10 +94,10 @@ public class ResponseServiceImpl implements ResponseService {
             responseEntity.setQuestionsEntity(question);
 
             res = responseRepository.save(responseEntity);
-
         }
-        r.setEmail(res.getEmail());
-        r.setResponse(res.getResponse());
+//        r.setEmail(res.getEmail());
+        r.setType("General");
+//        r.setResponse(res.getResponse());
 
         if(openS.getSendEmail() != null ){
             mailService.sendSuccessMailGeneral(openS.getSendEmail());

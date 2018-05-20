@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import '../styles/SurveyContainer.css';
-import FormContainer from "./FormContainer";
-// import {Button, Modal} from 'react-bootstrap';
 import { Table } from 'reactstrap';
-import classnames from 'classnames';
-
+import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
+const margin = {top: 20, right: 20, bottom: 30, left: 40};
+const data = [
+    {text: 'Man', value: 500},
+    {text: 'Woman', value: 300}
+];
 class SurveyStats extends Component {
     constructor(props){
         super(props);
@@ -29,19 +31,23 @@ class SurveyStats extends Component {
                         "choices":[
                             {
                                 "option": "a",
-                                "number": 10
+                                "Participants": 10,
+                                "percentage" : "20%"
                             },
                             {
                                 "option": "b",
-                                "number": 20
+                                "Participants": 20,
+                                "percentage" : "20%"
                             },
                             {
                                 "option": "c",
-                                "number": 30
+                                "Participants": 30,
+                                "percentage" : "20%"
                             },
                             {
                                 "option": "d",
-                                "number": 14
+                                "Participants": 14,
+                                "percentage" : "20%"
                             }
                         ]
                     },
@@ -50,15 +56,15 @@ class SurveyStats extends Component {
                         "choices":[
                             {
                                 "option": "a",
-                                "number": 10
+                                "Participants": 10
                             },
                             {
                                 "option": "b",
-                                "number": 40
+                                "Participants": 40
                             },
                             {
                                 "option": "c",
-                                "number": 56
+                                "Participants": 56
                             }
                         ]
                     }
@@ -104,26 +110,35 @@ class SurveyStats extends Component {
                             </tr>
                             </thead>
                             <tbody>
-                            {/*{this.state.statsOfSurvey.questions}*/}
-                            {/*{this.state.statsOfSurvey.questions.map((stats) =>*/}
-                                {/*<td>{stats.questionNo}</td>)}*/}
-
-                            {/*{this.stats.choices.map((options) =>*/}
-                                    {/*<td>{options.number}</td>*/}
-                                {/*)*/}
-                            {/*}*/}
                             {
                                 this.state.statsOfSurvey.questions.map((stat) =>(
                                 <tr>
                                 <td>{stat.questionNo}</td>
                                 {stat.choices.map((x) => (
-                                    <td>{x.number}</td>
+                                    <td>{x.percentage}</td>
                                 ))}
                                 </tr>
                                 ))
                             }
                             </tbody>
                         </Table>
+                        <h3>Graphs(Y axis shows the Number of participants and X axis is the options)</h3>
+                        <row>
+                            {
+                                this.state.statsOfSurvey.questions.map((stat) =>(
+                                    <div>
+                                        <div className="displayQuestions">{stat.questionNo}</div>
+                                        <BarChart width={700} height={400} data={stat.choices} margin={{top: 30, right: 30, left: 100, bottom: 30}}>
+                                            <CartesianGrid/>
+                                            <XAxis dataKey="option"/>
+                                            <YAxis/>
+                                            <Bar type="monotone" dataKey="Participants" fill="cornflowerblue" barSize={30}
+                                                 />
+                                        </BarChart>
+                                    </div>
+                                ))
+                            }
+                        </row>
                     </div>
                 </div>
             </div>

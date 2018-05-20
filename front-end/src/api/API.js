@@ -83,7 +83,7 @@ export const submitCloseUniqueSurvey = (payload) => {
 }
 
 export const saveGeneralSurveyResponse = (payload) => {
-    return axios.post('http://localhost:8080/survey/fetchQuestions', payload)
+    return axios.post('http://localhost:8080/response/saveGeneralSurveyResponse', payload)
 
         .then(function (response) {
             console.log(response);

@@ -19,7 +19,8 @@ class TakeSurvey extends Component{
         let parsed = queryString.parse(this.props.urlData.location.search);
         let type = this.props.type;
         if(type === 'unique' || type === 'close'){
-            if(localStorage.getItem("userEmail") !== null){
+            if(localStorage.getItem("userEmail") !== null && localStorage.getItem("userEmail") !== ""
+                    && localStorage.getItem("userEmail") !== undefined){
                 let surveyData = {
                     "type":type,
                     "surveyid": parsed.surveyid,

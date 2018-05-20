@@ -23,9 +23,9 @@ class SurveyQuestions extends Component{
             "surveyQuestions": {},
             "displayQues": []
         }
-
     }
 
+    // var checkBoxResponse
     componentWillMount() {
         let data = this.props.surveyData;
         var email = data.email;
@@ -61,7 +61,7 @@ class SurveyQuestions extends Component{
     handleStateData = ()=>{
         let x = this.state.displayQues;
         let survey = this.state.surveyQuestions.surveyquestions;
-
+        let checking = false;
         for(let i= 0; i<survey.length ;i++){
             let questionid= survey[i].questionid;
             x.push(
@@ -81,7 +81,7 @@ class SurveyQuestions extends Component{
                     <Row>
                         <Col xs="1"></Col>
                         <Col xs="5">
-                            <Dropdown options={opt} value={opt[0]} placeholder="Select an option"
+                            <Dropdown options={opt} value={survey[i].response} placeholder="Select an option"
                                       onChange={(e) => this.saveDropdown(questionid, e)}/>
                         </Col>
                     </Row>
@@ -89,12 +89,21 @@ class SurveyQuestions extends Component{
             } else if(survey[i].questiontype === "radio"){
                 let temp =[];
                 survey[i].options.map((opt, index) => {
+                    if(opt.options === survey[i].response){
                         temp.push(<div>
-                            <input type="radio" name={survey[i].questionid} value={opt.options} checked={opt.response}
-                                   onClick={(e) => this.saveRadio(opt.options, opt.optionid, questionid, e)}/>
-                            <label>{opt.options}</label>
+                                <input type="radio" name={survey[i].questionid} value={opt.options} checked={survey[i].response}
+                                       onClick={(e) => this.saveRadio(opt.options, opt.optionid, questionid, e)}/>
+                                <label>{opt.options}</label>
                             </div>
                         );
+                    } else{
+                        temp.push(<div>
+                                <input type="radio" name={survey[i].questionid} value={opt.options}
+                                       onClick={(e) => this.saveRadio(opt.options, opt.optionid, questionid, e)}/>
+                                <label>{opt.options}</label>
+                            </div>
+                        );
+                    }
                 });
                 x.push(
                     <Row>
@@ -110,13 +119,39 @@ class SurveyQuestions extends Component{
                 )
             } else if(survey[i].questiontype === "checkbox"){
                 let temp =[];
-                survey[i].options.map((opt, index) => {
-                    temp.push(<div>
-                        <input type="checkbox" onClick={(e) => this.saveCheckBox(opt.options, opt.optionid, questionid, e)}/>
-                        <label>{opt.options}</label>
-                       </div>
-                    );
-                });
+                if(survey[i].response !== ""){
+                    let res = survey[i].response.split(",");
+                    let opt = survey[i].options;
+                    for(let m=0; m<opt.length; m++){
+                        for(let n=0; n<res.length; n++){
+                            if(opt[m].options === res[n]){
+                                checking = true;
+                                temp.push(<div>
+                                        <input type="checkbox" checked onClick={(e) => this.saveCheckBox(opt[m].options, opt[m].optionid, questionid, e)}/>
+                                        <label>{opt[m].options}</label>
+                                    </div>
+                                );
+                                break;
+                            }
+                        }
+                        if(checking === false){
+                            temp.push(<div>
+                                    <input type="checkbox" onClick={(e) => this.saveCheckBox(opt[m].options, opt[m].optionid, questionid, e)}/>
+                                    <label>{opt[m].options}</label>
+                                </div>
+                            );
+                        }
+                        checking = false;
+                    }
+                } else{
+                    survey[i].options.map((opt, index) => {
+                        temp.push(<div>
+                                <input type="checkbox" onClick={(e) => this.saveCheckBox(opt.options, opt.optionid, questionid, e)}/>
+                                <label>{opt.options}</label>
+                            </div>
+                        );
+                    });
+                }
                 x.push(
                     <Row>
                         <Col xs="1"></Col>
@@ -127,17 +162,22 @@ class SurveyQuestions extends Component{
                 )
             }
             else if(survey[i].questiontype === "text"){
+                // this.setState({
+                //     ...this.state,
+                //     textValue: survey[i].response
+                // })
                 x.push(
                     <Row>
                         <Col xs="1"></Col>
                         <Col xs="5">
-                            <textarea width="50" placeholder="Your response here"
+                            <textarea width="50" value={survey[i].response + this.state.textValue} placeholder="Your response here"
                                       onBlurCapture={(event) => {
                                           this.setState({
+                                              ...this.state,
                                               textValue: event.target.value
                                           });
                                           this.saveText(questionid,event)}}
-                                      />
+                            />
                         </Col>
                     </Row>
                 )
@@ -152,6 +192,7 @@ class SurveyQuestions extends Component{
                         <Col xs="5">
                             <StarRatingComponent
                                 name={survey[i].options[0].optionid +","+questionid}
+                                value = {survey[i].response}
                                 renderStarIcon={() => <i className="fa fa-star" aria-hidden="true"></i> }
                                 starColor="#ffb400"
                                 emptyStarColor="#000000"
@@ -199,7 +240,6 @@ class SurveyQuestions extends Component{
             "optionid": optionid,
             "questionType": questionType
         }
-        // this.state.surveyResponses.push(payload);
 
         //API call to backend
         API.saveSurveyResponse(payload)

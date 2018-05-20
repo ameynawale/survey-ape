@@ -41,13 +41,14 @@ public class Survey {
 
     public Survey(){}
 
-    public Survey(String surveyid, String surveyname, String surveytype, String validity, int ispublished, int isclosed, Set<Invitees> invitees) {
+    public Survey(String surveyid, String surveyname, String surveytype, String validity, int ispublished, int isclosed, String URL, Set<Invitees> invitees) {
         this.surveyid = surveyid;
         this.surveyname = surveyname;
         this.surveytype = surveytype;
         this.validity = validity;
         this.ispublished = ispublished;
         this.isclosed = isclosed;
+        this.URL = URL;
         this.invitees = invitees;
     }
 

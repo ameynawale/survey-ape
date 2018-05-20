@@ -91,7 +91,8 @@ class OpenSurveyQuestions extends Component{
                 survey[i].options.map((opt, index) => {
                     temp.push(<div>
                             <input type="radio" name={survey[i].questionid}
-                                   value={opt.options} onClick={(e) => this.saveRadio(opt.options, opt.optionid, questionid, e)}/>
+                                   value={opt.options}
+                                   onClick={(e) => this.saveRadio(opt.options, opt.optionid, questionid, e)}/>
                             <label>{opt.options}</label>
                         </div>
                     );
@@ -108,11 +109,12 @@ class OpenSurveyQuestions extends Component{
                         </Col>
                     </Row>
                 )
-            } else if(survey.questiontype === "checkbox"){
+            } else if(survey[i].questiontype === "checkbox"){
                 let temp =[];
                 survey[i].options.map((opt, index) => {
                     temp.push(<div>
-                            <input type="checkbox" onClick={(e) => this.saveCheckBox(opt.options, opt.optionid, questionid, e)}/>
+                            <input type="checkbox"
+                                   onClick={(e) => this.saveCheckBox(opt.options, opt.optionid, questionid, e)}/>
                             <label>{opt.options}</label>
                         </div>
                     );
@@ -175,13 +177,36 @@ class OpenSurveyQuestions extends Component{
     }
     saveRadio(option, optionid, questionid, event){
         // this.autoSaveSurvey()
-        console.log(" dfg");
         this.autoSaveSurvey(option, questionid, optionid)
     }
     saveCheckBox(option, optionid, questionid, event){
         // this.autoSaveSurvey()
-        console.log(" dfg");
-        this.autoSaveSurvey(option, questionid, optionid)
+        var doInsert = true;
+        if(this.state.surveyResponses.length <1){
+            this.autoSaveSurvey(option, questionid, optionid);
+        } else{
+            for(let j=0; j<this.state.surveyResponses.length; j++){
+                if(this.state.surveyResponses[j].optionid === optionid && this.state.surveyResponses[j].questionid === questionid) {
+                    if(event.target.checked === false){
+                        this.state.surveyResponses.splice(j,1);
+                        j--;
+                    }
+                    doInsert = false;
+                    break;
+                }else{
+                    doInsert = true;
+                }
+            }
+            if(doInsert){
+                var payload = {
+                    "type": this.state.type,
+                    "response": option,
+                    "questionid": questionid,
+                    "optionid": optionid
+                }
+                this.state.surveyResponses.push(payload);
+            }
+        }
     }
     saveText(questionid, event){
         var optionid = null;
@@ -191,54 +216,71 @@ class OpenSurveyQuestions extends Component{
         // this.autoSaveSurvey(21, optionid)
         var value = optionid.split(",");
         this.autoSaveSurvey(nextValue, value[1], value[0])
-
-        // onStarClick = (nextValue, prevValue, name) => {
-        //     this.setState({ reviewedRating : nextValue });
-        // };
     }
 
     autoSaveSurvey(response, questionid, optionid){
+        var shouldOverride =false;
         var payload = {
             "type": this.state.type,
             "response": response,
             "questionid": questionid,
             "optionid": optionid
         }
-        this.state.surveyResponses.push(payload);
-        //API call to backend
+        if(this.state.surveyResponses.length <1){
+            this.state.surveyResponses.push(payload);
+        } else{
+            for(var i=0; i<this.state.surveyResponses.length; i++){
+                if(this.state.surveyResponses[i].questionid === questionid) {
+                    shouldOverride = true;
+                    this.state.surveyResponses[i].response = response;
+                    this.state.surveyResponses[i].optionid = optionid;
+                    break;
+                }else{
+                    shouldOverride = false;
+                }
+            }
+            if(!shouldOverride){
+                this.state.surveyResponses.push(payload);
+            }
+        }
 
     }
 
     submitGeneralSurvey(){
-        if(this.state.sendEmail === '' || this.state.sendEmail === ' ' || this.state.sendEmail === undefined){
-            var payload={
+        let payload={};
+        if(this.state.sendEmail !== "" && this.state.sendEmail !== " " && this.state.sendEmail !== undefined){
+             payload={
                 openResponses: this.state.surveyResponses,
                 sendEmail: this.state.sendEmail
             }
         } else{
-            var payload={
+             payload={
                 openResponses: this.state.surveyResponses,
                 sendEmail: null
             }
         }
 
-        API.saveGeneralSurveyResponse(payload)
-            .then(
-                response => {
-                    if(response.status === 200){
-                        console.log("saved");
-                        alert("You have Successfully submitted the survey");
-                        this.props.history.push('/');
-                    } else if (response.response.status === 404) {
-                        alert(response.response.data.message);
-                    } else {
-                        alert("An error occured. Please try again with correct URL");
+        if(payload.openResponses.length < 1){
+            alert("Please provide atleast one response");
+        } else{
+            API.saveGeneralSurveyResponse(payload)
+                .then(
+                    response => {
+                        if(response.status === 200){
+                            console.log("saved");
+                            alert("You have Successfully submitted the survey");
+                            this.props.history.push('/');
+                        } else if (response.response.status === 404) {
+                            alert(response.response.data.message);
+                        } else {
+                            alert("An error occured. Please try again");
+                        }
+                    },
+                    error => {
+                        console.log(error.data.message);
                     }
-                },
-                error => {
-                    console.log(error.data.message);
-                }
-            );
+                );
+        }
     }
     render(){
         return(
@@ -274,22 +316,3 @@ class OpenSurveyQuestions extends Component{
 }
 export default withRouter(OpenSurveyQuestions);
 
-
-
-// {
-//     "email": "abc@gmail.com",
-//     "responses":[
-//         {
-//             "type": "general",
-//             "response": "female",
-//             "questionid": "2",
-//             "optionid": "5"
-//         },
-//          {
-//              "type": "general",
-//              "response": "male",
-//              "questionid": "4",
-//              "optionid": "5"
-//         }
-//     ]
-// }
