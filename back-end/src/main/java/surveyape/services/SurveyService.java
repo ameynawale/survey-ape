@@ -43,4 +43,6 @@ public interface SurveyService {
   StatsOverall fetchStats(Survey survey);
 
   Boolean finishClosedUniqueSurveys(Survey survey, String email);
+
+  String exportSurvey(String surveyid, String filename);
 }

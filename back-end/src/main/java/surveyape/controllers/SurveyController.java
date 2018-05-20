@@ -1,6 +1,9 @@
 package surveyape.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +36,8 @@ import surveyape.models.Response;
 
 import surveyape.services.SurveyService;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -245,6 +250,41 @@ public class SurveyController {
 
         StatsOverall statsResponse = surveyService.fetchStats(survey);
         return new ResponseEntity<>(statsResponse, HttpStatus.OK);
+    }
+
+    @CheckSession
+    @RequestMapping(
+            path = "/export-survey",
+            method = RequestMethod.GET
+//            consumes = MediaType.APPLICATION_JSON_VALUE,
+//            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> exportSurvey(@RequestParam(value = "surveyid") String surveyid,
+                                                 @RequestParam(value = "filename") String filename)
+    {
+//        System.out.println("surveyid " + surveyid);
+//        System.out.println("filename " + filename);
+//        surv
+        String file = surveyService.exportSurvey(surveyid, filename);
+        try{
+            System.out.println("file in controller" + file);
+            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+            headers.add("Pragma", "no-cache");
+            headers.add("Expires", "0");
+            headers.add("Content-Disposition", "attachment; filename=\"somefile.pdf\"");
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .contentLength(file.length())
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(resource);
+        }
+        catch (FileNotFoundException fnf)
+        {
+            return new ResponseEntity<>("the survey cannot be exported", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @RequestMapping(
