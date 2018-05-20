@@ -62,7 +62,11 @@ public class ResponseServiceImpl implements ResponseService {
             } else{
                 resObject.setUserEntity(null);
             }
-            resObject.setResponse(response.getResponse());
+            if(response.getQuestionType().equals("check")){
+                resObject.setResponse(resObject.getResponse() + "," + response.getResponse());
+            } else{
+                resObject.setResponse(response.getResponse());
+            }
             resObject.setDummyid(resObject.getDummyid());
             ResponseEntity res = responseRepository.save(responseEntity);
             Response r = new Response();
@@ -90,10 +94,10 @@ public class ResponseServiceImpl implements ResponseService {
             responseEntity.setQuestionsEntity(question);
 
             res = responseRepository.save(responseEntity);
-
         }
-        r.setEmail(res.getEmail());
-        r.setResponse(res.getResponse());
+//        r.setEmail(res.getEmail());
+        r.setType("General");
+//        r.setResponse(res.getResponse());
 
         if(openS.getSendEmail() != null ){
             mailService.sendSuccessMailGeneral(openS.getSendEmail());

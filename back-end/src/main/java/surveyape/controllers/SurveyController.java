@@ -295,12 +295,11 @@ public class SurveyController {
             String check =
                     surveyService.isClosedSurveyInvitedOrCompleted(email, requestSurvey.getSurveyid());
 
-            if (check.equals("HAS_COMPLETED"))
-                throw new HttpBadRequestException("You have already completed the survey");
-            if (check.equals("NOT_INVITED"))
-                throw new HttpUnAuthorizedException(
-                        "You are not invited to take the survey. Please enter correct URL");
-        } else if (fetchedSurvey.getSurveytype().equals("unique")) {
+            if(check.equals("HAS_COMPLETED")) throw new HttpBadRequestException("You have already completed the survey");
+            if(check.equals("NOT_INVITED"))   throw new HttpUnAuthorizedException("You are not invited to take the survey. " +
+                    "Please enter correct URL or check or maybe you are logged in the survey ape with other email id. Logout first and then try again ");
+        }
+        else if(fetchedSurvey.getSurveytype().equals("unique")) {
 
             String email =
                     Convertors.fetchSessionEmail() != null

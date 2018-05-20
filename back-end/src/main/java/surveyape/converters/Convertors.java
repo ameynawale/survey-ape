@@ -29,6 +29,7 @@ public class Convertors {
                 surveyEntity.getValidity(),
                 surveyEntity.getIspublished(),
                 surveyEntity.getIsclosed(),
+                surveyEntity.getURL(),
                 null);
 
         return survey;

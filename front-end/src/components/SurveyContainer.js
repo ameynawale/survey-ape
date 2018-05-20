@@ -124,6 +124,14 @@ class SurveyContainer extends Component {
             show: false });
     }
 
+    openClosedSurvey(survey){
+        var sur={
+            "type":"close",
+            "surveyid": survey.surveyid,
+            "email":localStorage.getItem("userEmail")
+        }
+        this.props.history.push('./SurveyQuestions', {surveyData: sur});
+    }
     render() {
         return (
             <div className="survey-container">
@@ -197,7 +205,9 @@ class SurveyContainer extends Component {
                                 {this.state.sharedwithme.map((survey) =>
                                     <Row>
                                         <Col sm="12">
-                                           <h6>{survey.surveyname}</h6>
+                                           <a href="javascript:void(0)" onClick={() => {
+                                               this.openClosedSurvey(survey);
+                                           }}><h6>{survey.surveyname}</h6></a>
                                         </Col>
                                     </Row>)
                                 }
