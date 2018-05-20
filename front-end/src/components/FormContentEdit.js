@@ -7,6 +7,8 @@ import Rating from "./Rating";
 import Date from "./Date";
 import * as API from "../api/API";
 import '../styles/FormContent.css';
+import ExportSurveyModal from 'react-modal';
+import {customStyles} from "./util/modalStyles";
 import { Button, ButtonGroup } from 'reactstrap';
 
 
@@ -17,18 +19,36 @@ class FormContentEdit extends Component {
             isGoing: true,
             numberOfGuests: 2,
             questions: [],
+            exportSurveyIsOpen: false,
             questionsarray: this.props.surveydata.questions.questions,
             index: 0,
 
             // surveyName      :   this.props.surveydata.surveyName,
             surveyid        :   this.props.surveydata.questions.questions[0].surveyid,
+            filename: 'SurveyJson',
+            fileurl: 'http://localhost:8080/SurveyFiles/' + this.props.surveydata.questions.questions[0].surveyid
 
         };
         // var index = 0;
 
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        // this.handleExportSurvey = this.handleExportSurvey.bind(this);
+
+        this.openExportSurveyModal = this.openExportSurveyModal.bind(this);
+        this.closeExportSurveyModal = this.closeExportSurveyModal.bind(this);
     }
+
+    openExportSurveyModal() {
+        this.setState({
+            exportSurveyIsOpen: true
+        });
+    }
+
+    closeExportSurveyModal() {
+        this.setState({exportSurveyIsOpen: false});
+    }
+
 
     componentWillMount(){
         console.log("comp will mount ", this.state);
@@ -80,6 +100,11 @@ class FormContentEdit extends Component {
             .then((res) => {
                 console.log("questions", res.data.questions);
             })*/
+    }
+
+    handleExportSurvey = (event) => {
+        event.preventDefault();
+        API.exportSurvey(this.state);
     }
 
     handleInputChange(event) {
@@ -253,7 +278,31 @@ class FormContentEdit extends Component {
                         event.preventDefault();
                     }}>Save</button>
                     <button className="btn btn-primary" onClick={(event) => this.publishSurvey(event)}>Publish</button>
+                    {/*<button className="btn btn-primary" onClick={(event) => this.handleExportSurvey(event)}>Export</button>*/}
+                    <a href={this.state.fileurl} download>Export</a>
                 </div>
+                <ExportSurveyModal
+                    isOpen={this.state.exportSurveyIsOpen}
+                    onAfterOpen={this.openExportSurveyModal}
+                    onRequestClose={this.closeExportSurveyModal}
+                    style={customStyles}
+                >
+                    <div className="modal-body">
+                        <form className="form-horizontal">
+                            <input type="text" className="form-control" name="survey" placeholder = "Enter File Name"
+                                   onChange={(event) => {
+                                       this.setState({
+                                           ...this.state,
+                                           filename : event.target.value
+                                       });
+                                   }}/><br/>
+                            <button type="button" id="exportSurvey" className="button-register"
+                                     onClick={this.handleExportSurvey}
+                            >Export</button>
+                            <a href={this.state.fileurl} download>Export</a>
+                        </form>
+                    </div>
+                </ExportSurveyModal>
             </form>
         );
     }

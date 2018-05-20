@@ -283,6 +283,19 @@ export const getOptions = (payload) =>{
         });
 };
 
+export const exportSurvey = (payload) =>{
+    const url = 'http://localhost:8080/survey/export-survey?surveyid=' + payload.surveyid + '&filename=' + payload.filename;
+    return axios.get(url)
+        .then(function (response) {
+            console.log(response);
+            return response;
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error;
+        });
+};
+
 export const getSurveyListing = () =>
     fetch(`${api}/survey/surveylisting`, {
         method: 'GET',

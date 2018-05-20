@@ -9,6 +9,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import surveyape.converters.Convertors;
 import surveyape.entity.*;
 import surveyape.exceptions.HttpBadRequestException;
@@ -416,5 +422,68 @@ public class SurveyServiceImpl implements SurveyService {
         statsOverall.setQuestions(statsQuestionsSet);
 
         return statsOverall;
+    }
+
+    @Override
+    public String exportSurvey(String surveyid, String filename) {
+
+        System.out.println("surveyid " + surveyid);
+        System.out.println("filename " + filename);
+
+        SurveyEntity surveyEntity = surveyRepository.findBySurveyid(surveyid);
+
+//        JSONObject obj = new JSONObject();
+
+//        String email = Convertors.fetchSessionEmail() != null ? Convertors.fetchSessionEmail();
+        Survey survey = new Survey();
+        survey.setSurveyid(surveyid);
+
+        Map<String, Object> obj = fetchSurveyQuestions(survey);
+        /*obj.put("surveyname", surveyEntity.getSurveyname());
+        obj.put("surveytype", surveyEntity.getSurveytype());
+        obj.put("validity", surveyEntity.getValidity());*/
+
+        JSONObject obj1 = new JSONObject();
+        for(Map.Entry<String, Object> entry: obj.entrySet())
+        {
+            if(entry.getKey().equals("surveyquestions"))
+            {
+                Set<Question> questionsSet = (Set<Question>) entry.getValue();
+                JSONArray questionsarray = new JSONArray();
+                for(Question question: questionsSet)
+                {
+                    JSONObject questionjson = new JSONObject();
+                    questionjson.put("question",question.getQuestion());
+                    questionjson.put("questiontype",question.getQuestiontype());
+
+                    JSONArray options = new JSONArray();
+                    for(Option option: question.getOptions())
+                    {
+                        options.add(option.getOptions());
+                    }
+                    questionjson.put("options", options);
+
+                    questionsarray.add(questionjson);
+                }
+                obj1.put(entry.getKey(),questionsarray);
+            }
+            else if(!entry.getKey().equals("surveyid")){
+                obj1.put(entry.getKey(),entry.getValue());
+            }
+        }
+
+        String SurveyFiles = System.getProperty("user.dir")+"\\src\\main\\resources\\SurveyFiles";
+        String filepath = SurveyFiles + "\\" + surveyid + ".txt";
+        try (FileWriter file = new FileWriter(filepath)) {
+
+            file.write(obj1.toJSONString());
+            file.flush();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            return filepath;
+        }
     }
 }
