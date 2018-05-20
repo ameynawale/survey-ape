@@ -1,6 +1,7 @@
 package surveyape.servicesImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +50,9 @@ public class SurveyServiceImpl implements SurveyService {
 
     @Autowired
     private ResponseRepository responseRepository;
+
+    @Value("${aws.url}")
+    String appURL;
 
     public Survey createSurvey(Survey survey) {
 
@@ -117,7 +121,7 @@ public class SurveyServiceImpl implements SurveyService {
         SurveyEntity s = surveyRepository.save(surveyEntity);
         System.out.println("session email" + sessionEmail);
         System.out.println("survey type/" + surveyEntity.getSurveytype() + "/");
-        String URL = "http://localhost:3000" + "/" + surveyEntity.getSurveytype() + "?surveyid=" + survey.getSurveyid();
+        String URL = appURL + "/" + surveyEntity.getSurveytype() + "?surveyid=" + survey.getSurveyid();
         System.out.println(URL);
         surveyEntity.setURL(URL);
         SurveyEntity Q = surveyRepository.save(surveyEntity);

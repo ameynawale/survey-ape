@@ -22,3 +22,5 @@ yarn-error.log*
 
 # WebStorm files
 .idea/
+
+front-end/package-lock.json
