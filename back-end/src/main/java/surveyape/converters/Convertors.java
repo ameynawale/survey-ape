@@ -59,6 +59,10 @@ public class Convertors {
         return (String)((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession().getAttribute("email");
     }
 
+    public static Long fetchSessionUserId() {
+        return (Long)((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession().getAttribute("userid");
+    }
+
     public static Map<String, Object> mapSurveyEntityToSurveyQuestions(SurveyEntity surveyEntity, String email) {
 
         Set<Question> questionsList = new HashSet<>();
@@ -79,16 +83,24 @@ public class Convertors {
 //                            }
 //                            else {
                                 Set<ResponseEntity> responseEntitySet = questionsEntity.getResponses();
+                                String checkboxResponse = "";
                                 for (ResponseEntity responseEntity : responseEntitySet) {
                                     if (responseEntity.getEmail() != null && responseEntity.getEmail().equals(email)) {
-                                        question.setResponse(responseEntity.getResponse());
-                                        break;
+                                        if(questionsEntity.getQuestiontype().equals("checkbox")) {
+                                            if(checkboxResponse.equals("")){
+                                                checkboxResponse += responseEntity.getResponse();
+                                            } else{
+                                                checkboxResponse += ","+ responseEntity.getResponse();
+                                            }
+                                            question.setResponse(checkboxResponse);
+                                        } else{
+                                            question.setResponse(responseEntity.getResponse());
+                                        }
+//                                        break;
                                     }
                                 }
 //                            }
                         }
-
-
                         question.setOptions(fetchOptions(questionsEntity, email));
                         questionsList.add(question);
                     });

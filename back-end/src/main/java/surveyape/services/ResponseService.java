@@ -8,4 +8,6 @@ public interface ResponseService {
     Response saveSurveyResponse(Response response, String email);
 
     Response saveOpenSurveyResponse(OpenSurveyResponse openS);
+
+    Response saveCheckboxResponses(Response res, String email);
 }

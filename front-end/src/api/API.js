@@ -1,6 +1,6 @@
 const api = process.env.REACT_APP_CONTACTS_API_URL || 'http://localhost:8080'
-export const url = 'http://localhost:8080';
-// export const url = 'http://www.surveyape.ga:8080';
+// const url = 'http://localhost:8080';
+const url = 'http://www.surveyape.ga:8080';
 const axios = require("axios");
 // import axios from 'axios';
 
@@ -85,6 +85,19 @@ export const submitCloseUniqueSurvey = (payload) => {
 
 export const saveGeneralSurveyResponse = (payload) => {
     return axios.post(url + '/response/saveGeneralSurveyResponse', payload)
+
+        .then(function (response) {
+            console.log(response);
+            return response
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error
+        });
+}
+
+export const saveCheckBoxSurveyResponse = (payload) => {
+    return axios.post('http://localhost:8080/response/saveCheckBoxSurveyResponse', payload)
 
         .then(function (response) {
             console.log(response);
@@ -260,6 +273,17 @@ export const surveyListing = (payload) =>{
         });
 };
 
+export const getStats = (payload) => {
+    return axios.post(url + '/survey/fetchStats', payload)
+        .then(function (response) {
+            console.log(response);
+            return response;
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error;
+        });
+}
 
 export const uniqueSurveyListing = () =>{
     return axios.post(url + '/survey/uniqueSurveylisting',null)
@@ -312,7 +336,7 @@ export const exportSurvey = (payload) =>{
 };
 
 export const getSurveyListing = () =>
-    fetch(`${api}/survey/surveylisting`, {
+    fetch(`${url}/survey/surveylisting`, {
         method: 'GET',
         headers: {
             ...headers,

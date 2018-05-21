@@ -41,14 +41,14 @@ public class ResponseServiceImpl implements ResponseService {
             } else{
                 responseEntity.setUserEntity(null);
             }
-            responseEntity.setEmail(response.getEmail());
+
             if(response.getOptionid() == null){
                 responseEntity.setOptionid(null);
             } else{
                 responseEntity.setOptionid(Long.parseLong(response.getOptionid()));
             }
-            responseEntity.setResponse(response.getResponse());
             responseEntity.setEmail(response.getEmail());
+            responseEntity.setResponse(response.getResponse());
             responseEntity.setQuestionsEntity(question);
             ResponseEntity res = responseRepository.save(responseEntity);
             Response r = new Response();
@@ -56,23 +56,27 @@ public class ResponseServiceImpl implements ResponseService {
             r.setResponse(res.getResponse());
             return r;
         } else{
-            if(email != null){
-                UserEntity user = userRepository.findByEmail(email);
-                resObject.setUserEntity(user);
+            if(response.getQuestionType().equals("unCheck")){
+
+                //delete the object
+                responseRepository.delete(resObject);
+                return null;
+//                resObject.setResponse(resObject.getResponse() + "," + response.getResponse());
             } else{
-                resObject.setUserEntity(null);
-            }
-            if(response.getQuestionType().equals("check")){
-                resObject.setResponse(resObject.getResponse() + "," + response.getResponse());
-            } else{
+                if(email != null){
+                    UserEntity user = userRepository.findByEmail(email);
+                    resObject.setUserEntity(user);
+                } else{
+                    resObject.setUserEntity(null);
+                }
+                resObject.setDummyid(resObject.getDummyid());
                 resObject.setResponse(response.getResponse());
+                ResponseEntity res = responseRepository.save(responseEntity);
+                Response r = new Response();
+                r.setEmail(res.getEmail());
+                r.setResponse(res.getResponse());
+                return r;
             }
-            resObject.setDummyid(resObject.getDummyid());
-            ResponseEntity res = responseRepository.save(responseEntity);
-            Response r = new Response();
-            r.setEmail(res.getEmail());
-            r.setResponse(res.getResponse());
-            return r;
         }
     }
 
@@ -103,5 +107,37 @@ public class ResponseServiceImpl implements ResponseService {
             mailService.sendSuccessMailGeneral(openS.getSendEmail());
         }
         return r;
+    }
+
+    public Response saveCheckboxResponses(Response response, String email){
+        ResponseEntity responseEntity = new ResponseEntity();
+        QuestionsEntity question = questionRepository.findById(Long.parseLong(response.getQuestionid()));
+        ResponseEntity resObject = responseRepository.findByEmailAndAndQuestionsEntityAndOptionid(
+                response.getEmail(),question, Long.parseLong(response.getOptionid()));
+        if(resObject == null){
+            if(email != null){
+                UserEntity user = userRepository.findByEmail(email);
+                responseEntity.setUserEntity(user);
+            } else{
+                responseEntity.setUserEntity(null);
+            }
+            responseEntity.setEmail(response.getEmail());
+            responseEntity.setOptionid(Long.parseLong(response.getOptionid()));
+            responseEntity.setResponse(response.getResponse());
+            responseEntity.setQuestionsEntity(question);
+            ResponseEntity res = responseRepository.save(responseEntity);
+            Response r = new Response();
+            r.setEmail(res.getEmail());
+            r.setResponse(res.getResponse());
+            return r;
+        } else{
+            if(response.getQuestionType().equals("unCheck")){
+                //delete the object
+                responseRepository.delete(resObject);
+                return null;
+            } else{
+                return null;
+            }
+        }
     }
 }

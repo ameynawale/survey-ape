@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import '../styles/SurveyContainer.css';
 import { Table } from 'reactstrap';
+import * as API from '../api/API';
 import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
 const margin = {top: 20, right: 20, bottom: 30, left: 40};
 const data = [
@@ -18,6 +19,24 @@ class SurveyStats extends Component {
         }
     }
     componentWillMount(){
+        var payload = {
+            "surveyId": x.surveyId
+        }
+        API.getStats(payload)
+            .then(
+                response => {
+                    if(response.status === 200){
+                        this.setState({
+                            ...this.state,
+                            statsOfSurvey: response.data
+                        })
+                    }
+                },
+                error => {
+                    console.log(error.data.message);
+                }
+            );
+
         this.setState({
             ...this.state,
             statsOfSurvey: {

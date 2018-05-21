@@ -12,6 +12,7 @@ class HomeHeader extends Component {
             <div className="header-bar">
                 {/*<button className="btn btn-primary survey-button"></button>*/}
                 <span className="title">Survey-Ape</span>
+
                 <button className="btn btn-primary share-button"
                         onClick={() => {
                             this.props.history.push("/");
@@ -20,6 +21,10 @@ class HomeHeader extends Component {
                         onClick={() => {
                             this.props.history.push("/signUp");
                         }}>SignUp</button>
+                <button className="btn btn-primary share-button"
+                        onClick={() => {
+                            this.props.history.push("/uniqueSurveys");
+                        }}>View all Open Unique Survey</button>
             </div>
         );
     }

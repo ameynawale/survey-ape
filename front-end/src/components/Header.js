@@ -3,6 +3,7 @@ import '../styles/Header.css';
 import CreateSurveyModal from 'react-modal';
 import {customStyles} from "./util/modalStyles";
 import * as API from '../api/API';
+import { Route, withRouter } from 'react-router-dom';
 
 class Header extends Component {
     constructor() {
@@ -51,7 +52,6 @@ class Header extends Component {
                         onClick={this.openCreateSurveyModal}
                 >Create</button>
                 <button className="btn btn-primary share-button" onClick={this.handleLogout}>Sign Out</button>
-                <button className="btn btn-primary share-button">Share</button>
                 <CreateSurveyModal
                     isOpen={this.state.createSurveyIsOpen}
                     onAfterOpen={this.openCreateSurveyModal}
@@ -95,6 +95,7 @@ class Header extends Component {
                                 <option>Closed invitation-only survey</option>
                                 <option>Open unique survey</option>
                             </select><br/>
+                            <label>Enter all the invitees of the survey here. Separate the emails by comma</label>
                             <input type="text" className="form-control" name="survey" placeholder = "Invitees Emails (comma-separated)"
                                    disabled={this.state.isClosed}
                                    onChange={(event) => {
@@ -121,4 +122,4 @@ class Header extends Component {
     }
 }
 
-export default Header;
+export default withRouter(Header);

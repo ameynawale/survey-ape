@@ -163,6 +163,15 @@ class OpenSurveyQuestions extends Component{
                         </Col>
                     </Row>
                 )
+            } else if(survey[i].questiontype === "date"){
+                x.push(
+                    <Row>
+                        <Col xs="1"></Col>
+                        <Col xs="5">
+                            <input type="date" onChange={(e) => this.saveDate(questionid, e)}/>
+                        </Col>
+                    </Row>
+                )
             }
         }
 
@@ -217,7 +226,10 @@ class OpenSurveyQuestions extends Component{
         var value = optionid.split(",");
         this.autoSaveSurvey(nextValue, value[1], value[0])
     }
-
+    saveDate(questionid, event){
+        var optionid = null;
+        this.autoSaveSurvey(event.target.value, questionid, optionid);
+    }
     autoSaveSurvey(response, questionid, optionid){
         var shouldOverride =false;
         var payload = {

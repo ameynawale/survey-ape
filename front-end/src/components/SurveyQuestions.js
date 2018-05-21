@@ -11,6 +11,8 @@ import * as API from '../api/API';
 import StarRatingComponent      from 'react-star-rating-component';
 import {Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import QuestionRadio from  './QuestionRadio';
+
+let switchCheckbox = true
 class SurveyQuestions extends Component{
     constructor(props){
         super(props);
@@ -21,10 +23,45 @@ class SurveyQuestions extends Component{
             "email": x.email,
             "surveyid": x.surveyid,
             "surveyQuestions": {},
-            "displayQues": []
+            "displayQues": [],
+            "isGoing": true,
+            "surveyResponses": []
         }
+        this.handleInputChange = this.handleInputChange.bind(this);
     }
 
+    toggleCheckBox(e){
+        switchCheckbox = !switchCheckbox;
+    }
+    handleInputChange(event){
+        // const target = event.target;
+        // const value = target.type === 'checkbox' ? target.checked : target.value;
+        // const name = target.name;
+        //
+        // this.setState({
+        //     [name]: value
+        // });
+        this.setState({
+            ...this.state,
+            isGoing: false
+        })
+    }
+    unCheck(event, i){
+
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
+        this.setState({
+            [name]: value
+        });
+        // // var x = document.getElementById()
+        // var x = event.target.checked;
+        // event.target.checked = x;
+        // let ref = 'ref_' + i;
+        // // this.refs[ref].checked = !this.refs[ref].checked;
+        // this.refs.checked = !this.refs.checked;
+    }
     // var checkBoxResponse
     componentWillMount() {
         let data = this.props.surveyData;
@@ -44,13 +81,21 @@ class SurveyQuestions extends Component{
                             surveyQuestions: response.data
                         }, this.handleStateData)
                     } else if(response.response.status === 404){
-                        alert(response.response.data.message);
+                        var x = response.response.data.message + " Go back by clicking browser back button";
+                        alert(x);
+                    } else if(response.response.status === 400){
+                        var x = response.response.data.message + " Go back by clicking browser back button";
+                        alert(x);
                     } else if(response.response.status === 208){
                         //show his/her response page of the user
                     } else if(response.response.status === 401){
-                        alert(response.response.data.message);
+                        var x = response.response.data.message + " Go back by clicking browser back button";
+                        alert(x);
                     } else {
-                        alert("An error occured. Please try again with correc URL");
+                        alert("An error occured. Please try again with correct URL. The reason can be " +
+                            "that you are logged in with different email on survey ape and giving different" +
+                            "email address for taking this survey." +
+                            "First logout and then take this survey or take this survey in the app");
                     }
                 },
                 error => {
@@ -119,16 +164,21 @@ class SurveyQuestions extends Component{
                 )
             } else if(survey[i].questiontype === "checkbox"){
                 let temp =[];
-                if(survey[i].response !== ""){
+                if(survey[i].response !== undefined){
                     let res = survey[i].response.split(",");
-                    let opt = survey[i].options;
-                    for(let m=0; m<opt.length; m++){
+                    // let opt = survey[i].options;
+                    survey[i].options.map((opt, index) =>{
                         for(let n=0; n<res.length; n++){
-                            if(opt[m].options === res[n]){
+                            if(opt.options === res[n]){
                                 checking = true;
                                 temp.push(<div>
-                                        <input type="checkbox" checked onClick={(e) => this.saveCheckBox(opt[m].options, opt[m].optionid, questionid, e)}/>
-                                        <label>{opt[m].options}</label>
+                                        <input type="checkbox" checked
+                                               onClick={(e) => {
+                                                   // this.unCheck(e, index);
+                                                   // this.handleInputChange(e);
+                                                   this.saveCheckBox(opt.options, opt.optionid, questionid, e);
+                                               }}/>
+                                        <label>{opt.options}</label>
                                     </div>
                                 );
                                 break;
@@ -136,13 +186,13 @@ class SurveyQuestions extends Component{
                         }
                         if(checking === false){
                             temp.push(<div>
-                                    <input type="checkbox" onClick={(e) => this.saveCheckBox(opt[m].options, opt[m].optionid, questionid, e)}/>
-                                    <label>{opt[m].options}</label>
+                                    <input type="checkbox" onClick={(e) => this.saveCheckBox(opt.options, opt.optionid, questionid, e)}/>
+                                    <label>{opt.options}</label>
                                 </div>
                             );
                         }
                         checking = false;
-                    }
+                    })
                 } else{
                     survey[i].options.map((opt, index) => {
                         temp.push(<div>
@@ -166,11 +216,15 @@ class SurveyQuestions extends Component{
                 //     ...this.state,
                 //     textValue: survey[i].response
                 // })
+                var value = "";
+                if(survey[i].response !== undefined){
+                    value = survey[i].response
+                }
                 x.push(
                     <Row>
                         <Col xs="1"></Col>
                         <Col xs="5">
-                            <textarea width="50" value={survey[i].response + this.state.textValue} placeholder="Your response here"
+                            <textarea width="50" defaultValue={value} placeholder="Your response here"
                                       onBlurCapture={(event) => {
                                           this.setState({
                                               ...this.state,
@@ -202,6 +256,15 @@ class SurveyQuestions extends Component{
                         </Col>
                     </Row>
                 )
+            } else if(survey[i].questiontype === "date"){
+                x.push(
+                    <Row>
+                        <Col xs="1"></Col>
+                        <Col xs="5">
+                            <input type="date" onChange={(e) => this.saveDate(questionid, e)}/>
+                        </Col>
+                    </Row>
+                )
             }
         }
 
@@ -212,23 +275,54 @@ class SurveyQuestions extends Component{
     }
 
     saveDropdown(questionid, event){
-        this.autoSaveSurvey(event.label, questionid, event.value, "")
+        this.autoSaveSurvey(event.label, questionid, event.value, "");
     }
     saveRadio(option, optionid, questionid, event){
-        console.log(" dfg");
-        this.autoSaveSurvey(option, questionid, optionid, "")
+        this.autoSaveSurvey(option, questionid, optionid, "");
     }
     saveCheckBox(option, optionid, questionid, event){
-        console.log(" dfg");
-        this.autoSaveSurvey(option, questionid, optionid, "check")
+        if(event.target.checked === false){
+            this.saveCheckBoxesSurveyValue(option, questionid, optionid, "unCheck");
+        } else{
+            this.saveCheckBoxesSurveyValue(option, questionid, optionid, "");
+        }
+
     }
     saveText(questionid, event){
         var optionid = null;
-        this.autoSaveSurvey(event.target.value, questionid, optionid, "")
+        this.autoSaveSurvey(event.target.value, questionid, optionid, "");
     }
     saveRating=(nextValue, questionid, optionid)=>{
         var value = optionid.split(",");
-        this.autoSaveSurvey(nextValue, value[1], value[0], "")
+        this.autoSaveSurvey(nextValue, value[1], value[0], "");
+    }
+    saveDate(questionid, event){
+        var optionid = null;
+        this.autoSaveSurvey(event.target.value, questionid, optionid, "");
+    }
+    saveCheckBoxesSurveyValue(response, questionid, optionid , questionType){
+        var payload = {
+            "type": this.state.type,
+            "email": this.state.email,
+            "response": response,
+            "questionid": questionid,
+            "optionid": optionid,
+            "questionType": questionType
+        }
+        API.saveCheckBoxSurveyResponse(payload)
+            .then(
+                response => {
+                    if(response.status === 200){
+                        console.log("saved");
+                        // this.props.history.push('./SurveyQuestions', {surveyData: this.state});
+                    } else {
+                        // alert("An error occured. Please try again with correc URL");
+                    }
+                },
+                error => {
+                    console.log(error.data.message);
+                }
+            );
     }
 
     autoSaveSurvey(response, questionid, optionid, questionType){
@@ -268,7 +362,12 @@ class SurveyQuestions extends Component{
                 response => {
                     if (response.status === 200) {
                         alert("You have Successfully submitted the survey. A confirmation email has been sent to you");
-                        this.props.history.push("/");
+                        if(localStorage.getItem("userEmail") !== null && localStorage.getItem("userEmail") !== ""
+                            && localStorage.getItem("userEmail") !== undefined){
+                            this.props.history.push("/surveys");
+                        } else{
+                            this.props.history.push("/");
+                        }
                     } else if (response.response.status === 404) {
                         alert(response.response.data.message);
                     } else {
