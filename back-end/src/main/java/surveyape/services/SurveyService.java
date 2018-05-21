@@ -1,5 +1,6 @@
 package surveyape.services;
 
+import org.json.simple.JSONObject;
 import surveyape.models.*;
 import java.util.Set;
 import org.springframework.http.ResponseEntity;
@@ -46,5 +47,5 @@ public interface SurveyService {
 
   Boolean finishClosedUniqueSurveys(Survey survey, String email);
 
-  String exportSurvey(String surveyid, String filename);
+    JSONObject exportSurvey(String surveyid, String filename);
 }

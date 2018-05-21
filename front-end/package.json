@@ -13,6 +13,7 @@
     "react-modal": "^3.4.4",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
+    "react-s-alert": "^1.4.1",
     "react-scripts": "1.1.4",
     "react-star-rating-component": "^1.4.1",
     "reactstrap": "^5.0.0",

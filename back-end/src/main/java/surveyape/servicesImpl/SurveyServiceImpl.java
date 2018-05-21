@@ -594,7 +594,7 @@ public class SurveyServiceImpl implements SurveyService {
     }
 
     @Override
-    public String exportSurvey(String surveyid, String filename) {
+    public JSONObject exportSurvey(String surveyid, String filename) {
 
         System.out.println("surveyid " + surveyid);
         System.out.println("filename " + filename);
@@ -641,7 +641,9 @@ public class SurveyServiceImpl implements SurveyService {
             }
         }
 
-        String SurveyFiles = System.getProperty("user.dir")+"\\src\\main\\resources\\SurveyFiles";
+        return obj1;
+
+        /*String SurveyFiles = System.getProperty("user.dir")+"\\src\\main\\resources\\SurveyFiles";
         String filepath = SurveyFiles + "\\" + surveyid + ".txt";
         try (FileWriter file = new FileWriter(filepath)) {
 
@@ -653,6 +655,6 @@ public class SurveyServiceImpl implements SurveyService {
         }
         finally {
             return filepath;
-        }
+        }*/
     }
 }

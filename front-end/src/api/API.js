@@ -323,8 +323,8 @@ export const getOptions = (payload) =>{
 };
 
 export const exportSurvey = (payload) =>{
-    const url = url + '/survey/export-survey?surveyid=' + payload.surveyid + '&filename=' + payload.filename;
-    return axios.get(url)
+    const url1 = url + '/survey/export-survey?surveyid=' + payload.surveyid + '&filename=' + payload.filename;
+    return axios.get(url1)
         .then(function (response) {
             console.log(response);
             return response;

@@ -26,11 +26,14 @@ class FormContentEdit extends Component {
             // surveyName      :   this.props.surveydata.surveyName,
             surveyid        :   this.props.surveydata.questions.questions[0].surveyid,
             filename: 'SurveyJson',
-            fileurl: 'http://localhost:8080/' + this.props.surveydata.questions.questions[0].surveyid
+            // fileurl: API.url + '/f6e7fd8d-ff21-44fc-8a97-9c8264f85df9.txt',
+            data: ''
+            // fileurl: '/' + this.props.surveydata.questions.questions[0].surveyid + '.txt'
 
         };
         // var index = 0;
 
+        var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.state));
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         // this.handleExportSurvey = this.handleExportSurvey.bind(this);
@@ -105,6 +108,13 @@ class FormContentEdit extends Component {
             }
 
         })
+        API.exportSurvey(this.state)
+            .then((res) => {
+            console.log("this is dta",res.data);
+            this.setState({
+                data: res.data
+            })
+            })
         /*API.getQuestions(this.state)
             .then((res) => {
                 console.log("questions", res.data.questions);
@@ -280,6 +290,7 @@ class FormContentEdit extends Component {
 
 
     render() {
+        var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.state.data));
         return (
             <form>
                 <div className="form-design-container">
@@ -301,7 +312,8 @@ class FormContentEdit extends Component {
                     }}>Save</button>
                     <button className="btn btn-primary" onClick={(event) => this.publishSurvey(event)}>Publish</button>
                     {/*<button className="btn btn-primary" onClick={(event) => this.handleExportSurvey(event)}>Export</button>*/}
-                    <a href={this.state.fileurl} download>Export</a>
+                    {/*<a href={this.state.fileurl} download="true">Export Json</a>*/}
+                    <a href={`data: ${data}`} download={this.state.filename}>Export JSON file</a>
                 </div>
                 <ExportSurveyModal
                     isOpen={this.state.exportSurveyIsOpen}
@@ -318,10 +330,11 @@ class FormContentEdit extends Component {
                                            filename : event.target.value
                                        });
                                    }}/><br/>
-                            <button type="button" id="exportSurvey" className="button-register"
+                            {/*<button type="button" id="exportSurvey" className="button-register"
                                      onClick={this.handleExportSurvey}
-                            >Export</button>
-                            <a href={this.state.fileurl} download>Export</a>
+                            >Export</button>*/}
+                            {/*<a href={`data: ${data}`} download>Export</a>*/}
+                            <a href={`data:` + this.state.data} download={this.state.filename}>Export JSON file</a>
                         </form>
                     </div>
                 </ExportSurveyModal>
