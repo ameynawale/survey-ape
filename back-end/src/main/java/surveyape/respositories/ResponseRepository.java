@@ -13,4 +13,5 @@ public interface ResponseRepository extends CrudRepository<ResponseEntity, Long>
     ResponseEntity findByEmailAndAndQuestionsEntity(String email, QuestionsEntity questionsEntity);
     ResponseEntity findByEmailAndAndQuestionsEntityAndOptionid(String email, QuestionsEntity questionsEntity, Long optionid);
     long countByQuestionsEntityAndOptionid(QuestionsEntity questionsEntity, Long optionid);
+    long countByQuestionsEntity(QuestionsEntity questionsEntity);
 }

@@ -467,7 +467,7 @@ public class SurveyServiceImpl implements SurveyService {
 
                 numberOfParticipants = surveyEntity.getInvitees()  // Fetch All Invitees
                         .stream()  // Convert to stream
-                        .filter(inviteesEntity -> (userSurveyRepository.findBySurveyidAndEmail(surveyEntity.getSurveyid(), inviteesEntity.getEmail()).getHascompleted() == 1))
+                        .filter(inviteesEntity -> ( (userSurveyRepository.findBySurveyidAndEmail(surveyEntity.getSurveyid(), inviteesEntity.getEmail()) != null ) && (userSurveyRepository.findBySurveyidAndEmail(surveyEntity.getSurveyid(), inviteesEntity.getEmail()).getHascompleted() == 1) ))
                         .count();  // Filter has completed invitees and Count the invitees
 
                 if (numberOfParticipants < 2)
@@ -485,31 +485,103 @@ public class SurveyServiceImpl implements SurveyService {
                     statsQuestions.setQuestion        ( questionsEntity.getQuestion() );
 
                     Set<StatsChoices> statsChoicesSet = new HashSet<>();
+                    if(questionsEntity.getQuestiontype().equals("text")) {
 
-                    for(OptionsEntity optionsEntity : questionsEntity.getOptions()) {
-                        
                         StatsChoices statsChoices = new StatsChoices();
-                        statsChoices.setOption  ( optionsEntity.getOptions() );
-                        choiceDistribution = responseRepository.countByQuestionsEntityAndOptionid(questionsEntity, optionsEntity.getOptionid());
-
-                        statsChoices.setChoiceDistribution( choiceDistribution );
-
+                        Set<surveyape.entity.ResponseEntity> responseEntities = questionsEntity.getResponses();
+                        String responses = "";
+                        for(surveyape.entity.ResponseEntity responseEntity: responseEntities) {
+                            if(responses.equals("")) {
+                                responses = responseEntity.getResponse();
+                            } else {
+                                responses += "," + responseEntity.getResponse();
+                            }
+                        }
+                        statsChoices.setTextResponses(responses);
                         statsChoicesSet.add(statsChoices);
+
+                    } else {
+                        for (OptionsEntity optionsEntity : questionsEntity.getOptions()) {
+
+                            StatsChoices statsChoices = new StatsChoices();
+                            statsChoices.setOption(optionsEntity.getOptions());
+                            choiceDistribution = responseRepository.countByQuestionsEntityAndOptionid(questionsEntity, optionsEntity.getOptionid());
+
+                            double choiceRate =  (((double) choiceDistribution / numberOfParticipants) * 100);
+                            choiceRate = (Math.round(choiceRate * 100.0) / 100.0);
+
+                            statsChoices.setChoiceResponseRate(choiceRate);
+                            statsChoices.setChoiceDistribution(choiceDistribution);
+
+                            statsChoicesSet.add(statsChoices);
+                        }
                     }
+
+
+                    statsQuestions.setChoices(statsChoicesSet);
+
                     statsQuestionsSet.add(statsQuestions);
-                 }
+                }
 
                 break;
 
-            case "open":
-
-                break;
-
-            case "unique":
-
-                break;
             default:
-                throw new InternalServerException("Internal Server Error");
+                Set<QuestionsEntity> questionsEntities = surveyEntity.getQuestions();
+                for(QuestionsEntity questionsEntity : questionsEntities ) {
+                    numberOfParticipants = responseRepository.countByQuestionsEntity(questionsEntity);
+                    break;
+                }
+                rate = 100.00;
+
+                for (QuestionsEntity questionsEntity : surveyEntity.getQuestions()) {
+
+                    StatsQuestions statsQuestions = new StatsQuestions();
+                    long choiceDistribution = 0;
+
+                    statsQuestions.setQuestionid      ( questionsEntity.getQuestionid() );
+                    statsQuestions.setQuestiontype  ( questionsEntity.getQuestiontype() );
+                    statsQuestions.setQuestion        ( questionsEntity.getQuestion() );
+
+                    Set<StatsChoices> statsChoicesSet = new HashSet<>();
+                    if(questionsEntity.getQuestiontype().equals("text")) {
+
+                        StatsChoices statsChoices = new StatsChoices();
+                        Set<surveyape.entity.ResponseEntity> responseEntities = questionsEntity.getResponses();
+                        String responses = "";
+                        for(surveyape.entity.ResponseEntity responseEntity: responseEntities) {
+                            if(responses.length() == 0) {
+                                responses = responseEntity.getResponse();
+                            } else {
+                                responses = "," + responseEntity.getResponse();
+                            }
+                        }
+                        statsChoices.setTextResponses(responses);
+                        statsChoicesSet.add(statsChoices);
+
+                    } else {
+                        for (OptionsEntity optionsEntity : questionsEntity.getOptions()) {
+
+                            StatsChoices statsChoices = new StatsChoices();
+                            statsChoices.setOption(optionsEntity.getOptions());
+                            choiceDistribution = responseRepository.countByQuestionsEntityAndOptionid(questionsEntity, optionsEntity.getOptionid());
+
+                            double choiceRate = choiceDistribution/numberOfParticipants;
+                            choiceRate = (Math.round(choiceRate * 100.0) / 100.0);
+
+                            statsChoices.setChoiceResponseRate(choiceRate);
+                            statsChoices.setChoiceDistribution(choiceDistribution);
+
+                            statsChoicesSet.add(statsChoices);
+                        }
+                    }
+
+
+                    statsQuestions.setChoices(statsChoicesSet);
+
+                    statsQuestionsSet.add(statsQuestions);
+                }
+
+                break;
         }
 
         statsOverall.setStartTime(surveyEntity.getCreatedon());
