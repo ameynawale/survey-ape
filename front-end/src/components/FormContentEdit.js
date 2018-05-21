@@ -95,6 +95,14 @@ class FormContentEdit extends Component {
                     </div>
                 )
             }
+            else if(question.questiontype === 'date')
+            {
+                this.state.questions.push(
+                    <div className="form-inline">
+                        <Date surveydata={question} handleSubmit={this.handleSubmit}/>
+                    </div>
+                )
+            }
 
         })
         /*API.getQuestions(this.state)

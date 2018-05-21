@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import '../styles/FormContent.css';
 import '../styles/Header.css';
 import '../styles/SingleSelect.css';
+import * as API from "../api/API";
 
 
 class Date extends Component {
@@ -11,9 +12,12 @@ class Date extends Component {
         super(props);
         this.state = {
             options: [],
-            question: "",
+            question: this.props.surveydata.question,
             optionsarray: [],
-            index: this.props.index
+            index: this.props.index,
+            questionid: this.props.surveydata.questionid,
+            surveyid: this.props.surveydata.surveyid,
+            questiontype: 'date'
         };
 
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -27,7 +31,7 @@ class Date extends Component {
         handleSubmit: PropTypes.func.isRequired
     }
 
-    handleInputChange(event) {
+    /*handleInputChange(event) {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
@@ -40,6 +44,16 @@ class Date extends Component {
             optionsarray: optionsarray
         });
         console.log(this.state.optionsarray);
+    }*/
+
+    handleInputChange(event) {
+        let question = {
+            question: event.target.value,
+            questionid: this.state.questionid,
+            surveyid: this.state.surveyid,
+            questiontype: this.state.questiontype
+        }
+        API.addQuestion(question);
     }
 
     /*addOption = (event) => {
@@ -139,13 +153,14 @@ class Date extends Component {
             <div className="question-container">
                 <div className="col-lg-12">
                     <input type="text" className="form-control question-input"
-                           onChange={(event) => {
+                           defaultValue={this.state.question}
+                           onBlurCapture={(event) => {
                                this.setState({
                                    question: event.target.value
                                });
-                               this.props.handleSubmit(this.state);
+                               this.handleInputChange(event);
                            }}
-                    /><br/><br/>
+                    /><br/>
                 </div>
                 <div className="form-inline ml-3">
                     <label>Datepicker as seen by the surveyee :</label>
