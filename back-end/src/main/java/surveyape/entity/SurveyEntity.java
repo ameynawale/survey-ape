@@ -57,7 +57,7 @@ public class SurveyEntity {
     private Set<QuestionsEntity> questions;
 
     @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name = "userid") // ownerid
+    @JoinColumn(name = "userid")
     private UserEntity userEntity;
 
     public SurveyEntity(String surveyname, String surveytype, String validity, String createdon, int ispublished, Set<InviteesEntity> invitees, UserEntity userEntity) {
