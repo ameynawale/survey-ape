@@ -7,6 +7,7 @@ import Rating from "./Rating";
 import Date from "./Date";
 import * as API from "../api/API";
 import '../styles/FormContent.css';
+import { Route, withRouter } from 'react-router-dom';
 import { Button, ButtonGroup } from 'reactstrap';
 
 
@@ -181,6 +182,7 @@ class FormContent extends Component {
                 {
                     console.log('inside 200');
                     alert("Survey is published successfully", res.data.url);
+                    this.props.history.push("/surveys");
                 }
             });
     }
@@ -214,4 +216,4 @@ class FormContent extends Component {
     }
 }
 
-export default FormContent;
+export default withRouter(FormContent);

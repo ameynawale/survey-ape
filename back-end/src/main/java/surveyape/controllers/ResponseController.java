@@ -56,4 +56,17 @@ public class ResponseController {
         res = responseService.saveOpenSurveyResponse(response);
         return new ResponseEntity<>(res,HttpStatus.OK);
     }
+
+    @RequestMapping(path="/saveCheckBoxSurveyResponse", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> saveCheckBoxSurveyResponse(@RequestBody Response response) {
+        Response res = null;
+        String sessionEmail = Convertors.fetchSessionEmail();
+        if(sessionEmail != null){
+            res = responseService.saveCheckboxResponses(response, sessionEmail);
+            return new ResponseEntity<>(res,HttpStatus.OK);
+        } else{
+            res = responseService.saveCheckboxResponses(response, null);
+            return new ResponseEntity<>(res,HttpStatus.OK);
+        }
+    }
 }

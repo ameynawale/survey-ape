@@ -4,6 +4,7 @@ import queryString          from 'query-string';
 import EmailInput from './EmailInput';
 import OpenSurveyQuestions from './OpenSurveyQuestions';
 import SurveyQuestions from './SurveyQuestions';
+import UniqueEmailTracking from './UniqueEmailTracking';
 class TakeSurvey extends Component{
     constructor(props){
         super(props);
@@ -18,7 +19,7 @@ class TakeSurvey extends Component{
     componentWillMount(){
         let parsed = queryString.parse(this.props.urlData.location.search);
         let type = this.props.type;
-        if(type === 'unique' || type === 'close'){
+        if(type === 'close'){
             if(localStorage.getItem("userEmail") !== null && localStorage.getItem("userEmail") !== ""
                     && localStorage.getItem("userEmail") !== undefined){
                 let surveyData = {
@@ -40,6 +41,13 @@ class TakeSurvey extends Component{
                     "callComponent": <div> <EmailInput surveyid={parsed.surveyid} stype={type}/> </div>
                 });
             }
+        } else if(type === 'unique'){
+            this.setState({
+                ...this.state,
+                "type":type,
+                "surveyid": parsed.surveyid,
+                "callComponent": <div> <UniqueEmailTracking surveyid={parsed.surveyid} stype={type}/> </div>
+            });
         } else if(type === 'general'){
             this.setState({
                 ...this.state,

@@ -3,6 +3,7 @@ import '../styles/Header.css';
 import CreateSurveyModal from 'react-modal';
 import {customStyles} from "./util/modalStyles";
 import * as API from '../api/API';
+import { Route, withRouter } from 'react-router-dom';
 
 class Header extends Component {
     constructor() {
@@ -51,7 +52,6 @@ class Header extends Component {
                         onClick={this.openCreateSurveyModal}
                 >Create</button>
                 <button className="btn btn-primary share-button" onClick={this.handleLogout}>Sign Out</button>
-                <button className="btn btn-primary share-button">Share</button>
                 <CreateSurveyModal
                     isOpen={this.state.createSurveyIsOpen}
                     onAfterOpen={this.openCreateSurveyModal}
@@ -121,4 +121,4 @@ class Header extends Component {
     }
 }
 
-export default Header;
+export default withRouter(Header);

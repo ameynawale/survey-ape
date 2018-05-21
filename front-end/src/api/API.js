@@ -96,6 +96,19 @@ export const saveGeneralSurveyResponse = (payload) => {
         });
 }
 
+export const saveCheckBoxSurveyResponse = (payload) => {
+    return axios.post('http://localhost:8080/response/saveCheckBoxSurveyResponse', payload)
+
+        .then(function (response) {
+            console.log(response);
+            return response
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error
+        });
+}
+
 export const getSurvey = (payload) =>{
     return axios.post(url + '/survey/getSurvey', payload)
         .then(function (response) {
