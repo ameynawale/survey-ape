@@ -273,6 +273,17 @@ export const surveyListing = (payload) =>{
         });
 };
 
+export const getStats = (payload) => {
+    return axios.post(url + '/survey/fetchStats', payload)
+        .then(function (response) {
+            console.log(response);
+            return response;
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error;
+        });
+}
 
 export const uniqueSurveyListing = () =>{
     return axios.post(url + '/survey/uniqueSurveylisting',null)
