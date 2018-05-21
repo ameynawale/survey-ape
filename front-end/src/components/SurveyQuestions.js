@@ -92,7 +92,7 @@ class SurveyQuestions extends Component{
                         var x = response.response.data.message + " Go back by clicking browser back button";
                         alert(x);
                     } else {
-                        alert("An error occured. Please try again with correc URL. The reason can be " +
+                        alert("An error occured. Please try again with correct URL. The reason can be " +
                             "that you are logged in with different email on survey ape and giving different" +
                             "email address for taking this survey." +
                             "First logout and then take this survey or take this survey in the app");
@@ -216,11 +216,15 @@ class SurveyQuestions extends Component{
                 //     ...this.state,
                 //     textValue: survey[i].response
                 // })
+                var value = "";
+                if(survey[i].response !== undefined){
+                    value = survey[i].response
+                }
                 x.push(
                     <Row>
                         <Col xs="1"></Col>
                         <Col xs="5">
-                            <textarea width="50" value={survey[i].response + this.state.textValue} placeholder="Your response here"
+                            <textarea width="50" defaultValue={value} placeholder="Your response here"
                                       onBlurCapture={(event) => {
                                           this.setState({
                                               ...this.state,
@@ -252,6 +256,15 @@ class SurveyQuestions extends Component{
                         </Col>
                     </Row>
                 )
+            } else if(survey[i].questiontype === "date"){
+                x.push(
+                    <Row>
+                        <Col xs="1"></Col>
+                        <Col xs="5">
+                            <input type="date" onChange={(e) => this.saveDate(questionid, e)}/>
+                        </Col>
+                    </Row>
+                )
             }
         }
 
@@ -262,10 +275,10 @@ class SurveyQuestions extends Component{
     }
 
     saveDropdown(questionid, event){
-        this.autoSaveSurvey(event.label, questionid, event.value, "")
+        this.autoSaveSurvey(event.label, questionid, event.value, "");
     }
     saveRadio(option, optionid, questionid, event){
-        this.autoSaveSurvey(option, questionid, optionid, "")
+        this.autoSaveSurvey(option, questionid, optionid, "");
     }
     saveCheckBox(option, optionid, questionid, event){
         if(event.target.checked === false){
@@ -277,13 +290,16 @@ class SurveyQuestions extends Component{
     }
     saveText(questionid, event){
         var optionid = null;
-        this.autoSaveSurvey(event.target.value, questionid, optionid, "")
+        this.autoSaveSurvey(event.target.value, questionid, optionid, "");
     }
     saveRating=(nextValue, questionid, optionid)=>{
         var value = optionid.split(",");
-        this.autoSaveSurvey(nextValue, value[1], value[0], "")
+        this.autoSaveSurvey(nextValue, value[1], value[0], "");
     }
-
+    saveDate(questionid, event){
+        var optionid = null;
+        this.autoSaveSurvey(event.target.value, questionid, optionid, "");
+    }
     saveCheckBoxesSurveyValue(response, questionid, optionid , questionType){
         var payload = {
             "type": this.state.type,

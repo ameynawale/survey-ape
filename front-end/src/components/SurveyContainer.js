@@ -30,8 +30,8 @@ class SurveyContainer extends Component {
             uniqueSurvey:[],
             user: this.props.surveydata.user
         };
-        this.openModal = this.openModal.bind(this);
-        this.closeModal = this.closeModal.bind(this);
+        // this.openModal = this.openModal.bind(this);
+        // this.closeModal = this.closeModal.bind(this);
     }
 
     componentWillMount()
@@ -152,14 +152,14 @@ class SurveyContainer extends Component {
            this.openModal();
     }
 
-    openModal(){
-        this.setState({
-            show: true });
-    }
-    closeModal(){
-        this.setState({
-            show: false });
-    }
+    // openModal(){
+    //     this.setState({
+    //         show: true });
+    // }
+    // closeModal(){
+    //     this.setState({
+    //         show: false });
+    // }
 
     openClosedSurvey(survey){
         var sur={
@@ -183,25 +183,6 @@ class SurveyContainer extends Component {
             <div className="survey-container">
                 <div className="form-design-container">
                     <div className="form-container">
-
-                        <Modal dialogClassName={customStyles} show={this.state.show} onHide={() => this.closeModal()}>
-                            <Modal.Header closeButton>
-                                {/*<Modal.Title>Bookmarked Success</Modal.Title>*/}
-                            </Modal.Header>
-                            <Modal.Body>
-                                <div className="row justify-content-md-center">
-                                    <div className="form-group row">
-                                        <div className="col-sm-offset-1 col-sm-10 col-sm-offset-1">
-                                            <div className="alert alert-success text-center" role="alert">You first need to sign
-                                                in before adding a public board to your private boards.</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </Modal.Body>
-                            <Modal.Footer>
-                                <Button onClick={() => this.closeModal}>Close</Button>
-                            </Modal.Footer>
-                        </Modal>
 
 
                         <Nav tabs>

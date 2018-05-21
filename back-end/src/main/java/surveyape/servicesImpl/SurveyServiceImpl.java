@@ -70,7 +70,7 @@ public class SurveyServiceImpl implements SurveyService {
         SurveyEntity s = surveyRepository.save(surveyEntity);
         if (survey.getSurveytype().equals("closed")) {
             for (Invitees invitees : survey.getInvitees()) {
-                InviteesEntity inviteesEntity = new InviteesEntity(invitees.getEmail(), s);
+                InviteesEntity inviteesEntity = new InviteesEntity(invitees.getEmail().trim(), s);
                 inviteeRepository.save(inviteesEntity);
             }
         }
