@@ -1,6 +1,6 @@
 const api = process.env.REACT_APP_CONTACTS_API_URL || 'http://localhost:8080'
-const url = 'http://localhost:8080';
-// const url = 'http://www.surveyape.ga:8080';
+export const url = 'http://localhost:8080';
+// export const url = 'http://www.surveyape.ga:8080';
 const axios = require("axios");
 // import axios from 'axios';
 
@@ -299,8 +299,8 @@ export const getOptions = (payload) =>{
 };
 
 export const exportSurvey = (payload) =>{
-    const url = url + '/survey/export-survey?surveyid=' + payload.surveyid + '&filename=' + payload.filename;
-    return axios.get(url)
+    const url1 = url + '/survey/export-survey?surveyid=' + payload.surveyid + '&filename=' + payload.filename;
+    return axios.get(url1)
         .then(function (response) {
             console.log(response);
             return response;

@@ -1,5 +1,6 @@
 package surveyape.controllers;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -266,10 +267,13 @@ public class SurveyController {
     public ResponseEntity<?> exportSurvey(@RequestParam(value = "surveyid") String surveyid,
                                                  @RequestParam(value = "filename") String filename)
     {
+
+        JSONObject jsonObject = surveyService.exportSurvey(surveyid,"test");
+        return new ResponseEntity<>(jsonObject, HttpStatus.OK);
 //        System.out.println("surveyid " + surveyid);
 //        System.out.println("filename " + filename);
 //        surv
-        String file = surveyService.exportSurvey(surveyid, filename);
+        /*String file = surveyService.exportSurvey(surveyid, filename);
         try{
             System.out.println("file in controller" + file);
             InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
@@ -288,7 +292,7 @@ public class SurveyController {
         catch (FileNotFoundException fnf)
         {
             return new ResponseEntity<>("the survey cannot be exported", HttpStatus.BAD_REQUEST);
-        }
+        }*/
     }
 
     @RequestMapping(
