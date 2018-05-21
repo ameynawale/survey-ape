@@ -293,8 +293,11 @@ public class SurveyServiceImpl implements SurveyService {
         Set<SurveyEntity> surveyEntitiesCreatedByMe = new HashSet<SurveyEntity>();
         Set<SurveyEntity> surveyEntitiesSharedWithMe = new HashSet<SurveyEntity>();
 
+        Long userid =
+                Convertors.fetchSessionUserId() != null ? Convertors.fetchSessionUserId() : user.getUserid();
+
         UserEntity userEntity = new UserEntity();
-        userEntity.setUserid(user.getUserid());
+        userEntity.setUserid(userid);
         surveyEntitiesCreatedByMe = surveyRepository.findAllByUserEntity(userEntity);
 
         Set<InviteesEntity> inviteesEntities = inviteeRepository.findAllByEmail(user.getEmail());
@@ -306,6 +309,7 @@ public class SurveyServiceImpl implements SurveyService {
         Set<Survey> surveysCreatedByMe = new HashSet<Survey>();
         Set<Survey> surveysSharedWithMe = new HashSet<Survey>();
 
+
         for (SurveyEntity surveyEntity : surveyEntitiesCreatedByMe) {
             surveysCreatedByMe.add(Convertors.mapSurveyEntityToSurvey(surveyEntity));
         }
@@ -315,7 +319,17 @@ public class SurveyServiceImpl implements SurveyService {
                 surveysSharedWithMe.add(Convertors.mapSurveyEntityToSurvey(surveyEntity));
         }
 
-        SurveyListing surveyListing = new SurveyListing(surveysCreatedByMe, surveysSharedWithMe);
+        // for unique survey
+        Set<SurveyEntity> uniqueSurveyEntities = new HashSet<SurveyEntity>();
+        Set<Survey> uniqueSurvey = new HashSet<Survey>();
+        uniqueSurveyEntities = surveyRepository.findAllBySurveytype("unique");
+        for (SurveyEntity uniqueSurveyEntity : uniqueSurveyEntities) {
+            uniqueSurvey.add(Convertors.mapSurveyEntityToSurvey(uniqueSurveyEntity));
+        }
+
+
+
+        SurveyListing surveyListing = new SurveyListing(surveysCreatedByMe, surveysSharedWithMe, uniqueSurvey);
 
         return surveyListing;
     }
@@ -417,7 +431,9 @@ public class SurveyServiceImpl implements SurveyService {
 
     @Override
     public Boolean isUniqueSurveyAlreadyCompleted(String email, String surveyid) {
-        return (userSurveyRepository.findBySurveyidAndEmail(surveyid, email).getHascompleted() == 1);
+        UserSurveyEntity userSurveyEntity = userSurveyRepository.findBySurveyidAndEmail(surveyid, email);
+        if(userSurveyEntity == null) return false;
+        return (userSurveyEntity.getHascompleted() == 1);
     }
 
     @Override

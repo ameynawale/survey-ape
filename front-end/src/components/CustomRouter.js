@@ -76,13 +76,11 @@ class CustomRouter extends Component {
                             this.props.history.push('/signUpVerification');
                         }
                         else{
-                            alert("Login successful");
                             localStorage.setItem("userEmail", res.data.email);
                             this.props.history.push('/surveys');
                         }
 
                     } else if (res.response.status === 404){
-                       // alert("successful login");
                         console.log(res);
                             this.setState({
                                 ...this.state,
@@ -140,17 +138,18 @@ class CustomRouter extends Component {
     }
 
     handleGetSurveyListing = () => {
-        API.getSurveyListing()
-            .then((res) => {
-                if(res.status === 200)
-                {
-                    this.setState({
-                        createdbyme: res.createdbyme,
-                        sharedwithme: res.sharedwithme
-                    });
-                    this.props.history.push("/surveys");
-                }
-            })
+        // API.getSurveyListing()
+        //     .then((res) => {
+        //         if(res.status === 200)
+        //         {
+        //             this.setState({
+        //                 createdbyme: res.createdbyme,
+        //                 sharedwithme: res.sharedwithme
+        //             });
+        //             this.props.history.push("/surveys");
+        //         }
+        //     })
+        this.props.history.push("/surveys");
     }
 
     editSurvey = (surveydata) => {
@@ -177,7 +176,12 @@ class CustomRouter extends Component {
 
 
     }
-
+    checkHeaderCondition(){
+        if(localStorage.getItem("userEmail") !== null && localStorage.getItem("userEmail") !== ""
+            && localStorage.getItem("userEmail") !== undefined){
+            return true;
+        } else return false;
+    }
 
     render() {
         return (
@@ -221,7 +225,10 @@ class CustomRouter extends Component {
                 )}/>
                 <Route exact path="/uniqueSurveys" render={() => (
                     <div>
-                        <Header history={this.props.history} handleAddSurvey={this.handleAddSurvey} />
+                        {this.checkHeaderCondition() ?
+                            (<div>
+                            <Header history={this.props.history} handleAddSurvey={this.handleAddSurvey} handleGetSurveyListing={this.handleGetSurveyListing}/>
+                        </div>) : null}
                         <UniqueSurveyListing surveydata={this.state}/>
                     </div>
                 )}/>
@@ -254,6 +261,12 @@ class CustomRouter extends Component {
                 )}/>
                 <Route exact path="/SurveyQuestions" render={(surveyData) => (
                     <div>
+                        <div>
+                            {this.checkHeaderCondition() ?
+                                (<div>
+                                    <Header history={this.props.history} handleAddSurvey={this.handleAddSurvey} handleGetSurveyListing={this.handleGetSurveyListing}/>
+                                </div>) : null}
+                        </div>
                         <SurveyQuestions surveyData={surveyData.location.state.surveyData}/>
                     </div>
                 )}/>

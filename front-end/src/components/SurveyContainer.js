@@ -25,26 +25,9 @@ class SurveyContainer extends Component {
 
         this.state = {
             activeTab: '1',
-            createdbyme:[
-                {
-                    surveyId: 1,
-                    surveyName: 'Survey 1'
-                },
-                {
-                    surveyId: 2,
-                    surveyName: 'Survey 2'
-                }
-            ],
-            sharedwithme:[
-                {
-                    surveyId: 3,
-                    surveyName: 'Survey 3'
-                },
-                {
-                    surveyId: 4,
-                    surveyName: 'Survey 4'
-                }
-            ],
+            createdbyme:[],
+            sharedwithme:[],
+            uniqueSurvey:[],
             user: this.props.surveydata.user
         };
         this.openModal = this.openModal.bind(this);
@@ -58,7 +41,8 @@ class SurveyContainer extends Component {
             .then((res) => {
                 this.setState({
                     createdbyme:res.data.createdbyme,
-                    sharedwithme:res.data.sharedwithme
+                    sharedwithme:res.data.sharedwithme,
+                    uniqueSurvey: res.data.uniqueSurvey
                 })
             })
     }
@@ -185,6 +169,15 @@ class SurveyContainer extends Component {
         }
         this.props.history.push('./SurveyQuestions', {surveyData: sur});
     }
+
+    openUniqueSurvey(survey){
+        var sur={
+            "type":"unique",
+            "surveyid": survey.surveyid,
+            "email":localStorage.getItem("userEmail")
+        }
+        this.props.history.push('./SurveyQuestions', {surveyData: sur});
+    }
     render() {
         return (
             <div className="survey-container">
@@ -212,7 +205,7 @@ class SurveyContainer extends Component {
 
 
                         <Nav tabs>
-                            <NavItem className='col-lg-6'>
+                            <NavItem className='col-lg-4'>
                                 <NavLink
                                     className={classnames({ active: this.state.activeTab === '1'})}
                                     onClick={() => { this.toggle('1'); }}
@@ -220,12 +213,20 @@ class SurveyContainer extends Component {
                                     Created by Me
                                 </NavLink>
                             </NavItem>
-                            <NavItem className='col-lg-6'>
+                            <NavItem className='col-lg-4'>
                                 <NavLink
                                     className={classnames({ active: this.state.activeTab === '2' })}
                                     onClick={() => { this.toggle('2'); }}
                                 >
                                     Shared with Me
+                                </NavLink>
+                            </NavItem>
+                            <NavItem className='col-lg-4'>
+                                <NavLink
+                                    className={classnames({ active: this.state.activeTab === '3' })}
+                                    onClick={() => { this.toggle('3'); }}
+                                >
+                                    All Unique surveys
                                 </NavLink>
                             </NavItem>
                         </Nav>
@@ -269,6 +270,20 @@ class SurveyContainer extends Component {
                                            <a href="javascript:void(0)" onClick={() => {
                                                this.openClosedSurvey(survey);
                                            }}><h6>{survey.surveyname}</h6></a>
+                                            <br/>
+                                        </Col>
+                                    </Row>)
+                                }
+                            </TabPane>
+                            <TabPane tabId="3">
+                                <br/>
+                                {this.state.uniqueSurvey.map((survey) =>
+                                    <Row>
+                                        <Col sm="12">
+                                            <a href="javascript:void(0)" onClick={() => {
+                                                this.openUniqueSurvey(survey);
+                                            }}><h6>{survey.surveyname}</h6></a>
+                                            <br/>
                                         </Col>
                                     </Row>)
                                 }

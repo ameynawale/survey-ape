@@ -10,7 +10,7 @@ import '../styles/FormContent.css';
 import ExportSurveyModal from 'react-modal';
 import {customStyles} from "./util/modalStyles";
 import { Button, ButtonGroup } from 'reactstrap';
-
+import { Route, withRouter } from 'react-router-dom';
 
 class FormContentEdit extends Component {
     constructor(props) {
@@ -260,6 +260,7 @@ class FormContentEdit extends Component {
                 {
                     console.log('inside 200');
                     alert("Survey is published successfully");
+                    this.props.history.push("/surveys");
                 }
             });
     }
@@ -329,4 +330,4 @@ class FormContentEdit extends Component {
     }
 }
 
-export default FormContentEdit;
+export default withRouter(FormContentEdit);

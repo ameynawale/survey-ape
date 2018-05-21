@@ -5,10 +5,20 @@ import java.util.Set;
 public class SurveyListing {
     private Set<Survey> createdbyme;
     private Set<Survey> sharedwithme;
+    private Set<Survey> uniqueSurvey;
 
-    public SurveyListing(Set<Survey> createdbyme, Set<Survey> sharedwithme) {
+    public SurveyListing(Set<Survey> createdbyme, Set<Survey> sharedwithme, Set<Survey> uniqueSurvey) {
         this.createdbyme = createdbyme;
         this.sharedwithme = sharedwithme;
+        this.uniqueSurvey = uniqueSurvey;
+    }
+
+    public Set<Survey> getUniqueSurvey() {
+        return uniqueSurvey;
+    }
+
+    public void setUniqueSurvey(Set<Survey> uniqueSurvey) {
+        this.uniqueSurvey = uniqueSurvey;
     }
 
     public Set<Survey> getCreatedbyme() {

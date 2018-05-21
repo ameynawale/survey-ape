@@ -29,7 +29,8 @@ class EmailInput extends Component{
             .then(
                 response => {
                     if(response.status === 200){
-                        this.props.history.push('./SurveyQuestions', {surveyData: this.state});
+                        alert("An email has been sent to your email id. please follow the link to give the survey")
+                        // this.props.history.push('./SurveyQuestions', {surveyData: this.state});
                     } else if(response.response.status === 404){
                         alert(response.response.data.message);
                     } else if(response.response.status === 208){
@@ -53,7 +54,7 @@ class EmailInput extends Component{
                         <div className="form-container">
                             <Form>
                                 <FormGroup>
-                                    <Label for="exampleEmail">Enter your Email</Label>
+                                    <Label for="exampleEmail">Enter your Email to send the Survey URL to</Label>
                                     <Input type="email" placeholder="abc@gmail.com" value={this.state.email}
                                            onChange={(event) => {
                                                this.setState({...this.state,email: event.target.value});
