@@ -95,6 +95,7 @@ class Header extends Component {
                                 <option>Closed invitation-only survey</option>
                                 <option>Open unique survey</option>
                             </select><br/>
+                            <label>Enter all the invitees of the survey here. Separate the emails by comma</label>
                             <input type="text" className="form-control" name="survey" placeholder = "Invitees Emails (comma-separated)"
                                    disabled={this.state.isClosed}
                                    onChange={(event) => {
