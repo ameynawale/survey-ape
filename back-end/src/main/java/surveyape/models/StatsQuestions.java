@@ -15,7 +15,7 @@ public class StatsQuestions {
     @JsonInclude(JsonInclude.Include.NON_EMPTY) public void setQuestionid(Long questionid) { this.questionid = questionid; }
 
     public Set<StatsChoices> getChoices () { return choices; }
-    @JsonInclude(JsonInclude.Include.NON_EMPTY) public void setChoices (Set<StatsChoices> choices) { this.choices = choices; }
+    public void setChoices (Set<StatsChoices> choices) { this.choices = choices; }
 
     public String getQuestiontype() { return questiontype; }
     @JsonInclude(JsonInclude.Include.NON_EMPTY) public void setQuestiontype(String questiontype) { this.questiontype = questiontype; }

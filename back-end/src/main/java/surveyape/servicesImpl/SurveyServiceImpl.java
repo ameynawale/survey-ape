@@ -485,7 +485,7 @@ public class SurveyServiceImpl implements SurveyService {
                     statsQuestions.setQuestion        ( questionsEntity.getQuestion() );
 
                     Set<StatsChoices> statsChoicesSet = new HashSet<>();
-                    if(questionsEntity.getQuestiontype().equals("text")) {
+                    if(questionsEntity.getQuestiontype().equals("text") || questionsEntity.getQuestiontype().equals("date") ) {
 
                         StatsChoices statsChoices = new StatsChoices();
                         Set<surveyape.entity.ResponseEntity> responseEntities = questionsEntity.getResponses();
