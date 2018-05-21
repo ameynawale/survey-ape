@@ -1,11 +1,11 @@
 package surveyape.servicesImpl;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import surveyape.converters.Convertors;
 import surveyape.entity.UserEntity;
 import surveyape.models.User;
 import surveyape.respositories.UserRepository;
-import surveyape.services.MailService;
 import surveyape.services.UserService;
 
 import java.util.Random;
@@ -18,8 +18,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private MailService mailService;
 
     @Override
     public String fetchUniqueUser(User user) {

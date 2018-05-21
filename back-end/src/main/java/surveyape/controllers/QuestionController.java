@@ -21,7 +21,7 @@ import surveyape.services.SurveyService;
  */
 @RestController
 @RequestMapping("/question")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*", allowCredentials = "true", allowedHeaders = {"*"})
 public class QuestionController {
 
     @Autowired

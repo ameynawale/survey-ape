@@ -2,38 +2,28 @@ package surveyape.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import surveyape.aspects.CheckSession;
 import surveyape.converters.Convertors;
-import surveyape.entity.QuestionsEntity;
+import surveyape.entity.SurveyEntity;
 import surveyape.entity.UserSurveyEntity;
-
 import surveyape.exceptions.HttpBadRequestException;
 import surveyape.exceptions.HttpNotFoundException;
 import surveyape.exceptions.HttpUnAuthorizedException;
 import surveyape.models.*;
-
-import surveyape.respositories.ResponseRepository;
 import surveyape.respositories.SurveyRepository;
-import surveyape.respositories.QuestionRepository;
-import surveyape.entity.SurveyEntity;
-
 import surveyape.respositories.UserSurveyRepository;
 import surveyape.services.MailService;
-
 import surveyape.services.SurveyService;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * SurveyController a RestController class which manages the Surveys.
@@ -51,10 +41,6 @@ public class SurveyController {
     private SurveyRepository surveyRepository;
     @Autowired
     private UserSurveyRepository userSurveyRepository;
-    @Autowired
-    private QuestionRepository questionRepository;
-    @Autowired
-    private ResponseRepository responseRepository;
     @Autowired
     private MailService mailService;
 
