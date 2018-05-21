@@ -1,5 +1,6 @@
 const api = process.env.REACT_APP_CONTACTS_API_URL || 'http://localhost:8080'
 const url = 'http://localhost:8080';
+// const url = 'http://www.surveyape.ga:8080';
 const axios = require("axios");
 // import axios from 'axios';
 
@@ -10,7 +11,7 @@ const headers = {
 axios.defaults.withCredentials = true;
 
 export const doLogout = () =>{
-    return axios.get('http://localhost:8080/users/logout', null)
+    return axios.get(url + '/users/logout', null)
         .then(function (response) {
             console.log(response);
             localStorage.removeItem("userEmail");
@@ -23,7 +24,7 @@ export const doLogout = () =>{
 };
 
 export const doLogin = (payload) =>{
-    return axios.post('http://localhost:8080/users/login', payload)
+    return axios.post(url + '/users/login', payload)
         .then(function (response) {
             console.log(response);
             return response
@@ -35,7 +36,7 @@ export const doLogin = (payload) =>{
 };
 
 export const validateEmail = (payload) =>{
-    return axios.post('http://localhost:8080/survey/validateEmail', payload)
+    return axios.post(url + '/survey/validateEmail', payload)
         .then(function (response) {
             console.log(response);
             return response
@@ -48,7 +49,7 @@ export const validateEmail = (payload) =>{
 
 
 export const validateUniqueEmail = (payload) =>{
-    return axios.post('http://localhost:8080/survey/validateUniqueEmail', payload)
+    return axios.post(url + '/survey/validateUniqueEmail', payload)
     .then(function (response) {
     console.log(response);
     return response
@@ -59,7 +60,7 @@ export const validateUniqueEmail = (payload) =>{
 });
 }
 export const fetchQuestions = (payload) => {
-    return axios.post('http://localhost:8080/survey/fetchQuestions', payload)
+    return axios.post(url + '/survey/fetchQuestions', payload)
         .then(function (response) {
             console.log(response);
             return response
@@ -71,7 +72,7 @@ export const fetchQuestions = (payload) => {
 }
 
 export const submitCloseUniqueSurvey = (payload) => {
-    return axios.post('http://localhost:8080/survey/finishClosedUniqueSurveys', payload)
+    return axios.post(url + '/survey/finishClosedUniqueSurveys', payload)
         .then(function (response) {
             console.log(response);
             return response
@@ -83,7 +84,7 @@ export const submitCloseUniqueSurvey = (payload) => {
 }
 
 export const saveGeneralSurveyResponse = (payload) => {
-    return axios.post('http://localhost:8080/response/saveGeneralSurveyResponse', payload)
+    return axios.post(url + '/response/saveGeneralSurveyResponse', payload)
 
         .then(function (response) {
             console.log(response);
@@ -96,7 +97,7 @@ export const saveGeneralSurveyResponse = (payload) => {
 }
 
 export const getSurvey = (payload) =>{
-    return axios.post('http://localhost:8080/survey/getSurvey', payload)
+    return axios.post(url + '/survey/getSurvey', payload)
         .then(function (response) {
             console.log(response);
             return response
@@ -108,7 +109,7 @@ export const getSurvey = (payload) =>{
 }
 
 export const saveSurveyResponse = (payload) =>{
-    return axios.post('http://localhost:8080/response/saveSurveyResponse', payload)
+    return axios.post(url + '/response/saveSurveyResponse', payload)
         .then(function (response) {
             console.log(response);
             return response
@@ -133,7 +134,7 @@ export const saveSurveyResponse = (payload) =>{
     //     });
 
 export const doSignUp = (payload) =>{
-    return axios.post('http://localhost:8080/users/signup', payload)
+    return axios.post(url + '/users/signup', payload)
         .then(function (response) {
             console.log(response);
             return response
@@ -145,7 +146,7 @@ export const doSignUp = (payload) =>{
 };
 
 export const doSignUpVerification = (payload) =>{
-    return axios.post('http://localhost:8080/users/signUpVerification', payload)
+    return axios.post(url + '/users/signUpVerification', payload)
         .then(function (response) {
             console.log(response);
             return response
@@ -157,7 +158,7 @@ export const doSignUpVerification = (payload) =>{
 };
 
 export const doRegister = (payload) =>{
-    return axios.post('http://localhost:8080/survey/register', payload)
+    return axios.post(url + '/survey/register', payload)
         .then(function (response) {
             console.log(response);
             return response
@@ -169,7 +170,7 @@ export const doRegister = (payload) =>{
 };
 
 export const addSurvey = (payload) =>{
-    return axios.post('http://localhost:8080/survey/create', payload)
+    return axios.post(url + '/survey/create', payload)
         .then(function (response) {
             console.log(response);
             return response;
@@ -182,7 +183,7 @@ export const addSurvey = (payload) =>{
 };
 
 export const addQuestion = (payload) =>{
-    return axios.post('http://localhost:8080/question/create', payload, {headers: {
+    return axios.post(url + '/question/create', payload, {headers: {
         // 'Content-Type': 'application/json;charset=UTF-8',
             "Access-Control-Allow-Origin": "*",
         // "credentials":"include"
@@ -198,7 +199,7 @@ export const addQuestion = (payload) =>{
 };
 
 export const addOption = (payload) =>{
-    return axios.post('http://localhost:8080/option/create', payload)
+    return axios.post(url + '/option/create', payload)
         .then(function (response) {
             console.log(response);
             return response;
@@ -210,7 +211,7 @@ export const addOption = (payload) =>{
 };
 
 export const unpublishSurvey = (payload) =>{
-    return axios.post('http://localhost:8080/survey/unpublish', payload)
+    return axios.post(url + '/survey/unpublish', payload)
         .then(function (response) {
             console.log(response);
             return response;
@@ -223,7 +224,7 @@ export const unpublishSurvey = (payload) =>{
 
 
 export const publishSurvey = (payload) =>{
-    return axios.post('http://localhost:8080/survey/publish', payload)
+    return axios.post(url + '/survey/publish', payload)
         .then(function (response) {
             console.log(response);
             return response;
@@ -236,7 +237,7 @@ export const publishSurvey = (payload) =>{
 
 
 export const closeSurvey = (payload) =>{
-    return axios.post('http://localhost:8080/survey/close', payload)
+    return axios.post(url + '/survey/close', payload)
         .then(function (response) {
             console.log(response);
             return response;
@@ -248,7 +249,7 @@ export const closeSurvey = (payload) =>{
 };
 
 export const surveyListing = (payload) =>{
-    return axios.post('http://localhost:8080/survey/surveylisting', payload)
+    return axios.post(url + '/survey/surveylisting', payload)
         .then(function (response) {
             console.log(response);
             return response;
@@ -261,7 +262,7 @@ export const surveyListing = (payload) =>{
 
 
 export const uniqueSurveyListing = () =>{
-    return axios.post('http://localhost:8080/survey/uniqueSurveylisting',null)
+    return axios.post(url + '/survey/uniqueSurveylisting',null)
         .then(function (response) {
             console.log(response);
             return response
@@ -273,7 +274,7 @@ export const uniqueSurveyListing = () =>{
 }
 
 export const getQuestions = (payload) =>{
-    return axios.post('http://localhost:8080/survey/getquestions', payload)
+    return axios.post(url + '/survey/getquestions', payload)
         .then(function (response) {
             console.log(response);
             return response;
@@ -285,7 +286,7 @@ export const getQuestions = (payload) =>{
 };
 
 export const getOptions = (payload) =>{
-    return axios.post('http://localhost:8080/question/getoptions', payload)
+    return axios.post(url + '/question/getoptions', payload)
 
         .then(function (response) {
             console.log(response);
@@ -298,7 +299,7 @@ export const getOptions = (payload) =>{
 };
 
 export const exportSurvey = (payload) =>{
-    const url = 'http://localhost:8080/survey/export-survey?surveyid=' + payload.surveyid + '&filename=' + payload.filename;
+    const url = url + '/survey/export-survey?surveyid=' + payload.surveyid + '&filename=' + payload.filename;
     return axios.get(url)
         .then(function (response) {
             console.log(response);
