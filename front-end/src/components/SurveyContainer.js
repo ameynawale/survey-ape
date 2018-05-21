@@ -149,7 +149,7 @@ class SurveyContainer extends Component {
     }
     openStats = (survey) =>{
         this.props.history.push("/surveyStats", { selectedSurvey: survey })
-           this.openModal();
+           // this.openModal();
     }
 
     // openModal(){
