@@ -23,7 +23,7 @@ import surveyape.services.SurveyService;
  */
 @RestController
 @RequestMapping("/option")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*", allowCredentials = "true", allowedHeaders = {"*"})
 public class OptionController {
 
     @Autowired
@@ -32,11 +32,7 @@ public class OptionController {
     @RequestMapping(path="/create", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @CrossOrigin(origins = "*", allowCredentials = "true", allowedHeaders = {"*"})
     public ResponseEntity<?> createOption(@RequestBody Option option) {
-        System.out.println("-----------");
 
-        System.out.println("option" + option.getOptions());
-        System.out.println("option" + option.getOptionid());
-        System.out.println("option" + option.getQuestionid());
         OptionsEntity optionsEntity = new OptionsEntity();
         optionsEntity.setOptions(option.getOptions());
         if(option.getOptionid() != null) {

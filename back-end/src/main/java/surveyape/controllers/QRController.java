@@ -19,7 +19,7 @@ import surveyape.services.QRService;
     @EnableCaching
     @EnableScheduling
     @RequestMapping("/QR")
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "*", allowCredentials = "true", allowedHeaders = {"*"})
     @RestController
     public class QRController {
 
