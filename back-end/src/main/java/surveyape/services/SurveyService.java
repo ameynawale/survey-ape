@@ -16,6 +16,8 @@ public interface SurveyService {
 
   Survey publishSurvey(Survey survey);
 
+  Object unpublishSurvey(Survey survey);
+
   Survey closeSurvey(Survey survey);
 
   Questions getQuestions(Survey survey);

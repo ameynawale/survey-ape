@@ -209,6 +209,19 @@ export const addOption = (payload) =>{
         });
 };
 
+export const unpublishSurvey = (payload) =>{
+    return axios.post('http://localhost:8080/survey/unpublish', payload)
+        .then(function (response) {
+            console.log(response);
+            return response;
+        })
+        .catch(function (error) {
+            console.log(error);
+            return error;
+        });
+};
+
+
 export const publishSurvey = (payload) =>{
     return axios.post('http://localhost:8080/survey/publish', payload)
         .then(function (response) {
@@ -220,6 +233,7 @@ export const publishSurvey = (payload) =>{
             return error;
         });
 };
+
 
 export const closeSurvey = (payload) =>{
     return axios.post('http://localhost:8080/survey/close', payload)

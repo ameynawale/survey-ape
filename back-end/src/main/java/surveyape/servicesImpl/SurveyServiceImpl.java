@@ -159,6 +159,87 @@ public class SurveyServiceImpl implements SurveyService {
         return r;
     }
 
+    /*public Survey unpublishSurvey(Survey survey) {
+        System.out.println(survey.getSurveytype());
+        String sessionEmail = Convertors.fetchSessionEmail();
+        UserEntity userEntity = userRepository.findByEmail(sessionEmail);
+        SurveyEntity surveyEntity = surveyRepository.findBySurveyid(survey.getSurveyid());
+        if (surveyEntity == null) {
+            Survey r = new Survey();
+            return r;
+        }
+        surveyEntity.setIspublished(0);
+        SurveyEntity s = surveyRepository.save(surveyEntity);
+        System.out.println("session email" + sessionEmail);
+        System.out.println("survey type/" + surveyEntity.getSurveytype() + "/");
+        String URL = appURL + "/" + surveyEntity.getSurveytype() + "?surveyid=" + survey.getSurveyid();
+        System.out.println(URL);
+        surveyEntity.setURL(URL);
+        SurveyEntity Q = surveyRepository.save(surveyEntity);
+        //if general
+
+        if ((surveyEntity.getSurveytype()).equalsIgnoreCase("general")) {
+
+            ResponseEntity<byte[]> QRCode = this.getQRCode(URL);
+            System.out.println(QRCode);
+            mailService.sendpublishMailGeneral(URL, sessionEmail);
+        } else if ((surveyEntity.getSurveytype()).equalsIgnoreCase("closed")) {
+            System.out.println("closed type");
+            Set<InviteesEntity> set = inviteeRepository.findBySurveyEntity(surveyEntity);
+            for (InviteesEntity invitees : set) {
+                String email = invitees.getEmail();
+                System.out.println(email);
+                mailService.sendpublishMailClosed(URL, email);
+            }
+
+        }
+
+
+        Survey r = new Survey();
+        r.setSurveyid(Q.getSurveyid());
+        r.setSurveyname(Q.getSurveyname());
+        r.setIspublished(Q.getIspublished());
+        r.setSurveytype(Q.getSurveytype());
+        r.setURL(Q.getURL());
+        return r;
+    }
+*/
+
+    public Object unpublishSurvey(Survey survey) {
+        System.out.println(survey.getSurveytype());
+        String sessionEmail = Convertors.fetchSessionEmail();
+        UserEntity userEntity = userRepository.findByEmail(sessionEmail);
+        SurveyEntity surveyEntity = surveyRepository.findBySurveyid(survey.getSurveyid());
+        if (surveyEntity == null) {
+            Survey r = new Survey();
+            return r;
+        }
+
+        /*Survey survey1 = new Survey();
+        survey1.setSurveyid(survey.getSurveyid());
+        StatsOverall stats = fetchStats(survey1);
+        if(stats.getNoOfParticipants() > 0)
+        {
+            return new BadRequest("400","Survey cannot be unpublished as it has at least one response");
+        }*/
+        for(QuestionsEntity questionsEntity: surveyEntity.getQuestions())
+        {
+            if(responseRepository.findByQuestionsEntity(questionsEntity).size() > 0)
+                return new BadRequest("400","Survey cannot be unpublished as it has at least one response");
+        }
+        surveyEntity.setIspublished(0);
+        SurveyEntity s = surveyRepository.save(surveyEntity);
+
+        Survey r = new Survey();
+        r.setSurveyid(s.getSurveyid());
+        r.setSurveyname(s.getSurveyname());
+        r.setIspublished(s.getIspublished());
+        r.setSurveytype(s.getSurveytype());
+        r.setURL(s.getURL());
+        return r;
+    }
+
+
     public Survey closeSurvey(Survey survey) {
 
         String sessionEmail = Convertors.fetchSessionEmail();

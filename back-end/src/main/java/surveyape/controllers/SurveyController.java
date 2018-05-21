@@ -17,22 +17,15 @@ import surveyape.entity.UserSurveyEntity;
 import surveyape.exceptions.HttpBadRequestException;
 import surveyape.exceptions.HttpNotFoundException;
 import surveyape.exceptions.HttpUnAuthorizedException;
-import surveyape.models.Questions;
+import surveyape.models.*;
 
-import surveyape.models.StatsOverall;
-import surveyape.models.SurveyListing;
-import surveyape.models.UniqueSurveyListing;
-import surveyape.models.User;
 import surveyape.respositories.ResponseRepository;
 import surveyape.respositories.SurveyRepository;
 import surveyape.respositories.QuestionRepository;
 import surveyape.entity.SurveyEntity;
-import surveyape.models.Survey;
 
 import surveyape.respositories.UserSurveyRepository;
 import surveyape.services.MailService;
-
-import surveyape.models.Response;
 
 import surveyape.services.SurveyService;
 
@@ -87,10 +80,35 @@ public class SurveyController {
     public ResponseEntity<?> publishSurvey(@RequestBody Survey survey) {
         System.out.println("-----------");
 
+        System.out.println("publish method");
+
+
         Survey newSurvey = surveyService.publishSurvey(survey);
 
         return new ResponseEntity<>(newSurvey, HttpStatus.OK);
     }
+
+    @CheckSession
+    @RequestMapping(
+            path = "/unpublish",
+            method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> unpublishSurvey(@RequestBody Survey survey) {
+        System.out.println("-----------");
+
+        System.out.println("unpublish");
+
+
+        Object object = surveyService.unpublishSurvey(survey);
+
+        if(object instanceof BadRequest)
+            return new ResponseEntity<>(object, HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(object, HttpStatus.OK);
+    }
+
 
     @CheckSession
     @RequestMapping(

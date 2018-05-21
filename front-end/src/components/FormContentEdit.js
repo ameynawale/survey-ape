@@ -26,7 +26,7 @@ class FormContentEdit extends Component {
             // surveyName      :   this.props.surveydata.surveyName,
             surveyid        :   this.props.surveydata.questions.questions[0].surveyid,
             filename: 'SurveyJson',
-            fileurl: 'http://localhost:8080/SurveyFiles/' + this.props.surveydata.questions.questions[0].surveyid
+            fileurl: 'http://localhost:8080/' + this.props.surveydata.questions.questions[0].surveyid
 
         };
         // var index = 0;
@@ -53,6 +53,7 @@ class FormContentEdit extends Component {
     componentWillMount(){
         console.log("comp will mount ", this.state);
         console.log(this.props.surveydata.questions.questions[0].question);
+        console.log("fileurl", this.state.fileurl);
         this.state.questionsarray.map((question) => {
             if(question.questiontype === 'dropdown')
             {
@@ -251,6 +252,18 @@ class FormContentEdit extends Component {
                 {
                     console.log('inside 200');
                     alert("Survey is published successfully");
+                }
+            });
+    }
+
+    unPublishSurvey = (event) => {
+        event.preventDefault();
+        API.unpublishSurvey(this.state)
+            .then((res) => {
+                if(res.status === 200)
+                {
+                    console.log('inside 200');
+                    alert("Survey is unpublished successfully");
                 }
             });
     }
